@@ -16,8 +16,11 @@ export default React.createClass({
     return this.emptyInput();
   },
   componentWillMount: function() {
-    var ref = Firebase.database().ref('games');
-    this.bindAsArray(ref, 'games');
+    var gameRef = Firebase.database().ref('games');
+    this.bindAsArray(gameRef, 'games');
+
+    var memberRef = Firebase.database().ref('members');
+    this.bindAsArray(memberRef, 'members');
   },
   onChange: function(e) {
     const target = e.target;
@@ -48,6 +51,8 @@ export default React.createClass({
           <input name="name" value={ this.state.newGame.name } onChange={ this.onChange } required />
         <br />
         <label htmlFor="owner">Owner</label>
+
+
           <input name="owner" value={ this.state.newGame.owner } onChange={ this.onChange } required />
         <br />
         <label htmlFor="minPlayers">Minimum # of Players</label>
