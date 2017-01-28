@@ -51,9 +51,12 @@ export default React.createClass({
           <input name="name" value={ this.state.newGame.name } onChange={ this.onChange } required />
         <br />
         <label htmlFor="owner">Owner</label>
-
-
-          <input name="owner" value={ this.state.newGame.owner } onChange={ this.onChange } required />
+          <select name="owner" value={ this.state.newGame.owner } onChange={ this.onChange } required>
+            <option value="">Please Select</option>
+            {this.state.members.map((item, index) => {
+              return <option key={item[".key"]} value={item.firstName + " " + item.lastName}>{ item.firstName } { item.lastName }</option>
+            })}
+          </select>
         <br />
         <label htmlFor="minPlayers">Minimum # of Players</label>
           <input name="minPlayers" value={ this.state.newGame.minPlayers } onChange={ this.onChange } required />
