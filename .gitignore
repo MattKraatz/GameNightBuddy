@@ -1,5 +1,7 @@
 # Firebase Keys
 keys.js
+.DS_Store
+firebase
 
 # Logs
 logs
