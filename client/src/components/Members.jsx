@@ -37,23 +37,38 @@ export default React.createClass({
   render: function() {
     return <div className="members">
       <h2>Members</h2>
-      <ul>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+
         {this.state.members.map((item, index) => {
-          return <li key={item[".key"]}>{item.firstName} {item.lastName}</li>
+          return <tr key={item[".key"]}>
+                  <th scope="row">{ index + 1 }</th>
+                  <td>{ item.firstName } { item.lastName }</td>
+                </tr>
         })}
-      </ul>
-      <h2>New Game</h2>
+        </tbody>
+      </table>
+      <h2>New Member</h2>
       <form onSubmit={ this.handleSubmit }>
-        <label htmlFor="firstName">First Name</label>
-          <input name="firstName" value={ this.state.newMember.firstName } onChange={ this.onChange } required />
-        <br />
-        <label htmlFor="lastName">Last Name</label>
-          <input name="lastName" value={ this.state.newMember.lastName } onChange={ this.onChange } required />
-        <br />
-        <label htmlFor="email">Email</label>
-          <input name="email" value={ this.state.newMember.email } onChange={ this.onChange } required />
-        <br />
-        <button>{ 'Add #' + (this.state.members.length + 1) }</button>
+        <div className="form-group">
+          <label htmlFor="firstName">First Name</label>
+          <input name="firstName" type="text" className="form-control" value={ this.state.newMember.firstName } onChange={ this.onChange } required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="lastName">Last Name</label>
+          <input name="lastName" type="text" className="form-control" value={ this.state.newMember.lastName } onChange={ this.onChange } required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input name="email" type="email" className="form-control" value={ this.state.newMember.email } onChange={ this.onChange } required />
+        </div>
+        <button className="btn btn-primary btn-block">{ 'Add #' + (this.state.members.length + 1) }</button>
       </form>
     </div>
   }
