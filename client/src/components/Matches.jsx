@@ -114,12 +114,25 @@ export default React.createClass({
   },
   render: function() {
     return <div className="matches">
-      <h2>Matches Completed</h2>
-      <ul>
+      <h2>Match History</h2>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Game</th>
+            <th>Winner</th>
+          </tr>
+        </thead>
+        <tbody>
         {this.state.matches.map((item, index) => {
-          return <li key={item[".key"]}>{item.date}: {item.winner}</li>
+          return <tr key={item[".key"]}>
+                  <th scope="row">{ item.date }</th>
+                  <td>{ item.game }</td>
+                  <td>{ item.winner }</td>
+                </tr>
         })}
-      </ul>
+        </tbody>
+      </table>
       <h2>New Match</h2>
       <form onSubmit={ this.handleSubmit }>
         <div className="form-group">
