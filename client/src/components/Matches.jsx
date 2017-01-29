@@ -84,26 +84,23 @@ export default React.createClass({
   },
   onChange: function(e) {
     if (e) {
-      if (!e.target) {
+      const match = this.state.newMatch;
+      if (!e.target & !e.length) {
         const name = e.name;
-        const match = this.state.newMatch;
         match[name] = e.value;
         this.setState(match);
-        // Handle players multi-select
-        if (e.length > -1) {
-          const newMatch = this.state.newMatch;
-          newMatch.players = e;
-          // Change the option name for the Winner Select
-          newMatch.players.forEach((e,i) => {
-            e.name = "winner";
-          })
-          this.setState(newMatch);
-        }
+      // Handle players multi-select
+      } else if (!e.target & e.length > -1) {
+        match.players = e;
+        // Change the option name for the Winner Select
+        match.players.forEach((e,i) => {
+          e.name = "winner";
+        })
+        this.setState(match);
       } else {
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        const match = this.state.newMatch;
         match[name] = value;
         this.setState(match);
       }
@@ -111,10 +108,9 @@ export default React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    if (this.state.newMatch.name && this.state.newMatch.name.trim().length !== 0) {
-      this.firebaseRefs['matches'].push(this.state.newMatch);
-      this.setState(this.emptyInput());
-    }
+    console.log(this.state.newMatch);
+    this.firebaseRefs['matches'].push(this.state.newMatch);
+    this.setState(this.emptyInput());
   },
   render: function() {
     return <div className="matches">
