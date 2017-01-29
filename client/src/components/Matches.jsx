@@ -85,22 +85,15 @@ export default React.createClass({
         const match = this.state.newMatch;
         match[name] = e.value;
         this.setState(match);
+        // Handle players multi-select
         if (e.length > -1) {
           const newMatch = this.state.newMatch;
           newMatch.players = e;
+          // Change the option name for the Winner Select
+          newMatch.players.forEach((e,i) => {
+            e.name = "winner";
+          })
           this.setState(newMatch);
-          // e.forEach((e,i)=> {
-          //   const name = e.name;
-          //   const match = this.state.newMatch;
-          //   var index = match[name].indexOf(e)
-          //   console.log(index, match[name])
-          //   if (index > -1) {
-          //     match[name].splice(index,1);
-          //   } else {
-          //     match[name].push(e)
-          //   }
-          //   this.setState(match);
-          // })
         }
       } else {
         const target = e.target;
@@ -139,7 +132,7 @@ export default React.createClass({
           <Select.Async name="players" value={ this.state.newMatch.players } loadOptions={ this.getPlayerOptions } onChange={ this.onChange } multi={ true } clearable={ false } required />
         <br />
         <label htmlFor="winner">Winner</label>
-          <input name="winner" value={ this.state.newMatch.winner } onChange={ this.onChange } />
+          <Select name="winner" value={ this.state.newMatch.winner } options={ this.state.newMatch.players } onChange={ this.onChange } />
         <br />
         <button>{ 'Add #' + (this.state.games.length + 1) }</button>
       </form>
