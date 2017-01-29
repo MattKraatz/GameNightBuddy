@@ -3,6 +3,7 @@ import ReactFireMixin from 'reactfire';
 import Firebase from 'firebase';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import './Matches.css';
 
 export default React.createClass({
   mixins: [ReactFireMixin],
@@ -35,7 +36,9 @@ export default React.createClass({
         .then(function(snapshot) {
           var games = snapshot.val();
           for (var prop in games) {
-            options.push({ value: games[prop].name, label: games[prop].name , type: 'select', name: 'game' })
+            if (games.hasOwnProperty(prop)) {
+              options.push({ value: games[prop].name, label: games[prop].name , type: 'select', name: 'game' })
+            }
           };
           options.push({ value: 'new', label: '- new game -' });
           callback(null, { options: options, complete: true });
@@ -59,8 +62,10 @@ export default React.createClass({
         .then(function(snapshot) {
           var members = snapshot.val();
           for (var prop in members) {
-            var name = members[prop].firstName + " " + members[prop].lastName;
-            options.push({ value: name, label: name, type: 'select', name: 'players' })
+            if (members.hasOwnProperty(prop)) {
+              var name = members[prop].firstName + " " + members[prop].lastName;
+              options.push({ value: name, label: name, type: 'select', name: 'players' })
+            }
           };
           options.push({ value: 'new', label: '- guest -' });
           callback(null, { options: options, complete: true });
@@ -79,7 +84,6 @@ export default React.createClass({
   },
   onChange: function(e) {
     if (e) {
-      console.log(e)
       if (!e.target) {
         const name = e.name;
         const match = this.state.newMatch;
@@ -122,19 +126,24 @@ export default React.createClass({
       </ul>
       <h2>New Match</h2>
       <form onSubmit={ this.handleSubmit }>
-        <label htmlFor="date">Date</label>
-          <input name="date" type="date" value={ this.state.newMatch.date } onChange={ this.onChange } required />
-        <br />
-        <label htmlFor="game">Game</label>
+        <div className="form-group">
+          <label htmlFor="date">Date</label>
+          <input name="date" type="date" className="form-control" value={ this.state.newMatch.date } onChange={ this.onChange } required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="game">Game</label>
           <Select.Async name="game" value={ this.state.newMatch.game } loadOptions={ this.getGameOptions } onChange={ this.onChange } required />
-        <br />
-        <label htmlFor="players">Players</label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="players">Players</label>
           <Select.Async name="players" value={ this.state.newMatch.players } loadOptions={ this.getPlayerOptions } onChange={ this.onChange } multi={ true } clearable={ false } required />
-        <br />
-        <label htmlFor="winner">Winner</label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="winner">Winner</label>
           <Select name="winner" value={ this.state.newMatch.winner } options={ this.state.newMatch.players } onChange={ this.onChange } />
-        <br />
-        <button>{ 'Add #' + (this.state.games.length + 1) }</button>
+          <small id="winnerHelp" className="form-text text-muted">Selectable from the list of Players.</small>
+        </div>
+        <button className="btn btn-primary btn-block">{ 'Add #' + (this.state.matches.length + 1) }</button>
       </form>
     </div>
   }

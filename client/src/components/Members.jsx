@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactFireMixin from 'reactfire';
 import Firebase from 'firebase';
-import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
 export default React.createClass({
