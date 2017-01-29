@@ -108,7 +108,6 @@ export default React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    console.log(this.state.newMatch);
     this.firebaseRefs['matches'].push(this.state.newMatch);
     this.setState(this.emptyInput());
   },

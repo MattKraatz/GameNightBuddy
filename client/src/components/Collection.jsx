@@ -24,12 +24,42 @@ export default React.createClass({
     var memberRef = Firebase.database().ref('members');
     this.bindAsArray(memberRef, 'members');
   },
+  getOwnerOptions: function(input, callback) {
+    var options = [];
+    if (this.state.members.length === 0)
+    {
+      Firebase.database().ref('members').once('value')
+        .then(function(snapshot) {
+          var members = snapshot.val();
+          for (var prop in members) {
+            if (members.hasOwnProperty(prop)) {
+              var name = members[prop].firstName + " " + members[prop].lastName;
+              options.push({ value: name, label: name, type: 'select', name: 'owner' })
+            }
+          };
+          callback(null, { options: options, complete: true });
+        }, function (errorObject) {
+          console.error("The read failed: " + errorObject.code);
+        });
+    } else {
+      var members = this.state.members;
+      members.forEach((e, i) => {
+        var name = e.firstName + " " + e.lastName;
+        options.push({ value: name, label: name, type: 'select', name: 'owner' })
+      });
+      callback(null, { options: options, complete: true });
+    }
+  },
   onChange: function(e) {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
     const game = this.state.newGame;
-    game[name] = value;
+    if (!e.target) {
+      game[e.name] = e.value;
+    } else {
+      const target = e.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+      game[name] = value;
+    }
     this.setState(game);
   },
   handleSubmit: function(e) {
@@ -42,31 +72,43 @@ export default React.createClass({
   render: function() {
     return <div className="collection">
       <h2>Games Available</h2>
-      <ul>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>Players</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
         {this.state.games.map((item, index) => {
-          return <li key={item[".key"]}>{item.name} owned by {item.owner}, {item.minPlayers} - {item.maxPlayers} players</li>
+          return <tr key={item[".key"]}>
+                  <th scope="row">{ item.name }</th>
+                  <td>{ item.minPlayers } - { item.maxPlayers }</td>
+                  <td>{ item.owner }</td>
+                </tr>
         })}
-      </ul>
+        </tbody>
+      </table>
       <h2>New Game</h2>
       <form onSubmit={ this.handleSubmit }>
-        <label htmlFor="name">Name</label>
-          <input name="name" value={ this.state.newGame.name } onChange={ this.onChange } required />
-        <br />
-        <label htmlFor="owner">Owner</label>
-          <select name="owner" value={ this.state.newGame.owner } onChange={ this.onChange } required>
-            <option value="">Please Select</option>
-            {this.state.members.map((item, index) => {
-              return <option key={item[".key"]} value={item.firstName + " " + item.lastName}>{ item.firstName } { item.lastName }</option>
-            })}
-          </select>
-        <br />
-        <label htmlFor="minPlayers">Minimum # of Players</label>
-          <input name="minPlayers" value={ this.state.newGame.minPlayers } onChange={ this.onChange } required />
-        <br />
-        <label htmlFor="maxPlayers">Maximum # of Players</label>
-          <input name="maxPlayers" value={ this.state.newGame.maxPlayers } onChange={ this.onChange } required />
-        <br />
-        <button>{ 'Add #' + (this.state.games.length + 1) }</button>
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input name="name" type="text" className="form-control" value={ this.state.newGame.name } onChange={ this.onChange } required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="owner">Owner</label>
+          <Select.Async name="owner" value={ this.state.newGame.owner } loadOptions={ this.getOwnerOptions } onChange={ this.onChange } required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="minPlayers">Minimum # of Players</label>
+          <input name="minPlayers" type="number" className="form-control" value={ this.state.newGame.minPlayers } onChange={ this.onChange } required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="maxPlayers">Maximum # of Players</label>
+          <input name="maxPlayers" type="number" className="form-control" value={ this.state.newGame.maxPlayers } onChange={ this.onChange } required />
+        </div>
+        <button className="btn btn-primary btn-block">{ 'Add #' + (this.state.games.length + 1) }</button>
       </form>
     </div>
   }
