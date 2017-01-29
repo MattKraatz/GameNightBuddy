@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactFireMixin from 'reactfire';
 import Firebase from 'firebase';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 export default React.createClass({
   mixins: [ReactFireMixin],
@@ -51,6 +53,7 @@ export default React.createClass({
         <br />
         <label htmlFor="email">Email</label>
           <input name="email" value={ this.state.newMember.email } onChange={ this.onChange } required />
+        <br />
         <button>{ 'Add #' + (this.state.members.length + 1) }</button>
       </form>
     </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactFireMixin from 'reactfire';
 import Firebase from 'firebase';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 export default React.createClass({
   mixins: [ReactFireMixin],
@@ -63,6 +65,7 @@ export default React.createClass({
         <br />
         <label htmlFor="maxPlayers">Maximum # of Players</label>
           <input name="maxPlayers" value={ this.state.newGame.maxPlayers } onChange={ this.onChange } required />
+        <br />
         <button>{ 'Add #' + (this.state.games.length + 1) }</button>
       </form>
     </div>

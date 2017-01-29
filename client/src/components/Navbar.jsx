@@ -6,7 +6,6 @@ export default class App extends React.Component {
 
   render() {
     return <div>
-      <ProfileBadge />
         <ul id="navigation">
           <li><Link to='#'>Home</Link></li>
           <li><Link to='collection'>Collection</Link></li>
