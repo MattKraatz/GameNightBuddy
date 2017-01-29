@@ -35,7 +35,7 @@ export default React.createClass({
         .then(function(snapshot) {
           var games = snapshot.val();
           for (var prop in games) {
-            options.push({ value: games[prop].name, label: games[prop].name })
+            options.push({ value: games[prop].name, label: games[prop].name , type: 'select', name: 'game' })
           };
           options.push({ value: 'new', label: '- new game -' });
           callback(null, { options: options, complete: true });
@@ -45,18 +45,63 @@ export default React.createClass({
     } else {
       var games = this.state.games;
       games.forEach((e, i) => {
-        options.push({ value: e.name, label: e.name })
+        options.push({ value: e.name, label: e.name, type: 'select', name: 'game' })
       });
       options.push({ value: 'new', label: '- new game -' });
       callback(null, { options: options, complete: true });
     }
   },
+  getPlayerOptions: function(input, callback) {
+    var options = [];
+    if (this.state.members.length === 0)
+    {
+      Firebase.database().ref('members').once('value')
+        .then(function(snapshot) {
+          var members = snapshot.val();
+          for (var prop in members) {
+            var name = members[prop].firstName + " " + members[prop].lastName;
+            options.push({ value: name, label: name, type: 'select', name: 'players' })
+          };
+          options.push({ value: 'new', label: '- guest -' });
+          callback(null, { options: options, complete: true });
+        }, function (errorObject) {
+          console.error("The read failed: " + errorObject.code);
+        });
+    } else {
+      var members = this.state.members;
+      members.forEach((e, i) => {
+        var name = e.firstName + " " + e.lastName;
+        options.push({ value: name, label: name, type: 'select', name: 'players' })
+      });
+      options.push({ value: 'new', label: '- guest -' });
+      callback(null, { options: options, complete: true });
+    }
+  },
   onChange: function(e) {
     if (e) {
-      if (!e.target){
-        var match = this.state.newMatch;
-        match.game = e.value;
+      console.log(e)
+      if (!e.target) {
+        const name = e.name;
+        const match = this.state.newMatch;
+        match[name] = e.value;
         this.setState(match);
+        if (e.length > -1) {
+          const newMatch = this.state.newMatch;
+          newMatch.players = e;
+          this.setState(newMatch);
+          // e.forEach((e,i)=> {
+          //   const name = e.name;
+          //   const match = this.state.newMatch;
+          //   var index = match[name].indexOf(e)
+          //   console.log(index, match[name])
+          //   if (index > -1) {
+          //     match[name].splice(index,1);
+          //   } else {
+          //     match[name].push(e)
+          //   }
+          //   this.setState(match);
+          // })
+        }
       } else {
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -91,12 +136,7 @@ export default React.createClass({
           <Select.Async name="game" value={ this.state.newMatch.game } loadOptions={ this.getGameOptions } onChange={ this.onChange } required />
         <br />
         <label htmlFor="players">Players</label>
-          <select name="players" value={ this.state.newMatch.players } onChange={ this.onChange } required>
-            <option value="">Please Select</option>
-            {this.state.members.map((item, index) => {
-              return <option key={item[".key"]} value={item.firstName + " " + item.lastName}>{ item.firstName } { item.lastName }</option>
-            })}
-          </select>
+          <Select.Async name="players" value={ this.state.newMatch.players } loadOptions={ this.getPlayerOptions } onChange={ this.onChange } multi={ true } clearable={ false } required />
         <br />
         <label htmlFor="winner">Winner</label>
           <input name="winner" value={ this.state.newMatch.winner } onChange={ this.onChange } />
