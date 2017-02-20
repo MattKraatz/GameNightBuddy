@@ -5,6 +5,9 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import './Matches.css';
 
+var gameOptions = [];
+var playerOptions = [];
+
 export default React.createClass({
   mixins: [ReactFireMixin],
   emptyInput: function(){
@@ -19,6 +22,7 @@ export default React.createClass({
     return this.emptyInput();
   },
   componentWillMount: function() {
+    // Establish Firebase state connections
     var matchRef = Firebase.database().ref('matches');
     this.bindAsArray(matchRef, 'matches');
 
@@ -27,36 +31,34 @@ export default React.createClass({
 
     var gameRef = Firebase.database().ref('games');
     this.bindAsArray(gameRef,'games');
-  },
-  getGameOptions: function(input, callback) {
-    var options = [];
-    if (this.state.games.length === 0)
+
+    // SELECT
+    // GAME OPTIONS
+    if (!this.state.games || this.state.games.length === 0)
     {
       Firebase.database().ref('games').once('value')
         .then(function(snapshot) {
           var games = snapshot.val();
           for (var prop in games) {
             if (games.hasOwnProperty(prop)) {
-              options.push({ value: games[prop].name, label: games[prop].name , type: 'select', name: 'game' })
+              gameOptions.push({ value: games[prop].name, label: games[prop].name , type: 'select', name: 'game' })
             }
           };
-          options.push({ value: 'new', label: '- new game -' });
-          callback(null, { options: options, complete: true });
+          gameOptions.push({ value: 'new', label: '- new game -' });
         }, function (errorObject) {
           console.error("The read failed: " + errorObject.code);
         });
     } else {
       var games = this.state.games;
       games.forEach((e, i) => {
-        options.push({ value: e.name, label: e.name, type: 'select', name: 'game' })
+        gameOptions.push({ value: e.name, label: e.name, type: 'select', name: 'game' })
       });
-      options.push({ value: 'new', label: '- new game -' });
-      callback(null, { options: options, complete: true });
+      gameOptions.push({ value: 'new', label: '- new game -' });
     }
-  },
-  getPlayerOptions: function(input, callback) {
-    var options = [];
-    if (this.state.members.length === 0)
+
+    // SELECT
+    // PLAYER OPTIONS
+    if (!this.state.members || this.state.members.length === 0)
     {
       Firebase.database().ref('members').once('value')
         .then(function(snapshot) {
@@ -64,23 +66,21 @@ export default React.createClass({
           for (var prop in members) {
             if (members.hasOwnProperty(prop)) {
               var name = members[prop].firstName + " " + members[prop].lastName;
-              options.push({ value: name, label: name, type: 'select', name: 'players' })
+              playerOptions.push({ value: name, label: name, type: 'select', name: 'players' })
             }
           };
-          options.push({ value: 'new', label: '- guest -' });
-          callback(null, { options: options, complete: true });
+          playerOptions.push({ value: 'new', label: '- guest -' });
         }, function (errorObject) {
           console.error("The read failed: " + errorObject.code);
         });
     } else {
-      var members = this.state.members;
-      members.forEach((e, i) => {
+      this.state.members.forEach((e, i) => {
         var name = e.firstName + " " + e.lastName;
-        options.push({ value: name, label: name, type: 'select', name: 'players' })
+        playerOptions.push({ value: name, label: name, type: 'select', name: 'players' })
       });
-      options.push({ value: 'new', label: '- guest -' });
-      callback(null, { options: options, complete: true });
+      playerOptions.push({ value: 'new', label: '- guest -' });
     }
+
   },
   onChange: function(e) {
     if (e) {
@@ -140,11 +140,11 @@ export default React.createClass({
         </div>
         <div className="form-group">
           <label htmlFor="game">Game</label>
-          <Select.Async name="game" value={ this.state.newMatch.game } loadOptions={ this.getGameOptions } onChange={ this.onChange } required />
+          <Select name="game" value={ this.state.newMatch.game } options={ gameOptions } onChange={ this.onChange } required />
         </div>
         <div className="form-group">
           <label htmlFor="players">Players</label>
-          <Select.Async name="players" value={ this.state.newMatch.players } loadOptions={ this.getPlayerOptions } onChange={ this.onChange } multi={ true } clearable={ false } required />
+          <Select name="players" value={ this.state.newMatch.players } options={ playerOptions } onChange={ this.onChange } multi={ true } clearable={ false } required />
         </div>
         <div className="form-group">
           <label htmlFor="winner">Winner</label>

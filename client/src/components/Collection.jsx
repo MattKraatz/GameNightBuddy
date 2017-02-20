@@ -4,6 +4,8 @@ import Firebase from 'firebase';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
+var ownerOptions = [];
+
 export default React.createClass({
   mixins: [ReactFireMixin],
   emptyInput: function(){
@@ -23,10 +25,10 @@ export default React.createClass({
 
     var memberRef = Firebase.database().ref('members');
     this.bindAsArray(memberRef, 'members');
-  },
-  getOwnerOptions: function(input, callback) {
-    var options = [];
-    if (this.state.members.length === 0)
+
+    // SELECT
+    // Owner Options
+    if (!this.state.members || this.state.members.length === 0)
     {
       Firebase.database().ref('members').once('value')
         .then(function(snapshot) {
@@ -34,10 +36,9 @@ export default React.createClass({
           for (var prop in members) {
             if (members.hasOwnProperty(prop)) {
               var name = members[prop].firstName + " " + members[prop].lastName;
-              options.push({ value: name, label: name, type: 'select', name: 'owner' })
+              ownerOptions.push({ value: name, label: name, type: 'select', name: 'owner' })
             }
           };
-          callback(null, { options: options, complete: true });
         }, function (errorObject) {
           console.error("The read failed: " + errorObject.code);
         });
@@ -45,9 +46,8 @@ export default React.createClass({
       var members = this.state.members;
       members.forEach((e, i) => {
         var name = e.firstName + " " + e.lastName;
-        options.push({ value: name, label: name, type: 'select', name: 'owner' })
+        ownerOptions.push({ value: name, label: name, type: 'select', name: 'owner' })
       });
-      callback(null, { options: options, complete: true });
     }
   },
   onChange: function(e) {
@@ -98,7 +98,7 @@ export default React.createClass({
         </div>
         <div className="form-group">
           <label htmlFor="owner">Owner</label>
-          <Select.Async name="owner" value={ this.state.newGame.owner } loadOptions={ this.getOwnerOptions } onChange={ this.onChange } required />
+          <Select name="owner" value={ this.state.newGame.owner } options={ ownerOptions } onChange={ this.onChange } required />
         </div>
         <div className="form-group">
           <label htmlFor="minPlayers">Minimum # of Players</label>
