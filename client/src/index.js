@@ -23,11 +23,18 @@ Firebase.initializeApp(FBKeys);
 //   )
 //   .catch((error) => console.error(error));
 
+
+function requireAuth(nextState, replaceState) {
+  if (!Firebase.auth().currentUser)
+    // not sure if this works yet
+    replaceState({ nextPathname: nextState.location.pathname }, '/login')
+};
+
 const routes = <Route component={App}>
   <Route path="/" component={Home}/>
-  <Route path="/members" component={Members}/>
-  <Route path="/collection" component={Collection}/>
-  <Route path="/matches" component={Matches}/>
+  <Route path="/members" component={Members} onEnter={requireAuth}/>
+  <Route path="/collection" component={Collection} onEnter={requireAuth}/>
+  <Route path="/matches" component={Matches} onEnter={requireAuth}/>
 </Route>;
 
 ReactDOM.render(
