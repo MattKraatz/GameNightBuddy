@@ -27,7 +27,7 @@ Firebase.initializeApp(FBKeys);
 function requireAuth(nextState, replaceState) {
   if (!Firebase.auth().currentUser)
     // not sure if this works yet
-    replaceState({ nextPathname: nextState.location.pathname }, '/login')
+    replaceState({ nextPathname: nextState.location.pathname }, '/')
 };
 
 const routes = <Route component={App}>
