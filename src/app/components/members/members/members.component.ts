@@ -9,7 +9,8 @@ import {AppStore} from '../../../models/appstore.model';
 @Component({
   selector: 'app-members',
   templateUrl: './members.component.html',
-  styleUrls: ['./members.component.css']
+  styleUrls: ['./members.component.css'],
+  providers: [MembersService] 
 })
 export class MembersComponent implements OnInit {
 
@@ -17,6 +18,7 @@ export class MembersComponent implements OnInit {
 
   constructor(private membersService: MembersService, private store: Store<AppStore>) {
     this.members = membersService.members;
+    membersService.loadItems();
   }
 
   ngOnInit() {

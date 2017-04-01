@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Member} from '../../../models/member.model';
 
 @Component({
@@ -8,7 +8,10 @@ import {Member} from '../../../models/member.model';
 })
 export class MemberListComponent implements OnInit {
 
-  constructor() { }
+  @Input() members: Member[];
+
+  constructor() {
+  }
 
   ngOnInit() {
   }

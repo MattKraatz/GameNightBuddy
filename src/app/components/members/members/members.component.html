@@ -1,6 +1,6 @@
 <div class="members">
   <h2>Members</h2>
-  <app-member-list></app-member-list>
+  <app-member-list [members]="members | async"></app-member-list>
   <h2>New Member</h2>
   <app-member-form></app-member-form>
 </div>

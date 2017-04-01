@@ -46,7 +46,7 @@ const appRoutes: Routes = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore(members)
+    StoreModule.provideStore({members})
   ],
   providers: [MembersService],
   bootstrap: [
