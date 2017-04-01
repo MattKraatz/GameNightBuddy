@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit(); memberForm.reset()" #memberForm="ngForm">
+<form (ngSubmit)="onSubmit(ngModel); memberForm.reset()" #memberForm="ngForm">
   <div class="form-group">
     <label for="firstName">First Name</label>
     <input [(ngModel)]="model.firstName" name="firstName" id="firstName"

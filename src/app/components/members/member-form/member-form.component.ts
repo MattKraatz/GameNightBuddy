@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Member} from '../../../models/member.model';
+import {MembersService} from '../../../services/members.service';
 
 @Component({
   selector: 'app-member-form',
@@ -8,14 +9,17 @@ import {Member} from '../../../models/member.model';
 })
 export class MemberFormComponent implements OnInit {
 
-  constructor() { }
+  constructor(private membersService: MembersService) { }
 
   ngOnInit() {
   }
 
   // NEW MEMBER FORM //
-  model = new Member(1, 'Dr IQ', 'Strange', 'email@email.com');
+  model = new Member(2, 'Dr IQ', 'Strange', 'email@email.com');
   submitted = false;
-  onSubmit() { this.submitted = true; }
+  onSubmit() {
+    var member = new Member(this.model.id, this.model.firstName, this.model.lastName, this.model.email);
+    this.membersService.createMember(member);
+  }
 
 }

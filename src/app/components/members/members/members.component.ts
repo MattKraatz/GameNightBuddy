@@ -18,7 +18,7 @@ export class MembersComponent implements OnInit {
 
   constructor(private membersService: MembersService, private store: Store<AppStore>) {
     this.members = membersService.members;
-    membersService.loadItems();
+    membersService.loadMembers();
   }
 
   ngOnInit() {
