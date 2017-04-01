@@ -21,9 +21,5 @@ export class MembersComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  // NEW MEMBER FORM //
-  model = new Member(1, 'Dr IQ', 'Strange', 'email@email.com');
-  submitted = false;
-  onSubmit() { this.submitted = true; }
+  
 }

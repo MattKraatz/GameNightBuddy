@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
-import {provideStore} from '@ngrx/store';
+import {StoreModule} from '@ngrx/store';
 
 // Components
 import {AppComponent} from './app.component';
@@ -14,8 +14,10 @@ import {LoginComponent} from './components/auth/login/login.component';
 import {MembersComponent} from './components/members/members/members.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {HomeComponent} from './components/home/home.component';
+import { MemberFormComponent } from './components/members/member-form/member-form.component';
+import { MemberListComponent } from './components/members/member-list/member-list.component';
 
-// Models and Services
+// Stores and Services
 import {members} from './stores/members.store';
 import {MembersService} from './services/members.service';
 
@@ -35,20 +37,20 @@ const appRoutes: Routes = [
     LoginComponent,
     MembersComponent,
     NavbarComponent,
-    HomeComponent
+    HomeComponent,
+    MemberFormComponent,
+    MemberListComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    StoreModule.provideStore(members)
   ],
-  providers: [],
+  providers: [MembersService],
   bootstrap: [
-    AppComponent,
-    // MAY NEED TO WRAP THESE IN AN ARRAY (PER EXAMPLE)
-    MembersService,
-    provideStore(members)
+    AppComponent
   ]
 })
 export class AppModule {}

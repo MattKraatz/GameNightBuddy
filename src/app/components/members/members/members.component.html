@@ -1,47 +1,6 @@
 <div class="members">
   <h2>Members</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+  <app-member-list></app-member-list>
   <h2>New Member</h2>
-  <form (ngSubmit)="onSubmit(); memberForm.reset()" #memberForm="ngForm">
-    <div class="form-group">
-      <label for="firstName">First Name</label>
-      <input [(ngModel)]="model.firstName" name="firstName" id="firstName"
-        #firstName="ngModel" type="text" class="form-control" required />
-      <div [hidden]="firstName.valid || firstName.pristine"
-            class="alert alert-danger">
-        First Name is required
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="lastName">Last Name</label>
-      <input [(ngModel)]="model.lastName" name="lastName" id="lastName"
-        #lastName="ngModel" type="text" class="form-control" required />
-      <div [hidden]="lastName.valid || lastName.pristine"
-        class="alert alert-danger">
-        Last Name is required
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input [(ngModel)]="model.email" name="email" id="email"
-        #email="ngModel" type="email" class="form-control" required />
-      <div [hidden]="email.valid || email.pristine"
-        class="alert alert-danger">
-        Email is required
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block"
-      [disabled]="!memberForm.form.valid">
-      Add
-    </button>
-  </form>
+  <app-member-form></app-member-form>
 </div>
