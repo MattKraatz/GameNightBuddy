@@ -3,14 +3,18 @@
       <tr>
         <th>Date</th>
         <th>Game</th>
-        <th>Winner</th>
+        <th>Players</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let match of matches">
         <td>{{match.date}}</td>
         <td>{{match.game.name}}</td>
-        <td>{{match.players}}</td>
+        <td>
+          <span *ngFor="let player of match.players">
+            {{player.firstName + " " + player.lastName}}, 
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>
