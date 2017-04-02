@@ -15,15 +15,20 @@ import {LoginComponent} from './components/auth/login/login.component';
 import {MembersComponent} from './components/members/members/members.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {HomeComponent} from './components/home/home.component';
-import { MemberFormComponent } from './components/members/member-form/member-form.component';
-import { MemberListComponent } from './components/members/member-list/member-list.component';
+import {MemberFormComponent} from './components/members/member-form/member-form.component';
+import {MemberListComponent} from './components/members/member-list/member-list.component';
+import {GameListComponent} from './components/collection/game-list/game-list.component';
+import {GameFormComponent} from './components/collection/game-form/game-form.component';
 
 // Stores and Services
 import {members} from './stores/members.store';
+import {collection} from './stores/collection.store';
 import {MembersService} from './services/members.service';
+import {CollectionService} from './services/collection.service';
 
 // Private Keys
 
+// Route Definitions for NG Router
 const appRoutes: Routes = [
   {path: 'matches', component: MatchesComponent},
   {path: 'members', component: MembersComponent},
@@ -42,16 +47,18 @@ const appRoutes: Routes = [
     NavbarComponent,
     HomeComponent,
     MemberFormComponent,
-    MemberListComponent
+    MemberListComponent,
+    GameListComponent,
+    GameFormComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({members})
+    StoreModule.provideStore({members, collection})
   ],
-  providers: [MembersService],
+  providers: [MembersService, CollectionService],
   bootstrap: [
     AppComponent
   ]

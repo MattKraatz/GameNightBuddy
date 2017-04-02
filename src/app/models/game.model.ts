@@ -1,11 +1,11 @@
-export class Game {
+import {Member} from './member.model';
 
+export class Game {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
-    public owner: string,
+    public owner: Member,
     public minPlayers: number,
     public maxPlayers?: number
   ) {  }
-
 }
