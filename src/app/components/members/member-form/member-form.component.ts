@@ -15,7 +15,7 @@ export class MemberFormComponent implements OnInit {
   }
 
   // NEW MEMBER FORM //
-  model = new Member(2, 'Dr IQ', 'Strange', 'email@email.com');
+  model = new Member("1", 'Dr IQ', 'Strange', 'email@email.com');
   submitted = false;
   onSubmit() {
     var member = new Member(this.model.id, this.model.firstName, this.model.lastName, this.model.email);
