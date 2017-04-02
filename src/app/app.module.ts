@@ -6,6 +6,7 @@ import {HttpModule} from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import {StoreModule} from '@ngrx/store';
 import * as firebase from 'firebase';
+import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 
 // Components
 import {AppComponent} from './app.component';
@@ -26,11 +27,14 @@ import {MatchFormComponent} from './components/matches/match-form/match-form.com
 import {members} from './stores/members.store';
 import {collection} from './stores/collection.store';
 import {matches} from './stores/matches.store';
+import {auth} from './stores/auth.store';
 import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
+import {AuthService} from './services/auth.service';
 
 // Private Keys
+import {firebaseConfig} from './firebaseConfig';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -40,6 +44,12 @@ const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {path: '**', component: HomeComponent}
 ];
+
+// Authorization Config for AngularFireModule
+const authConfig = {
+  provider: AuthProviders.Facebook,
+  method: AuthMethods.Redirect
+}
 
 @NgModule({
   declarations: [
@@ -62,9 +72,10 @@ const appRoutes: Routes = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({members, collection, matches})
+    StoreModule.provideStore({members, collection, matches}),
+    AngularFireModule.initializeApp(firebaseConfig)
   ],
-  providers: [MembersService, CollectionService, MatchService],
+  providers: [MembersService, CollectionService, MatchService, AuthService],
   bootstrap: [
     AppComponent
   ]
