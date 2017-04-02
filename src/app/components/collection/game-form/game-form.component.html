@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit(ngModel); memberForm.reset()" #memberForm="ngForm">
+<form (ngSubmit)="onSubmit(ngModel); gameForm.reset()" #gameForm="ngForm">
   <div class="form-group">
     <label for="name">Name</label>
     <input [(ngModel)]="model.name" name="name" id="name"
@@ -34,7 +34,7 @@
       #maxPlayers="ngModel" type="number" class="form-control" placeholder="optional" />
   </div>
   <button type="submit" class="btn btn-primary btn-block"
-    [disabled]="!memberForm.form.valid">
+    [disabled]="!gameForm.form.valid">
     Add
   </button>
 </form>

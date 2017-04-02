@@ -1,6 +1,8 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Game} from '../../../models/game.model';
 import {Member} from '../../../models/member.model';
+import {Match} from '../../../models/match.model';
+import {MatchService} from '../../../services/match.service';
 
 @Component({
   selector: 'app-match-form',
@@ -12,9 +14,15 @@ export class MatchFormComponent implements OnInit {
   @Input() games: Game[];
   @Input() members: Member[];
 
-  constructor() { }
+  constructor(private matchService: MatchService) { }
 
   ngOnInit() {
+  }
+
+  model = new Match();
+  onSubmit() {
+    var match = new Match(this.model);
+    this.matchService.createMatch(match);
   }
 
 }

@@ -4,7 +4,7 @@ import {Player} from './player.model';
 
 interface IMatch {
   id: string;
-  date: string;
+  date: Date;
   game: Game;
   players: Player[];
   winner: Player;
@@ -12,14 +12,14 @@ interface IMatch {
 
 export class Match {
   public id: string;
-  public date: string;
+  public date: Date;
   public game: Game;
   public players: Player[];
   public winner: Player;
 
   constructor(obj?: IMatch){
     this.id = obj && obj.id || "";
-    this.date = obj && obj.date || "";
+    this.date = obj && obj.date || new Date();
     this.game = obj && obj.game || new Game();
     this.players = obj && obj.players || new Array<Player>();
     this.winner = obj && obj.winner || new Player();
