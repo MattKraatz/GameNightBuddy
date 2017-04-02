@@ -24,7 +24,6 @@ export class MatchService {
       .map(res => res.json())
       .map(matches => {
         // Map the Id from Firebase to each match's Id
-        console.log(matches);
         return Object.keys(matches).map((val => {
           var match = new Match(matches[val]);
           match.id = val;
@@ -36,7 +35,6 @@ export class MatchService {
   }
 
   createMatch(match: Match) {
-    console.dir(match);
     this.http.post(`${firebaseConfig.databaseURL}/v1/matches.json`, JSON.stringify(match), HEADER)
       .map(res => {
         // UUID is returned, add it to the match object
