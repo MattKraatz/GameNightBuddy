@@ -12,7 +12,7 @@
     <label for="owner">Owner</label>
     <select [(ngModel)]="model.owner" name="owner" id="owner"
       #owner="ngModel" type="text" class="form-control" required >
-      <option *ngFor="let member of members" [value]="member">{{member.firstName + " " + member.lastName}}</option>
+      <option *ngFor="let member of members" [ngValue]="member">{{member.firstName + " " + member.lastName}}</option>
     </select>
     <div [hidden]="owner.valid || owner.pristine"
           class="alert alert-danger">
