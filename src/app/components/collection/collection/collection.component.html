@@ -1,34 +1,6 @@
 <div class="collection">
-  <h2>Games Available</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Game</th>
-        <th>Players</th>
-        <th>Owner</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+  <h2>Game Available</h2>
+  <app-game-list [games]="games | async"></app-game-list>
   <h2>New Game</h2>
-  <form>
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input name="name" type="text" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label for="owner">Owner</label>
-      <input name="owner" type="text" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label for="minPlayers">Minimum # of Players</label>
-      <input name="minPlayers" type="number" class="form-control" required />
-    </div>
-    <div class="form-group">
-      <label for="maxPlayers">Maximum # of Players</label>
-      <input name="maxPlayers" type="number" class="form-control" required />
-    </div>
-    <button class="btn btn-primary btn-block">Add</button>
-  </form>
+  <app-game-form [members]="members | async"></app-game-form>
 </div>

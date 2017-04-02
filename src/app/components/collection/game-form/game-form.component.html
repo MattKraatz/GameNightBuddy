@@ -1,0 +1,40 @@
+<form (ngSubmit)="onSubmit(ngModel); memberForm.reset()" #memberForm="ngForm">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input [(ngModel)]="model.name" name="name" id="name"
+      #name="ngModel" type="text" class="form-control" required />
+    <div [hidden]="name.valid || name.pristine"
+          class="alert alert-danger">
+      Name is required
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="owner">Owner</label>
+    <select [(ngModel)]="model.owner" name="owner" id="owner"
+      #owner="ngModel" type="text" class="form-control" required >
+      <option *ngFor="let member of members" [value]="member">{{member.firstName + " " + member.lastName}}</option>
+    </select>
+    <div [hidden]="owner.valid || owner.pristine"
+          class="alert alert-danger">
+      Owner is required
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="minPlayers">Minimum # of Players</label>
+    <input [(ngModel)]="model.minPlayers" name="minPlayers" id="minPlayers"
+      #minPlayers="ngModel" type="text" class="form-control" required />
+    <div [hidden]="minPlayers.valid || minPlayers.pristine"
+      class="alert alert-danger">
+      Minimum is required
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="maxPlayers">Maximum # of Players</label>
+    <input [(ngModel)]="model.maxPlayers" name="maxPlayers" id="maxPlayers"
+      #maxPlayers="ngModel" type="number" class="form-control" placeholder="optional" />
+  </div>
+  <button type="submit" class="btn btn-primary btn-block"
+    [disabled]="!memberForm.form.valid">
+    Add
+  </button>
+</form>

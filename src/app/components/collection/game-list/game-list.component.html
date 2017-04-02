@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Game</th>
+      <th>Players</th>
+      <th>Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let game of games">
+      <td>{{game.name}}</td>
+      <td>{{game.minPlayers + " - " + game.maxPlayers}}</td>
+      <td>{{game.owner.firstName + " " + game.owner.lastName}}</td>
+    </tr>
+  </tbody>
+</table>
