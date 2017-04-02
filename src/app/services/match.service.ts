@@ -36,6 +36,7 @@ export class MatchService {
   }
 
   createMatch(match: Match) {
+    console.dir(match);
     this.http.post(`${firebaseConfig.databaseURL}/v1/matches.json`, JSON.stringify(match), HEADER)
       .map(res => {
         // UUID is returned, add it to the match object

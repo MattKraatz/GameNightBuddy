@@ -29,6 +29,31 @@
           class="alert alert-danger">
       Players are required
     </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Score</th>
+          <th>First Time?</th>
+          <th>Team</th>
+        </tr>
+      </thead>
+      <tr *ngFor="let player of model.players">
+        <td>{{player.firstName + " " + player.lastName}}</td>
+        <td>
+          <input [(ngModel)]="player.score" name="player.score" id="player.score"
+            type="number" class="form-control" />
+        </td>
+        <td>
+          <input [(ngModel)]="player.firstTime" name="player.firstTime" id="player.firstTime"
+            type="checkbox" class="form-control" />
+        </td>
+        <td>
+          <input [(ngModel)]="player.team" name="player.team" id="player.team"
+            type="text" class="form-control" />
+        </td>
+      </tr>
+    </table>
   </div>
   <button type="submit" class="btn btn-primary btn-block"
     [disabled]="!matchForm.form.valid">

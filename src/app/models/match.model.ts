@@ -7,7 +7,6 @@ interface IMatch {
   date: Date;
   game: Game;
   players: Player[];
-  winner: Player;
 }
 
 export class Match {
@@ -15,14 +14,12 @@ export class Match {
   public date: Date;
   public game: Game;
   public players: Player[];
-  public winner: Player;
 
   constructor(obj?: IMatch){
     this.id = obj && obj.id || "";
     this.date = obj && obj.date || new Date();
     this.game = obj && obj.game || new Game();
     this.players = obj && obj.players || new Array<Player>();
-    this.winner = obj && obj.winner || new Player();
   }
   
 }
