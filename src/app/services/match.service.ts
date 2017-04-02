@@ -24,6 +24,7 @@ export class MatchService {
       .map(res => res.json())
       .map(matches => {
         // Map the Id from Firebase to each match's Id
+        console.log(matches);
         return Object.keys(matches).map((val => {
           var match = new Match(matches[val]);
           match.id = val;

@@ -7,5 +7,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngFor="let match of matches">
+        <td>{{match.date}}</td>
+        <td>{{match.game.name}}</td>
+        <td>{{match.players}}</td>
+      </tr>
     </tbody>
   </table>
