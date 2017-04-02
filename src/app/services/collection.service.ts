@@ -6,7 +6,6 @@ import {Http, Headers} from '@angular/http';
 
 import {AppStore} from '../models/appstore.model';
 import {Game} from '../models/game.model';
-import {Member} from '../models/member.model';
 import {firebaseConfig} from '../firebaseConfig';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
@@ -45,4 +44,5 @@ export class CollectionService {
       .map(payload => ({ type: 'CREATE_GAME', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
+
 }

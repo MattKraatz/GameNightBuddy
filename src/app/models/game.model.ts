@@ -23,5 +23,5 @@ export class Game {
     this.minPlayers = obj && obj.minPlayers || null;
     this.maxPlayers = obj && obj.maxPlayers || null;
   }
-
+  
 }

@@ -23,6 +23,7 @@ import {GameFormComponent} from './components/collection/game-form/game-form.com
 // Stores and Services
 import {members} from './stores/members.store';
 import {collection} from './stores/collection.store';
+import {matches} from './stores/matches.store';
 import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 
@@ -56,7 +57,7 @@ const appRoutes: Routes = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({members, collection})
+    StoreModule.provideStore({members, collection, matches})
   ],
   providers: [MembersService, CollectionService],
   bootstrap: [
