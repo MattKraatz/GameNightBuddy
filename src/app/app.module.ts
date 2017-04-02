@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import {StoreModule} from '@ngrx/store';
+import * as firebase from 'firebase';
 
 // Components
 import {AppComponent} from './app.component';
@@ -20,6 +21,8 @@ import { MemberListComponent } from './components/members/member-list/member-lis
 // Stores and Services
 import {members} from './stores/members.store';
 import {MembersService} from './services/members.service';
+
+// Private Keys
 
 const appRoutes: Routes = [
   {path: 'matches', component: MatchesComponent},
