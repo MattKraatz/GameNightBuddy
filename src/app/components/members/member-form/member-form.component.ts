@@ -15,10 +15,10 @@ export class MemberFormComponent implements OnInit {
   }
 
   // NEW MEMBER FORM //
-  model = new Member('1', 'Dr IQ', 'Strange', 'email@email.com');
+  model = new Member();
   submitted = false;
   onSubmit() {
-    var member = new Member(this.model.id, this.model.firstName, this.model.lastName, this.model.email);
+    var member = new Member(this.model);
     this.membersService.createMember(member);
   }
 

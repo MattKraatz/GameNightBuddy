@@ -16,15 +16,19 @@ export class MembersService {
   members: Observable<Array<Member>>;
   
   constructor(private store: Store<AppStore>, private http: Http) {
-    this.members = store.select('members'); // Bind an observable of our members to "MembersService"
+    this.members = store.select('members');
   }
 
   loadMembers() {
     this.http.get(`${firebaseConfig.databaseURL}/v1/members.json`)
       .map(res => res.json())
       .map(members => {
-        // Sanitize Firebase return
-        return Object.keys(members).map((val => new Member(val, members[val].firstName, members[val].lastName, members[val].email)))
+        // Map the Id from Firebase to each member's Id
+        return Object.keys(members).map((val => {
+          var member = new Member(members[val]);
+          member.id = val;
+          return member;
+        }))
       })
       .map(payload => ({ type: 'POPULATE_MEMBERS', payload }))
       .subscribe(action => this.store.dispatch(action));
@@ -33,7 +37,7 @@ export class MembersService {
   createMember(member: Member) {
     this.http.post(`${firebaseConfig.databaseURL}/v1/members.json`, JSON.stringify(member), HEADER)
       .map(res => {
-        // UUID is returned, add it to the member object
+        // Firebase Id is returned, add it to the member object
         member.id = res.json().name;
         return member;
       })

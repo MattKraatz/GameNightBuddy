@@ -19,10 +19,10 @@ export class GameFormComponent implements OnInit {
   }
 
   // NEW MEMBER FORM //
-  model = new Game('1', 'Stone Age', null, 2, 4);
+  model = new Game();
   submitted = false;
   onSubmit() {
-    var game = new Game(this.model.id, this.model.name, this.model.owner, this.model.minPlayers, this.model.maxPlayers);
+    var game = new Game(this.model);
     this.collectionService.createGame(game);
   }
 
