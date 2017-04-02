@@ -4,8 +4,6 @@ import {Member} from '../../../models/member.model';
 import {CollectionService} from '../../../services/collection.service';
 import {MembersService} from '../../../services/members.service';
 import {Observable} from "rxjs/Observable";
-import {Store} from '@ngrx/store';
-import {AppStore} from '../../../models/appstore.model';
 
 @Component({
   selector: 'app-collection',
@@ -17,7 +15,7 @@ export class CollectionComponent implements OnInit {
   games: Observable<Array<Game>>;
   members: Observable<Array<Member>>;
 
-  constructor(private collectionService: CollectionService, private membersService: MembersService, private store: Store<AppStore>) {
+  constructor(private collectionService: CollectionService, private membersService: MembersService) {
     this.games = collectionService.collection;
     collectionService.loadCollection();
 

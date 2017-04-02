@@ -11,12 +11,12 @@ import {firebaseConfig} from '../firebaseConfig';
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
 @Injectable()
-export class MatchesServices {
+export class MatchService {
   
-  collection: Observable<Array<Match>>;
+  matches: Observable<Array<Match>>;
   
   constructor(private store: Store<AppStore>, private http: Http) {
-    this.collection = store.select('matches');
+    this.matches = store.select('matches');
   }
 
   loadMatches() {
@@ -44,5 +44,4 @@ export class MatchesServices {
       .map(payload => ({ type: 'CREATE_MATCH', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
-  
 }

@@ -19,6 +19,8 @@ import {MemberFormComponent} from './components/members/member-form/member-form.
 import {MemberListComponent} from './components/members/member-list/member-list.component';
 import {GameListComponent} from './components/collection/game-list/game-list.component';
 import {GameFormComponent} from './components/collection/game-form/game-form.component';
+import {MatchListComponent} from './components/matches/match-list/match-list.component';
+import {MatchFormComponent} from './components/matches/match-form/match-form.component';
 
 // Stores and Services
 import {members} from './stores/members.store';
@@ -26,6 +28,7 @@ import {collection} from './stores/collection.store';
 import {matches} from './stores/matches.store';
 import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
+import {MatchService} from './services/match.service';
 
 // Private Keys
 
@@ -50,7 +53,9 @@ const appRoutes: Routes = [
     MemberFormComponent,
     MemberListComponent,
     GameListComponent,
-    GameFormComponent
+    GameFormComponent,
+    MatchListComponent,
+    MatchFormComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +64,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     StoreModule.provideStore({members, collection, matches})
   ],
-  providers: [MembersService, CollectionService],
+  providers: [MembersService, CollectionService, MatchService],
   bootstrap: [
     AppComponent
   ]
