@@ -18,10 +18,10 @@
         <a class="nav-link" routerLink="/matches" routerLinkActive="active">Matches</a>
       </li>
       <li class="nav-item" *ngIf="user && user.uid">
-        <a class="nav-link" (click)="logout()">Logout</a>
+        <a class="nav-link" routerLink="*" (click)="logout()">Logout</a>
       </li>
       <li class="nav-item" *ngIf="!user || !user.uid">
-        <a class="nav-link" (click)="login()">Login</a>
+        <a class="nav-link" routerLink="*" (click)="login()">Login</a>
       </li>
     </ul>
   </div>
