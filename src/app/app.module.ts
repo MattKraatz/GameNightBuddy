@@ -72,8 +72,8 @@ const authConfig = {
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({members, collection, matches}),
-    AngularFireModule.initializeApp(firebaseConfig)
+    StoreModule.provideStore({members, collection, matches, auth}),
+    AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
   providers: [MembersService, CollectionService, MatchService, AuthService],
   bootstrap: [
