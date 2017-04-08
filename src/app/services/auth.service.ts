@@ -33,6 +33,16 @@ export class AuthService {
     })
   }
 
+  isLoggedIn():Observable<boolean> {
+    return this.af.auth.map(auth => {
+      if (auth) {
+        return true;
+      }
+    }).catch(() => {
+      return Observable.of(false);
+    })
+  }
+
   loginWithFacebook() {
     // Redirect Method (default) reloads the page, triggering the constructor
     //  so no store dispatch necessary (handled in constructor)
@@ -70,7 +80,10 @@ export class AuthService {
   }
 
   logout() {
-    this.af.auth.logout();
+    this.af.auth.logout()
+    .then(response => {
+      console.log("logout", response);
+    })
     // No redirect on logout, update the store
     this.store.dispatch({type: "LOGOUT_USER", payload: {}});
   }
