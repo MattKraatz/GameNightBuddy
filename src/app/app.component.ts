@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 
 import {AuthService} from './services/auth.service';
-import {User} from './models/user.model';
+import {Auth} from './models/auth.model';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import {User} from './models/user.model';
 })
 export class AppComponent implements OnInit {
   title = 'Game Night Buddy';
-  user: Observable<User>;
+  user: Observable<Auth>;
 
   constructor(private authService: AuthService) {
     this.user = authService.user;

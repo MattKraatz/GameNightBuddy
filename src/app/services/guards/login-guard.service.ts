@@ -3,7 +3,6 @@ import {CanActivate, Router} from '@angular/router';
 import {Observable} from "rxjs/Observable";
 
 import {AuthService} from '../auth.service';
-import {User} from '../../models/user.model';
 
 @Injectable()
 export class LoginGuard implements CanActivate {

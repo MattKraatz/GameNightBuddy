@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from '../../../models/user.model';
+import {Auth} from '../../../models/auth.model';
 import {AuthService} from '../../../services/auth.service';
 
 @Component({
@@ -25,13 +25,13 @@ export class EmailAuthComponent implements OnInit {
   }
 
   // NEW USER FORM //
-  model = new User();
+  model = new Auth();
   onLoginSubmit() {
-    var user = new User(this.model);
+    var user = new Auth(this.model);
     this.authService.loginWithEmailAndPassword(user);
   }
   onRegisterSubmit() {
-    var user = new User(this.model);
+    var user = new Auth(this.model);
     this.authService.registerEmailAndPassword(user);
   }
 

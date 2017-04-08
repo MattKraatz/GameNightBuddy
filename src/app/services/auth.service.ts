@@ -5,12 +5,12 @@ import {Store} from '@ngrx/store';
 import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 
 import {AppStore} from '../models/appstore.model';
-import {User} from '../models/user.model';
+import {Auth} from '../models/Auth.model';
 
 @Injectable()
 export class AuthService {
   
-  user: Observable<User>;
+  user: Observable<Auth>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>) {
     this.user = store.select("auth");
@@ -19,9 +19,9 @@ export class AuthService {
       if(auth) {
         // user logged in
         if (auth.auth) {
-          var user = new User(auth.auth);
+          var user = new Auth(auth.auth);
         } else if (auth.facebook) {
-          var user = new User(auth.facebook);
+          var user = new Auth(auth.facebook);
           user.uid = auth.uid;
         }
         this.store.dispatch({type: "LOGIN_USER", payload: user})
@@ -39,7 +39,7 @@ export class AuthService {
     this.af.auth.login()
   }
 
-  loginWithEmailAndPassword(user: User) {
+  loginWithEmailAndPassword(user: Auth) {
     this.af.auth.login({
       email: user.email,
       password: user.password
@@ -56,7 +56,7 @@ export class AuthService {
     })
   }
 
-  registerEmailAndPassword(user: User) {
+  registerEmailAndPassword(user: Auth) {
     this.af.auth.createUser({
       email: user.email,
       password: user.password

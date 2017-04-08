@@ -1,4 +1,5 @@
-interface IUser {
+// Firebase Auth Object
+interface IAuth {
   uid: string;
   displayName: string;
   photoURL: string;
@@ -7,7 +8,7 @@ interface IUser {
   password?: string;
 }
 
-export class User {
+export class Auth {
 
   public uid: string;
   public displayName: string;
@@ -16,7 +17,7 @@ export class User {
   public email?: string;
   public password?: string;
 
-  constructor(obj?: IUser) {
+  constructor(obj?: IAuth) {
     this.uid = obj && obj.uid || "";
     this.displayName = obj && obj.displayName || "";
     this.photoURL = obj && obj.photoURL || "";
