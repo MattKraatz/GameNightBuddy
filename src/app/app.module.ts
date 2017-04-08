@@ -33,6 +33,7 @@ import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
 import {AuthService} from './services/auth.service';
 import {EmailAuthComponent} from './components/auth/email-auth/email-auth.component';
+import {AuthGuard} from './services/auth-guard.service';
 
 // Private Keys
 import {firebaseConfig} from './firebaseConfig';
@@ -42,7 +43,11 @@ const appRoutes: Routes = [
   {path: 'matches', component: MatchesComponent},
   {path: 'members', component: MembersComponent},
   {path: 'collection', component: CollectionComponent},
-  {path: 'login', component: LoginComponent},
+  {
+    path: 'login',
+    canActivate: [AuthGuard],
+    component: LoginComponent
+  },
   {path: 'email-auth', component: EmailAuthComponent},
   {path: '', component: HomeComponent},
   {path: '**', component: HomeComponent}
@@ -79,7 +84,7 @@ const authConfig = {
     StoreModule.provideStore({members, collection, matches, auth}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
-  providers: [MembersService, CollectionService, MatchService, AuthService],
+  providers: [MembersService, CollectionService, MatchService, AuthService, AuthGuard],
   bootstrap: [
     AppComponent
   ]
