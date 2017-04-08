@@ -33,16 +33,6 @@ export class AuthService {
     })
   }
 
-  isLoggedIn():Observable<boolean> {
-    return this.af.auth.map(auth => {
-      if (auth) {
-        return true;
-      }
-    }).catch(() => {
-      return Observable.of(false);
-    })
-  }
-
   loginWithFacebook() {
     // Redirect Method (default) reloads the page, triggering the constructor
     //  so no store dispatch necessary (handled in constructor)

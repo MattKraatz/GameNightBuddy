@@ -6,16 +6,10 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/" routerLinkActive="active">Home</a>
+        <a class="nav-link" routerLink="/explore" routerLinkActive="active">Explore</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/collection" routerLinkActive="active">Collection</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/members" routerLinkActive="active">Members</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/matches" routerLinkActive="active">Matches</a>
+        <a class="nav-link" *ngIf="user && user.uid" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>
       </li>
     </ul>
     <ul class="navbar-nav">
@@ -24,6 +18,9 @@
           {{user.displayName }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" routerLink="/my-collection">My Collection</a>
+          <a class="dropdown-item" routerLink="/my-matches">My Matches</a>
+          <a class="dropdown-item" routerLink="/profile">My Profile</a>          
           <a class="dropdown-item" (click)="logout()">Logout</a>
         </div>
       </li>

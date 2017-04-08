@@ -22,6 +22,9 @@ import {GameListComponent} from './components/collection/game-list/game-list.com
 import {GameFormComponent} from './components/collection/game-form/game-form.component';
 import {MatchListComponent} from './components/matches/match-list/match-list.component';
 import {MatchFormComponent} from './components/matches/match-form/match-form.component';
+import {UserProfileComponent} from './components/user/user-profile/user-profile.component';
+import {ExploreComponent} from './components/explore/explore.component';
+import {GameNightsComponent} from './components/game-nights/game-nights/game-nights.component';
 
 // Stores and Services
 import {members} from './stores/members.store';
@@ -33,8 +36,9 @@ import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
 import {AuthService} from './services/auth.service';
 import {EmailAuthComponent} from './components/auth/email-auth/email-auth.component';
-import {LoginGuard} from './services/login-guard.service';
-import {AuthGuard} from './services/auth-guard.service';
+import {LoginGuard} from './services/guards/login-guard.service';
+import {AuthGuard} from './services/guards/auth-guard.service';
+import {GameNightService} from './services/game-night.service';
 
 // Private Keys
 import {firebaseConfig} from './firebaseConfig';
@@ -42,17 +46,22 @@ import {firebaseConfig} from './firebaseConfig';
 // Route Definitions for NG Router
 const appRoutes: Routes = [
   {
-    path: 'matches',
+    path: 'profile',
+    component: UserProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'my-game-nights',
+    canActivate: [AuthGuard],
+    component: GameNightsComponent
+  },
+  {
+    path: 'my-matches',
     canActivate: [AuthGuard],
     component: MatchesComponent
   },
   {
-    path: 'members',
-    canActivate: [AuthGuard],
-    component: MembersComponent
-  },
-  {
-    path: 'collection',
+    path: 'my-collection',
     canActivate: [AuthGuard],
     component: CollectionComponent
   },
@@ -61,6 +70,7 @@ const appRoutes: Routes = [
     canActivate: [LoginGuard],
     component: LoginComponent
   },
+  {path: 'explore', component: ExploreComponent},
   {path: 'email-auth', component: EmailAuthComponent},
   {path: '', component: HomeComponent},
   {path: '**', component: HomeComponent}
@@ -87,7 +97,10 @@ const authConfig = {
     GameFormComponent,
     MatchListComponent,
     MatchFormComponent,
-    EmailAuthComponent
+    EmailAuthComponent,
+    UserProfileComponent,
+    ExploreComponent,
+    GameNightsComponent
   ],
   imports: [
     BrowserModule,
@@ -97,8 +110,15 @@ const authConfig = {
     StoreModule.provideStore({members, collection, matches, auth}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
-  providers: [MembersService, CollectionService, MatchService, AuthService,
-              LoginGuard, AuthGuard],
+  providers: [
+    MembersService,
+    CollectionService,
+    MatchService,
+    AuthService,
+    LoginGuard,
+    AuthGuard,
+    GameNightService
+  ],
   bootstrap: [
     AppComponent
   ]
