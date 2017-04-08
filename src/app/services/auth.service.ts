@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 
 import {AppStore} from '../models/appstore.model';
-import {Auth} from '../models/Auth.model';
+import {Auth} from '../models/auth.model';
 
 @Injectable()
 export class AuthService {

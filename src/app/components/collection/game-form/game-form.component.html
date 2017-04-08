@@ -9,17 +9,6 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="owner">Owner</label>
-    <select [(ngModel)]="model.owner" name="owner" id="owner"
-      #owner="ngModel" type="text" class="form-control" required >
-      <option *ngFor="let member of members" [ngValue]="member">{{member.firstName + " " + member.lastName}}</option>
-    </select>
-    <div [hidden]="owner.valid || owner.pristine"
-          class="alert alert-danger">
-      Owner is required
-    </div>
-  </div>
-  <div class="form-group">
     <label for="minPlayers">Minimum # of Players</label>
     <input [(ngModel)]="model.minPlayers" name="minPlayers" id="minPlayers"
       #minPlayers="ngModel" type="text" class="form-control" required />

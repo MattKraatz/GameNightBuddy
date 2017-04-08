@@ -10,7 +10,7 @@
     <tr *ngFor="let game of games">
       <td>{{game.name}}</td>
       <td>{{game.minPlayers + " - " + game.maxPlayers}}</td>
-      <td>{{game.owner.firstName + " " + game.owner.lastName}}</td>
+      <td>{{game.owner.displayName}}</td>
     </tr>
   </tbody>
 </table>
