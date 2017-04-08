@@ -32,6 +32,7 @@ import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
 import {AuthService} from './services/auth.service';
+import {EmailAuthComponent} from './components/auth/email-auth/email-auth.component';
 
 // Private Keys
 import {firebaseConfig} from './firebaseConfig';
@@ -41,11 +42,13 @@ const appRoutes: Routes = [
   {path: 'matches', component: MatchesComponent},
   {path: 'members', component: MembersComponent},
   {path: 'collection', component: CollectionComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'email-auth', component: EmailAuthComponent},
   {path: '', component: HomeComponent},
   {path: '**', component: HomeComponent}
 ];
 
-// Authorization Config for AngularFireModule
+// Default Authorization Config for AngularFireModule
 const authConfig = {
   provider: AuthProviders.Facebook,
   method: AuthMethods.Redirect
@@ -65,7 +68,8 @@ const authConfig = {
     GameListComponent,
     GameFormComponent,
     MatchListComponent,
-    MatchFormComponent
+    MatchFormComponent,
+    EmailAuthComponent
   ],
   imports: [
     BrowserModule,

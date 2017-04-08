@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
-import {AngularFire, AuthProviders} from 'angularfire2';
+import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 
 import {AppStore} from '../models/appstore.model';
 import {User} from '../models/user.model';
@@ -37,6 +37,36 @@ export class AuthService {
     // Redirect Method (default) reloads the page, triggering the constructor
     //  so no store dispatch necessary (handled in constructor)
     this.af.auth.login()
+  }
+
+  loginWithEmailAndPassword(user: User) {
+    this.af.auth.login({
+      email: user.email,
+      password: user.password
+    },
+    {
+      provider: AuthProviders.Password,
+      method: AuthMethods.Password,
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(response => {
+      console.error(response);
+    })
+  }
+
+  registerEmailAndPassword(user: User) {
+    this.af.auth.createUser({
+      email: user.email,
+      password: user.password
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(response => {
+      console.error(response);
+    })
   }
 
   logout() {

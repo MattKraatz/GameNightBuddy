@@ -4,6 +4,7 @@ interface IUser {
   photoURL: string;
   providerId: string;
   email?: string;
+  password?: string;
 }
 
 export class User {
@@ -13,6 +14,7 @@ export class User {
   public photoURL: string;
   public providerId: string;
   public email?: string;
+  public password?: string;
 
   constructor(obj?: IUser) {
     this.uid = obj && obj.uid || "";
@@ -20,5 +22,6 @@ export class User {
     this.photoURL = obj && obj.photoURL || "";
     this.providerId = obj && obj.providerId || "";
     this.email = obj && obj.email || "";
+    this.password = obj && obj.password || "";
   }
 }
