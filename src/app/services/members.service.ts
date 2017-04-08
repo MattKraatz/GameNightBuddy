@@ -6,7 +6,7 @@ import {Http, Headers} from '@angular/http';
 
 import {AppStore} from '../models/appstore.model';
 import {Member} from '../models/member.model';
-import {firebaseConfig} from '../firebaseConfig';
+import {firebaseConfig} from '../constants/firebaseConfig';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 

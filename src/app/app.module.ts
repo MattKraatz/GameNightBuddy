@@ -8,6 +8,23 @@ import {StoreModule} from '@ngrx/store';
 import * as firebase from 'firebase';
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 
+// Private Keys
+import {firebaseConfig} from './constants/firebaseConfig';
+
+// Stores and Services
+import {members} from './stores/members.store';
+import {collection} from './stores/collection.store';
+import {matches} from './stores/matches.store';
+import {auth} from './stores/auth.store';
+import {MembersService} from './services/members.service';
+import {CollectionService} from './services/collection.service';
+import {MatchService} from './services/match.service';
+import {AuthService} from './services/auth.service';
+import {EmailAuthComponent} from './components/auth/email-auth/email-auth.component';
+import {LoginGuard} from './services/guards/login-guard.service';
+import {AuthGuard} from './services/guards/auth-guard.service';
+import {GameNightService} from './services/game-night.service';
+
 // Components
 import {AppComponent} from './app.component';
 import {MatchesComponent} from './components/matches/matches/matches.component';
@@ -24,27 +41,50 @@ import {MatchListComponent} from './components/matches/match-list/match-list.com
 import {MatchFormComponent} from './components/matches/match-form/match-form.component';
 import {UserProfileComponent} from './components/user/user-profile/user-profile.component';
 import {ExploreComponent} from './components/explore/explore.component';
-import {GameNightsComponent} from './components/game-nights/game-nights/game-nights.component';
-
-// Stores and Services
-import {members} from './stores/members.store';
-import {collection} from './stores/collection.store';
-import {matches} from './stores/matches.store';
-import {auth} from './stores/auth.store';
-import {MembersService} from './services/members.service';
-import {CollectionService} from './services/collection.service';
-import {MatchService} from './services/match.service';
-import {AuthService} from './services/auth.service';
-import {EmailAuthComponent} from './components/auth/email-auth/email-auth.component';
-import {LoginGuard} from './services/guards/login-guard.service';
-import {AuthGuard} from './services/guards/auth-guard.service';
-import {GameNightService} from './services/game-night.service';
-
-// Private Keys
-import {firebaseConfig} from './firebaseConfig';
+import {GameNightListComponent} from './components/game-nights/game-night-list/game-night-list.component';
+import {GameNightHomeComponent} from './components/game-nights/game-night-home/game-night-home.component';
+import {GameNightCollectionComponent} from './components/game-nights/game-night-collection/game-night-collection.component';
+import {GameNightMatchesComponent} from './components/game-nights/game-night-matches/game-night-matches.component';
+import {GameNightRegistrationComponent} from './components/game-nights/game-night-registration/game-night-registration.component';
+import {GameNightMembersComponent} from './components/game-nights/game-night-members/game-night-members.component';
+import {GameNightNavbarComponent} from './components/game-nights/game-night-navbar/game-night-navbar.component';
+import {GameNightComponent} from './components/game-nights/game-night/game-night.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
+  // GAME NIGHTS
+  {
+    path: 'game-night/:id',
+    component: GameNightComponent,
+    children: [
+      {
+        path: 'members',
+        component: GameNightMembersComponent
+      },
+      {
+        path: 'collection',
+        component: GameNightCollectionComponent
+      },
+      {
+        path: 'matches',
+        component: GameNightMatchesComponent
+      },
+      {
+        path: '',
+        component: GameNightHomeComponent
+      },
+      {
+        path: '**',
+        component: GameNightHomeComponent
+      }
+    ]
+  },
+  {
+    path: 'new-game-night',
+    component: GameNightRegistrationComponent,
+    canActivate: [AuthGuard]
+  },
+  // USER
   {
     path: 'profile',
     component: UserProfileComponent,
@@ -53,7 +93,7 @@ const appRoutes: Routes = [
   {
     path: 'my-game-nights',
     canActivate: [AuthGuard],
-    component: GameNightsComponent
+    component: GameNightListComponent
   },
   {
     path: 'my-matches',
@@ -65,13 +105,16 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard],
     component: CollectionComponent
   },
+  // EXPLORE
+  {path: 'explore', component: ExploreComponent},
+  // AUTH
   {
     path: 'login',
     canActivate: [LoginGuard],
     component: LoginComponent
   },
-  {path: 'explore', component: ExploreComponent},
   {path: 'email-auth', component: EmailAuthComponent},
+  // DEFAULTS
   {path: '', component: HomeComponent},
   {path: '**', component: HomeComponent}
 ];
@@ -100,7 +143,14 @@ const authConfig = {
     EmailAuthComponent,
     UserProfileComponent,
     ExploreComponent,
-    GameNightsComponent
+    GameNightListComponent,
+    GameNightHomeComponent,
+    GameNightCollectionComponent,
+    GameNightMatchesComponent,
+    GameNightRegistrationComponent,
+    GameNightMembersComponent,
+    GameNightNavbarComponent,
+    GameNightComponent
   ],
   imports: [
     BrowserModule,
