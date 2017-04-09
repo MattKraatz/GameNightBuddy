@@ -25,7 +25,7 @@ import {EmailAuthComponent} from './components/auth/email-auth/email-auth.compon
 import {LoginGuard} from './services/guards/login-guard.service';
 import {AuthGuard} from './services/guards/auth-guard.service';
 import {GameNightService} from './services/game-night.service';
-import {GameNightListResolver} from './services/resolvers/game-night-list-resolver.service';
+import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
 
 // Components
 import {AppComponent} from './app.component';
@@ -59,6 +59,9 @@ const appRoutes: Routes = [
   {
     path: 'game-night/:id',
     component: GameNightComponent,
+    resolve: {
+      gameNight: GameNightResolver
+    },
     children: [
       {
         path: 'members',
@@ -171,7 +174,8 @@ const authConfig = {
     AuthService,
     LoginGuard,
     AuthGuard,
-    GameNightService
+    GameNightService,
+    GameNightResolver
   ],
   bootstrap: [
     AppComponent

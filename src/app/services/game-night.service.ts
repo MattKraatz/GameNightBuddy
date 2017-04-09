@@ -18,52 +18,65 @@ export class GameNightService {
   gameNight: Observable<GameNight>;
   myGameNights: Observable<Array<GameNight>>;
 
+  nightLoaded: boolean = false;
+  nightsLoaded: boolean = false;  
+
   constructor(private store: Store<AppStore>, private http: Http, private authService: AuthService) {
     this.gameNight = store.select("gameNight");
     this.myGameNights = store.select("myGameNights");
   }
 
-  loadGameNight() {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json`)
-      .map(res => res.json())
-      .map(gameNight => {
-        // Map the Id from Firebase to each member's Id
-        return Object.keys(gameNight).map((val => {
-          var night = new GameNight(gameNight[val]);
-          night.id = val;
+  loadGameNight(id: string) {
+    if (!this.nightLoaded) {
+      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights/${id}.json`)
+        .map(res => res.json())
+        .map(gameNight => {
+          var night = new GameNight(gameNight);
+          // Attach the Id from Firebase to the nights's Id        
+          night.id = id;
+          // Map the Id from Firebase to each host's Id
+          night.hosts = Object.keys(night.hosts).map((val => {
+            var auth = new Auth(night.hosts[val]);
+            auth.uid = val;
+            return auth;
+          }))
           return night;
-        }))[0]
-      })
-      .map(payload => ({ type: 'POPULATE_NIGHT', payload }))
-      .subscribe(action => this.store.dispatch(action));
+        })
+        .map(payload => ({ type: 'POPULATE_NIGHT', payload }))
+        .subscribe(action => this.store.dispatch(action));
+    }
+    this.nightLoaded = true;
   }
 
   loadMyGameNights() {
-    var uid = this.authService.getCurrentUser();
-    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy="hosts"&startAt="${uid}"`)
-      .map(res => res.json())
-      .map(gameNights => {
-        // Map the Id from Firebase to each night's Id
-        return Object.keys(gameNights).map((val => {
-          var night = new GameNight(gameNights[val]);
-          night.id = val;
-          // Map the Id from Firebase to each host's Id
-          night.hosts = Object.keys(gameNights[val].hosts).map((val2 => {
-            var auth = new Auth(gameNights[val].hosts[val2]);
-            auth.uid = val2;
-            return auth;
+    if (!this.nightsLoaded) {
+      var uid = this.authService.getCurrentUser();
+      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy="hosts"&startAt="${uid}"`)
+        .map(res => res.json())
+        .map(gameNights => {
+          // Map the Id from Firebase to each night's Id
+          return Object.keys(gameNights).map((val => {
+            var night = new GameNight(gameNights[val]);
+            night.id = val;
+            // Map the Id from Firebase to each host's Id
+            night.hosts = Object.keys(gameNights[val].hosts).map((val2 => {
+              var auth = new Auth(gameNights[val].hosts[val2]);
+              auth.uid = val2;
+              return auth;
+            }))
+            // // Map the Id from Firebase to each member's Id
+            // night.members = Object.keys(gameNights[val].members).map((val2 => {
+            //   var auth = new Auth(gameNights[val].members[val2]);
+            //   auth.uid = val2;
+            //   return auth;
+            // }))
+            return night;
           }))
-          // // Map the Id from Firebase to each member's Id
-          // night.members = Object.keys(gameNights[val].members).map((val2 => {
-          //   var auth = new Auth(gameNights[val].members[val2]);
-          //   auth.uid = val2;
-          //   return auth;
-          // }))
-          return night;
-        }))
-      })
-      .map(payload => ({ type: 'POPULATE_NIGHTS', payload }))
-      .subscribe(action => this.store.dispatch(action));
+        })
+        .map(payload => ({ type: 'POPULATE_NIGHTS', payload }))
+        .subscribe(action => this.store.dispatch(action));
+    }
+    this.nightsLoaded = true;
   }
 
   createGameNight(night: GameNight) {
