@@ -24,7 +24,7 @@ export class GameNightService {
   }
 
   loadGameNight() {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy=id&equalTo=${this.authService.getCurrentUser()}`)
+    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json`)
       .map(res => res.json())
       .map(gameNight => {
         // Map the Id from Firebase to each member's Id
