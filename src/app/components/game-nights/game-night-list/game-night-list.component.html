@@ -1,3 +1,21 @@
-<p>
-  game-night-list works!
-</p>
+<h2>My Game Nights</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Hosts</th>
+      <th>Members</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let night of gameNights">
+      <td>{{night.name}}</td>
+      <td>
+        <span *ngFor="let host of night.hosts">{{host.displayName }}</span>
+      </td>
+      <td>
+        <span *ngFor="let member of night.members">{{member.displayName }}</span>
+      </td>
+    </tr>
+  </tbody>
+</table>

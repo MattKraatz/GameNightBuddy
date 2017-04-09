@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+
+import {GameNight} from '../../../models/game-night.model';
 
 @Component({
   selector: 'app-game-night-list',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameNightListComponent implements OnInit {
 
-  constructor() { }
+  @Input() gameNights: GameNight[];
+
+  constructor() {}
 
   ngOnInit() {
   }

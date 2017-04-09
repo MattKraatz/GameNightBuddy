@@ -12,10 +12,11 @@ import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 import {firebaseConfig} from './constants/firebaseConfig';
 
 // Stores and Services
-import {members} from './stores/members.store';
 import {collection} from './stores/collection.store';
 import {matches} from './stores/matches.store';
 import {auth} from './stores/auth.store';
+import {gameNight} from './stores/game-night.store';
+import {myGameNights} from './stores/my-game-nights.store';
 import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
@@ -24,6 +25,7 @@ import {EmailAuthComponent} from './components/auth/email-auth/email-auth.compon
 import {LoginGuard} from './services/guards/login-guard.service';
 import {AuthGuard} from './services/guards/auth-guard.service';
 import {GameNightService} from './services/game-night.service';
+import {GameNightListResolver} from './services/resolvers/game-night-list-resolver.service';
 
 // Components
 import {AppComponent} from './app.component';
@@ -49,6 +51,7 @@ import {GameNightRegistrationComponent} from './components/game-nights/game-nigh
 import {GameNightMembersComponent} from './components/game-nights/game-night-members/game-night-members.component';
 import {GameNightNavbarComponent} from './components/game-nights/game-night-navbar/game-night-navbar.component';
 import {GameNightComponent} from './components/game-nights/game-night/game-night.component';
+import { MyGameNightsComponent } from './components/game-nights/my-game-nights/my-game-nights.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -150,14 +153,15 @@ const authConfig = {
     GameNightRegistrationComponent,
     GameNightMembersComponent,
     GameNightNavbarComponent,
-    GameNightComponent
+    GameNightComponent,
+    MyGameNightsComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({members, collection, matches, auth}),
+    StoreModule.provideStore({collection, matches, auth, gameNight, myGameNights}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
   providers: [

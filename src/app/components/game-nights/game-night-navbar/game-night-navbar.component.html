@@ -1,3 +1,19 @@
-<p>
-  game-night-navbar works!
-</p>
+<nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="/game-night/12345">{{gameNight.name}}</a>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/game-night/12345/collection" routerLinkActive="active">Collection</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/game-night/12345/members" routerLinkActive="active">Members</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/game-night/12345/matches" routerLinkActive="active">Matches</a>
+      </li>
+    </ul>
+  </div>
+</nav>

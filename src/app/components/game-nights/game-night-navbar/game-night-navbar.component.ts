@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
+import {GameNight} from '../../../models/game-night.model';
 
 @Component({
   selector: 'app-game-night-navbar',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./game-night-navbar.component.css']
 })
 export class GameNightNavbarComponent implements OnInit {
+
+  @Input() gameNight: GameNight;
 
   constructor() { }
 

@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Observable} from "rxjs/Observable";
+
+import {GameNight} from '../../../models/game-night.model';
+import {GameNightService} from '../../../services/game-night.service';
 
 @Component({
   selector: 'app-game-night',
@@ -7,7 +11,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameNightComponent implements OnInit {
 
-  constructor() { }
+  gameNight: Observable<GameNight>;
+
+  constructor(private gameNightService: GameNightService) {
+    this.gameNight = gameNightService.gameNight;
+  }
 
   ngOnInit() {
   }
