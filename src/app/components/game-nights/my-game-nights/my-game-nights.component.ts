@@ -11,7 +11,7 @@ import {GameNightService} from '../../../services/game-night.service';
 })
 export class MyGameNightsComponent implements OnInit {
 
-  gameNights: Observable<GameNight[]>;
+  gameNights: Observable<Array<GameNight>>;
 
   constructor(private gameNightService: GameNightService) {
     this.gameNights = gameNightService.myGameNights;

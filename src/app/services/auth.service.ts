@@ -33,6 +33,19 @@ export class AuthService {
     })
   }
 
+  getCurrentUser(): string {
+    var output: string;
+    this.af.auth.subscribe(auth => {
+      if(auth) {
+        // user logged in
+        if (auth.auth) {
+          output = auth.uid;
+        }
+      }
+    })
+    return output;
+  }
+
   loginWithFacebook() {
     // Redirect Method (default) reloads the page, triggering the constructor
     //  so no store dispatch necessary (handled in constructor)

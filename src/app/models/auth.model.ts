@@ -1,5 +1,5 @@
 // Firebase Auth Object
-interface IAuth {
+export interface IAuth {
   uid: string;
   displayName: string;
   photoURL: string;
