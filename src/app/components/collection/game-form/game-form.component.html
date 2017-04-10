@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit(ngModel); gameForm.reset()" #gameForm="ngForm">
+<form (ngSubmit)="addGame.emit(model); gameForm.reset()" #gameForm="ngForm">
   <div class="form-group">
     <label for="name">Name</label>
     <input [(ngModel)]="model.name" name="name" id="name"

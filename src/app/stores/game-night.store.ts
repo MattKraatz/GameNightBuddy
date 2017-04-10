@@ -1,15 +1,16 @@
-export const gameNight = (state: any = [], {type, payload}) => {
+import {GameNight} from '../models/game-night.model';
+
+export const gameNight = (state: GameNight, {type, payload}) => {
   switch (type) {
     case "POPULATE_NIGHT":
       return payload;
+    case 'CREATE_GAME_IN_GAME_NIGHT':
+      state.collection.push(payload);
+      return state;
     case 'UPDATE_NIGHT':
-      return state.map(night => {
-        return night.id === payload.id ? Object.assign({}, night, payload) : night;
-      });
+      return state.id === payload.id ? Object.assign({}, state, payload) : state;
     case 'DELETE_NIGHT':
-      return state.filter(night => {
-        return night.id !== payload.id;
-      });
+      return new GameNight();
     default:
       return state;
   }

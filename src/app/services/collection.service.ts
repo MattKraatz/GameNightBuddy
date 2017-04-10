@@ -45,4 +45,16 @@ export class CollectionService {
       .subscribe(action => this.store.dispatch(action));
   }
 
+  createGameInGameNightCollection(game: Game, id: string) {
+    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), HEADER)
+      .map(res => {
+        // UUID is returned, add it to the game object
+        game.id = res.json().name;
+        return game;
+      })
+      .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
+      .subscribe(action => this.store.dispatch(action));
+
+  }
+
 }

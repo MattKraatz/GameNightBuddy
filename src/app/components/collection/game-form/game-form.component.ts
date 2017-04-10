@@ -12,6 +12,7 @@ import {AuthService} from '../../../services/auth.service';
 export class GameFormComponent implements OnInit {
 
   @Input() members: Member[];
+  @Output() addGame = new EventEmitter();
 
   constructor(private collectionService: CollectionService, private authService: AuthService) { }
 
@@ -20,14 +21,4 @@ export class GameFormComponent implements OnInit {
 
   // NEW MEMBER FORM //
   model = new Game();
-  onSubmit() {
-    var game = new Game(this.model);
-    this.authService.user.subscribe(
-      user => {
-        game.owner = user;
-        this.collectionService.createGame(game);
-      }
-    )
-  }
-
 }

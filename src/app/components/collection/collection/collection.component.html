@@ -2,5 +2,5 @@
   <h2>Games Available</h2>
   <app-game-list [games]="games | async"></app-game-list>
   <h2>New Game</h2>
-  <app-game-form [members]="members | async"></app-game-form>
+  <app-game-form [members]="members | async" (addGame)="addGame($event)"></app-game-form>
 </div>

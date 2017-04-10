@@ -1,4 +1,6 @@
-export const collection = (state: any = [], {type, payload}) => {
+import {Game} from '../models/game.model';
+
+export const collection = (state: Game[], {type, payload}) => {
   switch (type) {
     case "POPULATE_COLLECTION":
       return payload;

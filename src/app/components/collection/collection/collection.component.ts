@@ -3,6 +3,7 @@ import {Game} from '../../../models/game.model';
 import {Member} from '../../../models/member.model';
 import {CollectionService} from '../../../services/collection.service';
 import {MembersService} from '../../../services/members.service';
+import {AuthService} from '../../../services/auth.service';
 import {Observable} from "rxjs/Observable";
 
 @Component({
@@ -15,7 +16,7 @@ export class CollectionComponent implements OnInit {
   games: Observable<Array<Game>>;
   members: Observable<Array<Member>>;
 
-  constructor(private collectionService: CollectionService, private membersService: MembersService) {
+  constructor(private collectionService: CollectionService, private membersService: MembersService, private authService: AuthService) {
     this.games = collectionService.collection;
     collectionService.loadCollection();
 
@@ -24,6 +25,16 @@ export class CollectionComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  addGame(model: Game) {
+    var game = new Game(model);
+    this.authService.user.subscribe(
+      user => {
+        game.owner = user;
+        this.collectionService.createGame(game);
+      }
+    )
   }
   
 }
