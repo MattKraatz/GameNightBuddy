@@ -1,20 +1,15 @@
-export interface IMember {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+import {Auth, IAuth} from './auth.model';
+
+export interface IMember extends IAuth {
+  dateJoined: string;
 }
 
-export class Member {
-  public id: string;
-  public firstName: string;
-  public lastName: string;
-  public email: string;
+export class Member extends Auth {
+  
+  public dateJoined: string;
 
   constructor(obj?: IMember) {
-    this.id = obj && obj.id || "";
-    this.firstName = obj && obj.firstName || "";
-    this.lastName = obj && obj.lastName || "";
-    this.email = obj && obj.email || "";
+    super(obj)
+    this.dateJoined = obj && obj.dateJoined || Date.now().toString();
   }
 }

@@ -19,7 +19,7 @@ export class MemberFormComponent implements OnInit {
   submitted = false;
   onSubmit() {
     var member = new Member(this.model);
-    this.membersService.createMember(member);
+    this.membersService.createMember(member, "");
   }
 
 }

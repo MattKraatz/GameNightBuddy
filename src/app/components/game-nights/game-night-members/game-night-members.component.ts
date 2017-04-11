@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+
+import {GameNight} from '../../../models/game-night.model';
+import {Auth} from '../../../models/auth.model';
+
 
 @Component({
   selector: 'app-game-night-members',
@@ -7,7 +12,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameNightMembersComponent implements OnInit {
 
-  constructor() { }
+  members: Auth[];
+  nightId: string;
+
+  constructor(route: ActivatedRoute) {
+    route.parent.data.subscribe(data => {
+      var night: GameNight = data['gameNight'];
+      this.members = night.members;
+      this.nightId = night.id;
+    })
+  }
 
   ngOnInit() {
   }
