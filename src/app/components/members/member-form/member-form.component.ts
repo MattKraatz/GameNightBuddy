@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {Member} from '../../../models/member.model';
 import {MembersService} from '../../../services/members.service';
 
@@ -9,6 +9,8 @@ import {MembersService} from '../../../services/members.service';
 })
 export class MemberFormComponent implements OnInit {
 
+  @Output() addMember = new EventEmitter();
+
   constructor(private membersService: MembersService) { }
 
   ngOnInit() {
@@ -16,10 +18,4 @@ export class MemberFormComponent implements OnInit {
 
   // NEW MEMBER FORM //
   model = new Member();
-  submitted = false;
-  onSubmit() {
-    var member = new Member(this.model);
-    this.membersService.createMember(member, "");
-  }
-
 }

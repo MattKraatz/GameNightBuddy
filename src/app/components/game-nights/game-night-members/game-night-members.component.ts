@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {GameNight} from '../../../models/game-night.model';
-import {Auth} from '../../../models/auth.model';
-
+import {Member} from '../../../models/member.model';
+import {MembersService} from '../../../services/members.service';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-game-night-members',
@@ -12,10 +13,10 @@ import {Auth} from '../../../models/auth.model';
 })
 export class GameNightMembersComponent implements OnInit {
 
-  members: Auth[];
+  members: Member[];
   nightId: string;
 
-  constructor(route: ActivatedRoute) {
+  constructor(route: ActivatedRoute, private membersService: MembersService, private authService: AuthService) {
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
       this.members = night.members;
@@ -24,6 +25,11 @@ export class GameNightMembersComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  addMember(model: Member) {
+    var member = new Member(model);
+    this.membersService.createMember(model, this.nightId);
   }
 
 }

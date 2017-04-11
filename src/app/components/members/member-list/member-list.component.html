@@ -1,13 +1,13 @@
 <table class="table">
     <thead>
       <tr>
-        <th>Index</th>
+        <th>Date Joined</th>
         <th>Name</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let member of members">
-        <td>{{member.id}}</td>
+        <td>{{member.dateJoined}}</td>
         <td>{{member.firstName + " " + member.lastName}}</td>
       </tr>
     </tbody>

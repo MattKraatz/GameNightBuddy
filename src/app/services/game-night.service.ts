@@ -10,6 +10,7 @@ import {GameNight} from '../models/game-night.model';
 import {Game} from '../models/game.model';
 import {Auth, IAuth} from '../models/auth.model';
 import {AuthService} from './auth.service';
+import {Member} from '../models/member.model';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -41,6 +42,12 @@ export class GameNightService {
             auth.uid = val;
             return auth;
           }))
+          night.members = Object.keys(night.members).map((val => {
+              var member = new Member(night.members[val]);
+              member.uid = val;
+              return member;
+            }))
+          console.log(night.members);
           // Map the Id from Firebase to each game's Id
           night.collection = Object.keys(night.collection).map((val => {
             var game = new Game(night.collection[val]);
@@ -71,12 +78,12 @@ export class GameNightService {
               auth.uid = val2;
               return auth;
             }))
-            // // Map the Id from Firebase to each member's Id
-            // night.members = Object.keys(gameNights[val].members).map((val2 => {
-            //   var auth = new Auth(gameNights[val].members[val2]);
-            //   auth.uid = val2;
-            //   return auth;
-            // }))
+            // Map the Id from Firebase to each member's Id
+            night.members = Object.keys(gameNights[val].members).map((val2 => {
+              var member = new Member(gameNights[val].members[val2]);
+              member.uid = val2;
+              return member;
+            }))
             return night;
           }))
         })
