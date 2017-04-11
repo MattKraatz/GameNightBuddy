@@ -47,7 +47,6 @@ export class GameNightService {
               member.uid = val;
               return member;
             }))
-          console.log(night.members);
           // Map the Id from Firebase to each game's Id
           night.collection = Object.keys(night.collection).map((val => {
             var game = new Game(night.collection[val]);
