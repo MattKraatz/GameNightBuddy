@@ -32,7 +32,7 @@ export class GameNightCollectionComponent implements OnInit {
     this.authService.user.subscribe(
       user => {
         game.owner = user;
-        this.collectionService.createGameInGameNightCollection(game, this.nightId);
+        this.collectionService.createGameInGameNightAndMyCollection(game, this.nightId);
       }
     )
   }

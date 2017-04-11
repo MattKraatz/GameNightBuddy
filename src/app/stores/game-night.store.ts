@@ -1,6 +1,6 @@
 import {GameNight} from '../models/game-night.model';
 
-export const gameNight = (state: GameNight, {type, payload}) => {
+export const gameNight = (state: GameNight = new GameNight(), {type, payload}) => {
   switch (type) {
     case "POPULATE_NIGHT":
       return payload;

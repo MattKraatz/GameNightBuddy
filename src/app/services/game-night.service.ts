@@ -7,6 +7,7 @@ import {Http, Headers} from '@angular/http';
 import {AppStore} from '../models/appstore.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
 import {GameNight} from '../models/game-night.model';
+import {Game} from '../models/game.model';
 import {Auth, IAuth} from '../models/auth.model';
 import {AuthService} from './auth.service';
 
@@ -39,6 +40,12 @@ export class GameNightService {
             var auth = new Auth(night.hosts[val]);
             auth.uid = val;
             return auth;
+          }))
+          // Map the Id from Firebase to each game's Id
+          night.collection = Object.keys(night.collection).map((val => {
+            var game = new Game(night.collection[val]);
+            game.id = val;
+            return game;
           }))
           return night;
         })

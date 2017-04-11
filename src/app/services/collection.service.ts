@@ -54,7 +54,20 @@ export class CollectionService {
       })
       .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
       .subscribe(action => this.store.dispatch(action));
-
   }
 
+  createGameInGameNightAndMyCollection(game: Game, id: string) {
+    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
+      .map(res => {
+        // UUID is returned, add it to the game object
+        game.id = res.json().name;
+        this.http.put(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection/${game.id}.json`, JSON.stringify(game), HEADER)
+          .map(res => game)
+          .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
+          .subscribe(action => this.store.dispatch(action));
+        return game;
+      })
+      .map(payload => ({ type: 'CREATE_GAME', payload }))
+      .subscribe(action => this.store.dispatch(action));
+  }
 }
