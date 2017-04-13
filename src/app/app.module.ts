@@ -26,6 +26,7 @@ import {LoginGuard} from './services/guards/login-guard.service';
 import {AuthGuard} from './services/guards/auth-guard.service';
 import {GameNightService} from './services/game-night.service';
 import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
+import {ProfileCompleteGuard} from './services/guards/profile-complete-guard.service';
 
 // Components
 import {AppComponent} from './app.component';
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
     resolve: {
       gameNight: GameNightResolver
     },
+    canActivate: [ProfileCompleteGuard],
     children: [
       {
         path: 'members',
@@ -88,7 +90,7 @@ const appRoutes: Routes = [
   {
     path: 'new-game-night',
     component: GameNightRegistrationComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, ProfileCompleteGuard]
   },
   // USER
   {
@@ -98,17 +100,17 @@ const appRoutes: Routes = [
   },
   {
     path: 'my-game-nights',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, ProfileCompleteGuard],
     component: MyGameNightsComponent
   },
   {
     path: 'my-matches',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, ProfileCompleteGuard],
     component: MatchesComponent
   },
   {
     path: 'my-collection',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, ProfileCompleteGuard],
     component: CollectionComponent
   },
   // EXPLORE
@@ -175,7 +177,8 @@ const authConfig = {
     LoginGuard,
     AuthGuard,
     GameNightService,
-    GameNightResolver
+    GameNightResolver,
+    ProfileCompleteGuard
   ],
   bootstrap: [
     AppComponent

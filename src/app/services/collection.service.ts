@@ -62,8 +62,8 @@ export class CollectionService {
         // UUID is returned, add it to the game object
         game.id = res.json().name;
         this.http.put(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection/${game.id}.json`, JSON.stringify(game), HEADER)
-          .map(res => game)
-          .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
+          // ignore the results (res), input is the payload
+          .map(res => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', game }))
           .subscribe(action => this.store.dispatch(action));
         return game;
       })

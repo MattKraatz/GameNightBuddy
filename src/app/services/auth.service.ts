@@ -4,6 +4,7 @@ import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
 import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 import {Http, Headers} from '@angular/http';
+import {Router} from '@angular/router';
 
 import {AppStore} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
@@ -15,10 +16,12 @@ const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 export class AuthService {
   
   user: Observable<Auth>;
+  currentUser: Auth;
   
-  constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http) {
+  constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http, private router: Router) {
     this.user = store.select("auth");
-    // Resolve Auth status during construction
+    this.user.subscribe(auth => this.currentUser = auth);
+    // Resolve initial Auth status during construction
     this.af.auth.subscribe(auth => {
       if(auth) {
         // user logged in
@@ -32,7 +35,7 @@ export class AuthService {
       }
       else {
         // user not logged in
-        this.store.dispatch({type: "LOGOUT_USER", payload: ""});
+        this.store.dispatch({type: "LOGOUT_USER", payload: new Auth()});
       }
     })
   }
@@ -49,25 +52,32 @@ export class AuthService {
         .subscribe(action => this.store.dispatch(action));
   }
 
-  getCurrentUser(): string {
-    var output: string;
+  // TODO: update this method to retrieve status from this.user Observable instead of AF
+  // Add a static user object that accepts the value of the subscribed emmission in the constructor
+  getCurrentUser(): Auth {
+    var output: Auth;
     this.af.auth.subscribe(auth => {
       if(auth) {
         // user logged in
-        if (auth.auth) {
-          output = auth.uid;
-        }
+        if (auth.auth) output = auth.auth;
       }
     })
     return output;
   }
 
+  updateUserInFB(user: Auth) {
+    this.http.put(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`,JSON.stringify(user),HEADER)
+      .map(res => ({ type: 'LOGIN_USER', payload: user }))
+      .subscribe(action => this.store.dispatch(action));
+  }
+
   loginWithFacebook() {
     // Redirect Method (default) reloads the page, triggering the constructor
     //  so no store dispatch necessary (handled in constructor)
-    this.af.auth.login()
+    this.af.auth.login();
   }
 
+  // TODO: call getAuthRecordFromFB() in this method
   loginWithEmailAndPassword(user: Auth) {
     this.af.auth.login({
       email: user.email,
@@ -82,9 +92,10 @@ export class AuthService {
     })
     .catch(response => {
       console.error(response);
-    })
+    });
   }
 
+  // TODO: call getAuthRecordFromFB() in this method
   registerEmailAndPassword(user: Auth) {
     this.af.auth.createUser({
       email: user.email,
@@ -95,16 +106,18 @@ export class AuthService {
     })
     .catch(response => {
       console.error(response);
-    })
+    });
   }
 
+  // TODO: redirect the user on logout to home
   logout() {
     this.af.auth.logout()
     .then(response => {
       console.log("logout", response);
-    })
+    });
     // No redirect on logout, update the store
     this.store.dispatch({type: "LOGOUT_USER", payload: {}});
+    this.router.navigate(['/']);
   }
 
 }
