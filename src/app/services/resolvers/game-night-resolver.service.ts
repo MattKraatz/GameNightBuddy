@@ -12,10 +12,11 @@ export class GameNightResolver implements Resolve<GameNight> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<GameNight> {
     let id = route.params['id'];
+    let loaded: boolean = this.gameNightService.nightLoaded;
     this.gameNightService.loadGameNight(id);
     // Complete the Observable by calling .first
     // If the Game Night was already loaded, take the first value, else take the second
-    return this.gameNightService.nightLoaded ?
+    return loaded ?
       this.gameNightService.gameNight.first() :
       this.gameNightService.gameNight.skip(1).first();
   }
