@@ -25,7 +25,8 @@ export class UserSearchComponent implements OnInit {
 
   // let's do this locally for now, should probably integrate this into the store long-term
   doSearch() {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/users.json?orderBy="email"&startAt="${this.model}"`,HEADER)
+    this.results = null;
+    this.http.get(`${firebaseConfig.databaseURL}/v1/users.json?orderBy="email"&equalTo="${this.model}"`,HEADER)
       .map(res => res.json())
       .map(auths => {
         this.results = Object.keys(auths).map((val => {

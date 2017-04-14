@@ -67,7 +67,6 @@ export class GameNightService {
       this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy="hosts"&startAt="${uid}"`)
         .map(res => res.json())
         .map(gameNights => {
-          console.log(gameNights);
           // Map the Id from Firebase to each night's Id
           return Object.keys(gameNights).map((val => {
             var night = new GameNight(gameNights[val]);

@@ -17,6 +17,8 @@ export class AuthService {
   
   user: Observable<Auth>;
   currentUser: Auth;
+
+  public userLoaded: boolean = false;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http, private router: Router) {
     this.user = store.select("auth");
@@ -49,7 +51,10 @@ export class AuthService {
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))
-        .subscribe(action => this.store.dispatch(action));
+        .subscribe(action => {
+          this.store.dispatch(action)
+          this.userLoaded = true;
+        });
   }
 
   // TODO: update this method to retrieve status from this.user Observable instead of AF
