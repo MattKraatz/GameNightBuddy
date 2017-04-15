@@ -105,11 +105,6 @@ const appRoutes: Routes = [
     component: MyGameNightsComponent
   },
   {
-    path: 'my-matches',
-    canActivate: [AuthGuard, ProfileCompleteGuard],
-    component: MatchesComponent
-  },
-  {
     path: 'my-collection',
     canActivate: [AuthGuard, ProfileCompleteGuard],
     component: CollectionComponent
