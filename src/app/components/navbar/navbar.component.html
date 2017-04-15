@@ -15,7 +15,7 @@
     <ul class="navbar-nav">
       <li class="nav-item dropdown" *ngIf="user && user.uid">
         <a class="nav-link dropdown-toggle" id="navbarProfileDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{user.displayName }}
+          {{user.displayName || user.email }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" routerLink="/my-collection">My Collection</a>

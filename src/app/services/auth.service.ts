@@ -46,8 +46,10 @@ export class AuthService {
     this.http.get(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`)
         .map(res => res.json())
         .map(res => {
-          user.firstName = res.firstName;
-          user.lastName = res.lastName;
+          if (res) {
+            user.firstName = res.firstName;
+            user.lastName = res.lastName;
+          }
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))

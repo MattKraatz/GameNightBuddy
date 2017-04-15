@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Http, Headers} from '@angular/http';
 
 import {Auth} from '../../../models/auth.model';
@@ -13,6 +13,9 @@ const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
   styleUrls: ['./user-search.component.css']
 })
 export class UserSearchComponent implements OnInit {
+
+  @Output() addMember = new EventEmitter();
+  @Input() members: Auth[];
 
   private results: Auth[];
 
@@ -29,12 +32,16 @@ export class UserSearchComponent implements OnInit {
     this.http.get(`${firebaseConfig.databaseURL}/v1/users.json?orderBy="email"&equalTo="${this.model}"`,HEADER)
       .map(res => res.json())
       .map(auths => {
-        this.results = Object.keys(auths).map((val => {
-            console.log(val);
+        // map the keys from Firebase to new Auth objects
+        this.results = Object.keys(auths)
+          .map((val => {
             var auth = new Auth(auths[val]);
             return auth;
-        }))
+          }))
+          // filter out any results that are already included in this game night
+          .filter(val => this.members.findIndex(mem => mem.email == val.email) < 0)
       })
       .subscribe()
   }
+
 }

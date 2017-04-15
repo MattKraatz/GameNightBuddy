@@ -35,11 +35,11 @@ export class MembersService {
   }
 
   createMember(member: Member, id: string) {
-    console.log(member);
     this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`, JSON.stringify(member), HEADER)
       .map(res => {
         // Firebase Id is returned, add it to the member object
         member.id = res.json().name;
+        member.dateJoined = res.json().dateJoined;
         return member;
       })
       .map(payload => ({ type: 'CREATE_MEMBER_IN_GAME_NIGHT', payload }))
