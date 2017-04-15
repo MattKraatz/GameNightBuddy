@@ -12,7 +12,7 @@
         <td>{{match.game.name}}</td>
         <td>
           <span *ngFor="let player of match.players">
-            {{player.firstName + " " + player.lastName}}, 
+            | {{player.firstName}} {{player.lastName}}
           </span>
         </td>
       </tr>

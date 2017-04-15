@@ -13,6 +13,7 @@ export class MatchFormComponent implements OnInit {
 
   @Input() games: Game[];
   @Input() members: Member[];
+  @Output() addMatch = new EventEmitter();
 
   constructor(private matchService: MatchService) { }
 
@@ -20,9 +21,5 @@ export class MatchFormComponent implements OnInit {
   }
 
   model = new Match();
-  onSubmit() {
-    var match = new Match(this.model);
-    this.matchService.createMatch(match);
-  }
 
 }

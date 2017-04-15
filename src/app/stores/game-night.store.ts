@@ -10,6 +10,9 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case 'CREATE_MEMBER_IN_GAME_NIGHT':
       state.members.push(payload);
       return state;
+    case 'CREATE_MATCH_IN_GAME_NIGHT':
+      state.matches.push(payload);
+      return state;
     case 'UPDATE_NIGHT':
       return state.id === payload.id ? Object.assign({}, state, payload) : state;
     case 'DELETE_NIGHT':

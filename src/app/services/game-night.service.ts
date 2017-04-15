@@ -11,6 +11,8 @@ import {Game} from '../models/game.model';
 import {Auth, IAuth} from '../models/auth.model';
 import {AuthService} from './auth.service';
 import {Member} from '../models/member.model';
+import {Match} from '../models/match.model';
+import {Player} from '../models/player.model';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -36,7 +38,8 @@ export class GameNightService {
           var night = new GameNight(gameNight);
           // Attach the Id from Firebase to the nights's Id        
           night.id = id;
-          // Map the Id from Firebase to each host's Id
+
+          /* Map the IDs from Firebase */
           night.hosts = Object.keys(night.hosts).map((val => {
             var auth = new Auth(night.hosts[val]);
             auth.uid = val;
@@ -47,12 +50,22 @@ export class GameNightService {
               member.uid = val;
               return member;
             }))
-          // Map the Id from Firebase to each game's Id
           night.collection = Object.keys(night.collection).map((val => {
             var game = new Game(night.collection[val]);
             game.id = val;
             return game;
           }))
+          night.matches = Object.keys(night.matches).map((val => {
+            var match = new Match(night.matches[val]);
+            match.id = val;
+            match.players = Object.keys(match.players).map(val => {
+              var player = new Player(match.players[val]);
+              player.id = val;
+              return player;
+            })
+            return match;
+          }))
+
           return night;
         })
         .map(payload => ({ type: 'POPULATE_NIGHT', payload }))

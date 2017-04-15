@@ -4,7 +4,6 @@ import {ActivatedRoute} from '@angular/router';
 import {GameNight} from '../../../models/game-night.model';
 import {Member} from '../../../models/member.model';
 import {MembersService} from '../../../services/members.service';
-import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-game-night-members',
@@ -16,7 +15,7 @@ export class GameNightMembersComponent implements OnInit {
   members: Member[];
   nightId: string;
 
-  constructor(route: ActivatedRoute, private membersService: MembersService, private authService: AuthService) {
+  constructor(route: ActivatedRoute, private membersService: MembersService) {
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
       this.members = night.members;
