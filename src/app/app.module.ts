@@ -54,6 +54,7 @@ import {GameNightNavbarComponent} from './components/game-nights/game-night-navb
 import {GameNightComponent} from './components/game-nights/game-night/game-night.component';
 import {MyGameNightsComponent} from './components/game-nights/my-game-nights/my-game-nights.component';
 import {UserSearchComponent} from './components/members/user-search/user-search.component';
+import { MatchDetailComponent } from './components/matches/match-detail/match-detail.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -77,6 +78,10 @@ const appRoutes: Routes = [
       {
         path: 'matches',
         component: GameNightMatchesComponent
+      },
+      {
+        path: 'matches/:id',
+        component: MatchDetailComponent
       },
       {
         path: '',
@@ -156,7 +161,8 @@ const authConfig = {
     GameNightNavbarComponent,
     GameNightComponent,
     MyGameNightsComponent,
-    UserSearchComponent
+    UserSearchComponent,
+    MatchDetailComponent
   ],
   imports: [
     BrowserModule,

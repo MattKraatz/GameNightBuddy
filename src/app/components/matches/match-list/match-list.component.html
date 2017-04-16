@@ -8,7 +8,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let match of matches">
-        <td>{{match.date}}</td>
+        <a routerLink="{{match.id}}">
+          <td>{{match.date}}</td>
+        </a>
         <td>{{match.game.name}}</td>
         <td>
           <span *ngFor="let player of match.players">

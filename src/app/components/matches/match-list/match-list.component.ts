@@ -9,6 +9,7 @@ import {Match} from '../../../models/match.model';
 export class MatchListComponent implements OnInit {
 
   @Input() matches: Match[];
+  @Input() nightId: string;
 
   constructor() { }
 
