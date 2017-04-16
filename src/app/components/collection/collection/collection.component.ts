@@ -16,7 +16,7 @@ export class CollectionComponent implements OnInit {
 
   constructor(private collectionService: CollectionService, private authService: AuthService) {
     this.games = collectionService.collection;
-    collectionService.loadCollection();
+    collectionService.loadCollection(this.authService.currentUser.uid);
   }
 
   ngOnInit() {
