@@ -11,10 +11,10 @@
     <tr *ngFor="let night of gameNights">
       <td><a [routerLink]="['/game-night', night.id]">{{night.name}}</a></td>
       <td>
-        <span *ngFor="let host of night.hosts">{{host.displayName }}</span>
+        <span *ngFor="let host of night.hosts">| {{host.firstName}} {{host.lastName}} </span>
       </td>
       <td>
-        <span *ngFor="let member of night.members">{{member.displayName }}</span>
+        <span *ngFor="let member of night.members">| {{member.firstName}} {{member.lastName}} </span>
       </td>
     </tr>
   </tbody>

@@ -88,8 +88,8 @@ export class GameNightService {
   }
 
   createGameNight(night: GameNight) {
-    night = this.packageGameNight(night);
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights.json`, JSON.stringify(night), HEADER)
+    var nightForFB = this.packageGameNight(night);
+    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights.json`, JSON.stringify(nightForFB), HEADER)
       .map(res => {
         // Firebase Id is returned, add it to the member object
         night.id = res.json().name;
