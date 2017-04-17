@@ -74,33 +74,15 @@ export class GameNightService {
     this.nightLoaded = true;
   }
 
-  loadMyGameNights() {
+  loadMyGameNights(id: string) {
     if (!this.nightsLoaded) {
-      var uid = this.authService.getCurrentUser();
-      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy="hosts"&startAt="${uid}"`)
+      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy="hosts"`)
         .map(res => res.json())
-        .map(gameNights => {
-          // Map the Id from Firebase to each night's Id
-          return Object.keys(gameNights).map((val => {
-            var night = new GameNight(gameNights[val]);
-            night.id = val;
-            // Map the Id from Firebase to each host's Id
-            if (gameNights[val].hosts) night.hosts = Object.keys(gameNights[val].hosts).map((val2 => {
-              var auth = new Auth(gameNights[val].hosts[val2]);
-              auth.uid = val2;
-              return auth;
-            }))
-            // Map the Id from Firebase to each member's Id
-            if (gameNights[val].members) night.members = Object.keys(gameNights[val].members).map((val2 => {
-              var member = new Member(gameNights[val].members[val2]);
-              member.uid = val2;
-              return member;
-            }))
-            return night;
-          }))
-        })
-        .map(payload => ({ type: 'POPULATE_NIGHTS', payload }))
-        .subscribe(action => this.store.dispatch(action));
+        .map(this.unpackageGameNights)
+        .subscribe(payload => {
+          var filtered = this.filterMyNights(payload, id);
+          this.store.dispatch({ type: 'POPULATE_MY_NIGHTS', payload: filtered.myNights })
+      });
     }
     this.nightsLoaded = true;
   }
@@ -128,5 +110,40 @@ export class GameNightService {
       output.hosts[auth.uid] = auth;
     })
     return output;
+  }
+
+  unpackageGameNights(nights: any[]): GameNight[] {
+    // Map the Id from Firebase to each night's Id
+    return Object.keys(nights).map((val => {
+      var night = new GameNight(nights[val]);
+      night.id = val;
+      // Map the Id from Firebase to each host's Id
+      if (nights[val].hosts) night.hosts = Object.keys(nights[val].hosts).map((val2 => {
+        var auth = new Auth(nights[val].hosts[val2]);
+        auth.uid = val2;
+        return auth;
+      }))
+      // Map the Id from Firebase to each member's Id
+      if (nights[val].members) night.members = Object.keys(nights[val].members).map((val2 => {
+        var member = new Member(nights[val].members[val2]);
+        member.uid = val2;
+        return member;
+      }))
+      return night;
+    }))
+  }
+
+  filterMyNights(nights: GameNight[], id: string) {
+    var myNights = new Array<GameNight>();
+    var otherNights = new Array<GameNight>();
+    nights.forEach(night => {
+      if (night.hosts.findIndex(host => host.uid === id) > -1 ||
+          night.members.findIndex(mem => mem.uid === id) > -1) {
+            myNights.push(night);
+          } else {
+            otherNights.push(night);
+          }
+    })
+    return {myNights: myNights, otherNights: otherNights};
   }
 }

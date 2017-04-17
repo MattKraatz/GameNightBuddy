@@ -3,6 +3,7 @@ import {Observable} from 'rxjs/Observable';
 
 import {GameNight} from '../../../models/game-night.model';
 import {GameNightService} from '../../../services/game-night.service';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-my-game-nights',
@@ -13,9 +14,9 @@ export class MyGameNightsComponent implements OnInit {
 
   gameNights: Observable<Array<GameNight>>;
 
-  constructor(private gameNightService: GameNightService) {
+  constructor(private gameNightService: GameNightService, private authService: AuthService) {
     this.gameNights = gameNightService.myGameNights;
-    gameNightService.loadMyGameNights();
+    gameNightService.loadMyGameNights(this.authService.currentUser.uid);
   }
 
   ngOnInit() {

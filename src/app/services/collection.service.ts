@@ -20,7 +20,6 @@ export class CollectionService {
   }
 
   loadCollection(id: string) {
-    console.log(`callling ${firebaseConfig.databaseURL}/v1/collection.json?orderBy="owner/uid"&equalTo="${id}"`)
     this.http.get(`${firebaseConfig.databaseURL}/v1/collection.json?orderBy="owner/uid"&equalTo="${id}"`)
       .map(res => res.json())
       .map(games => {
