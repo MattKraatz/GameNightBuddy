@@ -29,14 +29,14 @@
           class="alert alert-danger">
       Players are required
     </div>
-    <table>
+    <table *ngIf="model.players?.length > 0">
       <thead>
         <tr>
-          <th>Player</th>
-          <th>First Timer</th>
-          <th>Team</th>
-          <th>Score</th>
-          <th>Winner</th>
+          <th class="playerCol">Player</th>
+          <th class="centeredText">First Timer</th>
+          <th class="centeredText">Team</th>
+          <th class="centeredText">Score</th>
+          <th class="centeredText">Winner</th>
         </tr>
       </thead>
       <tr *ngFor="let player of model.players">

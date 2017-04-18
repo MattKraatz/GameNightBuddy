@@ -1,0 +1,8 @@
+.centeredCol {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.playerCol {
+  min-width: 120px;
+}
