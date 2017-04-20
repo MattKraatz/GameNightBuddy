@@ -1,9 +1,17 @@
+<div class="container search-results">
+  <div class="row" *ngFor="let auth of results">
+    <div class="col-2">
+      <span (click)="addMember.emit(auth)" class="invite-link">Invite</span>
+    </div>
+    <div class="col-4">
+      <span>{{auth.firstName}} {{auth.lastName}}</span>
+    </div>
+    <div class="col-4">
+      <span>{{auth.email}}</span>
+    </div>
+  </div>
+</div>
 <form (ngSubmit)="doSearch()" #userSearchForm="ngForm">
-  <ul>
-    <li *ngFor="let auth of results; let i = index;" (click)="addMember.emit(auth)">
-      {{auth.firstName}} {{auth.lastName}} - {{auth.email}}
-    </li>
-  </ul>
   <div class="form-group">
     <label for="search">Search</label>
     <input [(ngModel)]="model" name="search" id="search"

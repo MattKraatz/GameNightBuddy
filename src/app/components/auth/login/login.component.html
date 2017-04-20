@@ -1,14 +1,14 @@
-<h2>
-  Login
-</h2>
-<h4>
-  Select a provider below
-</h4>
-
-<button type="button" class="btn btn-primary" (click)="loginWithFacebook()">
-  Login with Facebook
-</button>
-<br/>
-<a routerLink="/email-auth">
-  Login with Email/Password
-</a>
+<div id="main-login-component">
+  <h4>
+    Select a provider below
+  </h4>
+  <button type="button" class="btn btn-primary" (click)="loginWithFacebook()">
+    Login with Facebook
+  </button>
+  <br/>
+  <div class="email-auth-link">
+    <a routerLink="/email-auth">
+      Login with Email/Password
+    </a>
+  </div>
+</div>

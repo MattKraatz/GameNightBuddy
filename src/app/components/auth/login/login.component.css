@@ -1,0 +1,11 @@
+#main-login-component {
+  text-align: center;
+}
+
+h4 {
+  padding: 20px;
+}
+
+.email-auth-link {
+  margin-top: 10px;
+}

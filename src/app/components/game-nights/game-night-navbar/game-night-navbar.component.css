@@ -1,3 +1,8 @@
 nav {
   padding: 0 24px 2px;
 }
+
+button {
+  padding: 0px 4px;
+  margin: 3px 8px;
+}

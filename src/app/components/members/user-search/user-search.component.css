@@ -1,0 +1,16 @@
+.invite-link {
+  text-decoration: underline;
+  font-weight: bold;
+  color: blue;
+}
+
+.invite-link:hover {
+  text-decoration: underline;
+  font-weight: bold;
+  color: blue;
+  cursor: pointer;
+}
+
+.search-results {
+  margin-bottom: 10px;
+}
