@@ -1,71 +1,73 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a [ngClass]="loginTabClasses" (click)="setTab('login')">Login</a>
-  </li>
-  <li class="nav-item">
-    <a [ngClass]="registerTabClasses" (click)="setTab('register')">Register</a>
-  </li>
-</ul>
+<div id="email-auth-component">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a [ngClass]="loginTabClasses" (click)="setTab('login')">Login</a>
+    </li>
+    <li class="nav-item">
+      <a [ngClass]="registerTabClasses" (click)="setTab('register')">Register</a>
+    </li>
+  </ul>
 
-<div *ngIf="loginTabClasses.active">
-  <form (ngSubmit)="onLoginSubmit(ngModel); userForm.reset()" #userForm="ngForm">
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input [(ngModel)]="model.email" name="email" id="email"
-        #email="ngModel" type="email" class="form-control" required />
-      <div [hidden]="email.valid || email.pristine"
-            class="alert alert-danger">
-        Email is required
+  <div *ngIf="loginTabClasses.active">
+    <form (ngSubmit)="onLoginSubmit(ngModel); userForm.reset()" #userForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input [(ngModel)]="model.email" name="email" id="email"
+          #email="ngModel" type="email" class="form-control" required />
+        <div [hidden]="email.valid || email.pristine"
+              class="alert alert-danger">
+          Email is required
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input [(ngModel)]="model.password" name="password" id="password"
-        #password="ngModel" type="password" class="form-control" required />
-      <div [hidden]="password.valid || password.pristine"
-        class="alert alert-danger">
-        Password is required
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input [(ngModel)]="model.password" name="password" id="password"
+          #password="ngModel" type="password" class="form-control" required />
+        <div [hidden]="password.valid || password.pristine"
+          class="alert alert-danger">
+          Password is required
+        </div>
       </div>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block"
-      [disabled]="!userForm.form.valid">
-      Login
-    </button>
-  </form>
-</div>
+      <button type="submit" class="btn btn-primary btn-block"
+        [disabled]="!userForm.form.valid">
+        Login
+      </button>
+    </form>
+  </div>
 
-<div *ngIf="registerTabClasses.active">
-  <form (ngSubmit)="onRegisterSubmit(ngModel); userForm.reset()" #userForm="ngForm">
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input [(ngModel)]="model.email" name="email" id="email"
-        #email="ngModel" type="email" class="form-control" required />
-      <div [hidden]="email.valid || email.pristine"
-            class="alert alert-danger">
-        Email is required
+  <div *ngIf="registerTabClasses.active">
+    <form (ngSubmit)="onRegisterSubmit(ngModel); userForm.reset()" #userForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input [(ngModel)]="model.email" name="email" id="email"
+          #email="ngModel" type="email" class="form-control" required />
+        <div [hidden]="email.valid || email.pristine"
+              class="alert alert-danger">
+          Email is required
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input [(ngModel)]="model.password" name="password" id="password"
-        #password="ngModel" type="password" class="form-control" required />
-      <div [hidden]="password.valid || password.pristine"
-        class="alert alert-danger">
-        Password is required
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input [(ngModel)]="model.password" name="password" id="password"
+          #password="ngModel" type="password" class="form-control" required />
+        <div [hidden]="password.valid || password.pristine"
+          class="alert alert-danger">
+          Password is required
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="confirmPassword">Confirm Password</label>
-      <input [(ngModel)]="model.confirmPassword" name="confirmPassword" id="confirmPassword"
-        #confirmPassword="ngModel" type="password" class="form-control" required />
-      <div [hidden]="confirmPassword.valid || confirmPassword.pristine"
-        class="alert alert-danger">
-        You must confirm your password
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input [(ngModel)]="model.confirmPassword" name="confirmPassword" id="confirmPassword"
+          #confirmPassword="ngModel" type="password" class="form-control" required />
+        <div [hidden]="confirmPassword.valid || confirmPassword.pristine"
+          class="alert alert-danger">
+          You must confirm your password
+        </div>
       </div>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block"
-      [disabled]="!userForm.form.valid">
-      Register
-    </button>
-  </form>
+      <button type="submit" class="btn btn-primary btn-block"
+        [disabled]="!userForm.form.valid">
+        Register
+      </button>
+    </form>
+  </div>
 </div>

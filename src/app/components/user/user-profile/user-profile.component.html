@@ -1,5 +1,9 @@
 <h4>My Profile</h4>
 <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
+  <div [hidden]="profileForm.valid"
+        class="alert alert-info">
+    Please complete your profile
+  </div>
   <div class="form-group">
     <label for="firstName">First Name</label>
     <input [(ngModel)]="model.firstName" name="firstName" id="firstName"

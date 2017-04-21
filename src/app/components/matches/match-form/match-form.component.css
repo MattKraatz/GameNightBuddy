@@ -1,8 +1,26 @@
-.centeredCol {
+#player-table {
+  margin: 0 auto;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+.player-col {
+  min-width: 100px;
+  text-align: center;
+}
+
+.checkbox {
+  width: 65px;
   text-align: center;
   vertical-align: middle;
 }
 
-.playerCol {
-  min-width: 120px;
+.checkbox > input {
+  margin: 0 20px;
+}
+
+.score {
+  max-width: 85px;
 }

@@ -2,6 +2,7 @@
 
 .vscode
 firebaseConfig.ts
+functions/node_modules
 
 # compiled output
 /dist

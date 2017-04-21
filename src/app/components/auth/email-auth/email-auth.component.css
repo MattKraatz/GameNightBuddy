@@ -1,0 +1,9 @@
+#email-auth-component {
+  padding: 15px 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#email-auth-component div {
+  margin: 10px 0
+}

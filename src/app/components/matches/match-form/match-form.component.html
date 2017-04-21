@@ -29,19 +29,19 @@
           class="alert alert-danger">
       Players are required
     </div>
-    <table *ngIf="model.players?.length > 0">
+    <table *ngIf="model.players?.length > 0" id="player-table">
       <thead>
         <tr>
-          <th class="playerCol">Player</th>
-          <th class="centeredText">First Timer</th>
-          <th class="centeredText">Team</th>
-          <th class="centeredText">Score</th>
-          <th class="centeredText">Winner</th>
+          <th class="player-col">Player</th>
+          <th class="checkbox">First Timer</th>
+          <th class="centered-text team">Team</th>
+          <th class="centered-text score">Score</th>
+          <th class="checkbox">Winner</th>
         </tr>
       </thead>
       <tr *ngFor="let player of model.players">
         <td>{{player.firstName + " " + player.lastName}}</td>
-        <td>
+        <td class="checkbox">
           <input [(ngModel)]="player.firstTime" name="player.firstTime" id="player.firstTime"
             type="checkbox" class="form-control" />
         </td>
@@ -49,11 +49,11 @@
           <input [(ngModel)]="player.team" name="player.team" id="player.team"
             type="text" class="form-control" />
         </td>
-        <td>
+        <td class="score">
           <input [(ngModel)]="player.score" name="player.score" id="player.score"
             type="number" class="form-control" />
         </td>
-        <td>
+        <td class="checkbox">
           <input [(ngModel)]="player.winner" name="player.winner" id="player.winner"
             type="checkbox" class="form-control" />
         </td>
