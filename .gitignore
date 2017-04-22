@@ -2,6 +2,7 @@
 
 .vscode
 firebaseConfig.ts
+appsettings.json
 functions/node_modules
 bin
 obj

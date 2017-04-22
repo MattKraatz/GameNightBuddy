@@ -1,16 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22CF8DAC-CD51-44C2-ACD7-6EB27AC00EA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A977F408-A743-4E80-BAEC-0C51E369A004}"
 	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameNightBuddy-Server", "src\GameNightBuddy-Server\GameNightBuddy-Server.csproj", "{ED0F6590-E1B7-4B0D-AF7A-23DF64D66C40}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "GameNightBuddy-Server", "src\GameNightBuddy-Server\GameNightBuddy-Server.xproj", "{ED0F6590-E1B7-4B0D-AF7A-23DF64D66C40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
