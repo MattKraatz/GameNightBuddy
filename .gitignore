@@ -3,6 +3,8 @@
 .vscode
 firebaseConfig.ts
 functions/node_modules
+bin
+obj
 
 # compiled output
 /dist
