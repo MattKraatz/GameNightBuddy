@@ -6,17 +6,20 @@ using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.Models
 {
-    public class GameNight
+    public class GameNightMember
     {
         // Primary Key
-        public Guid GameNightId { get; set; }
-
+        public Guid GameNightMemberId { get; set; }
+        // Foreign Keys
         [Required]
-        public string Name { get; set; }
+        public Guid GameNightId { get; set; }
+        public GameNight GameNight { get; set; }
+        [Required]
+        public Guid UserId { get; set; }
+        public User User { get; set;}
+        public List<MatchPlayer> MatchPlayers { get; set; }
 
-        public List<GameNightMember> Members { get; set; }
-        public List<GameNightGame> Games { get; set; }
-        public List<Match> Matches { get; set; }
+        public Boolean IsHost { get; set; }
 
         public DateTime DateCreated { get; set; }
         public Boolean IsActive { get; set; }
