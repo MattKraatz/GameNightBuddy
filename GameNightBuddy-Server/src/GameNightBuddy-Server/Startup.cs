@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using GameNightBuddy_Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameNightBuddy_Server
 {
@@ -29,7 +31,7 @@ namespace GameNightBuddy_Server
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
-
+        
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container
@@ -37,6 +39,9 @@ namespace GameNightBuddy_Server
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+
+            services.AddDbContext<Context>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services
                 .AddMvc()

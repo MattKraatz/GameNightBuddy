@@ -16,7 +16,6 @@ namespace GameNightBuddy_Server.Models
 
         public List<GameNightMember> Members { get; set; }
         public List<GameNightGame> Games { get; set; }
-        public List<Match> Matches { get; set; }
 
         public DateTime DateCreated { get; set; }
         public Boolean IsActive { get; set; }
