@@ -1,6 +1,5 @@
 ﻿using GameNightBuddy_Server.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +52,19 @@ namespace GameNightBuddy_Server.Controllers
       this.gameNightRepository.InsertMember(member, id);
       this.gameNightRepository.Save();
       return new CreatedResult($"game-nights/${id}/members", member);
+    }
+
+    [HttpPost("{id}/games")]
+    public IActionResult AddGame([FromBody] Game game, [FromRoute] Guid id)
+    {
+      if (game == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameNightRepository.InsertGameNightGame(game.GameId, id);
+      this.gameNightRepository.Save();
+      return new CreatedResult($"game-nights/${id}/games", game);
     }
 
     [HttpPost]

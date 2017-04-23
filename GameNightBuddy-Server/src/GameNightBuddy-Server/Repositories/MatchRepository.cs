@@ -43,7 +43,7 @@ namespace GameNightBuddy_Server.Repositories
         // Full Game Tree
         .Include(m => m.Game)
           .ThenInclude(g => g.User)
-        .Where(m => players.Contains(m.MatchId))
+        .Where(m => players.Contains(m.MatchId));
     }
 
     public Guid InsertMatch(Match match)

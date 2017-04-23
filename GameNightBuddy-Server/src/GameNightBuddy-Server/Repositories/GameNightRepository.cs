@@ -13,6 +13,7 @@ namespace GameNightBuddy_Server.Repositories
     IEnumerable<GameNight> GetMyGameNights(Guid id);
     GameNight LoadGameNightByID(Guid nightId);
     Guid InsertGameNight(GameNight night);
+    Guid InsertGameNightGame(Guid gameId, Guid nightId);
     Guid InsertMember(GameNightMember member, Guid id);
     void DeactivateGameNight(Guid nightId);
     void UpdateGameNight(GameNight night);
