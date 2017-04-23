@@ -94,6 +94,11 @@ namespace GameNightBuddy_Server.Models
           .WithMany(b => b.Players)
           .OnDelete(DeleteBehavior.Restrict);
 
+      modelBuilder.Entity<Match>()
+          .HasOne(m => m.GameNight)
+          .WithMany(n => n.Matches)
+          .OnDelete(DeleteBehavior.Restrict);
+
       #endregion DELETE BEHAVIOR
     }
   }

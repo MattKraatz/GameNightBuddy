@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GameNightBuddy_Server.Models;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -19,10 +20,10 @@ namespace GameNightBuddy_Server.Controllers
       this.gameNightRepository = gameNightRepository;
     }
 
-    [HttpGet]
-    public IActionResult GetAll()
+    [HttpGet("my/{userId}")]
+    public IActionResult GetMyGameNights([FromRoute] Guid userId)
     {
-      var nights = this.gameNightRepository.GetGameNights();
+      var nights = this.gameNightRepository.GetMyGameNights(userId);
       if (nights == null)
       {
         return new NoContentResult();
@@ -39,6 +40,43 @@ namespace GameNightBuddy_Server.Controllers
         return new NoContentResult();
       }
       return new ObjectResult(night);
+    }
+
+    [HttpPost("{id}/members")]
+    public IActionResult AddMember([FromBody] GameNightMember member, [FromRoute] Guid id)
+    {
+      if (member == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameNightRepository.InsertMember(member, id);
+      this.gameNightRepository.Save();
+      return new CreatedResult($"game-nights/${id}/members", member);
+    }
+
+    [HttpPost]
+    public IActionResult Create([FromBody] GameNight night)
+    {
+      if (night == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameNightRepository.InsertGameNight(night);
+      this.gameNightRepository.Save();
+      return new CreatedResult("game-nights", night);
+    }
+
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+      var nights = this.gameNightRepository.GetGameNights();
+      if (nights == null)
+      {
+        return new NoContentResult();
+      }
+      return new ObjectResult(nights);
     }
 
   }

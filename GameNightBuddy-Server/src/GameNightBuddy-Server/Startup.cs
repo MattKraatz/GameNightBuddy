@@ -45,11 +45,16 @@ namespace GameNightBuddy_Server
           options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
       services.AddScoped<IGameNightRepository, GameNightRepository>();
-
+      services.AddScoped<IGameRepository, GameRepository>();
+      services.AddScoped<IMatchRepository, MatchRepository>();
+      services.AddScoped<IUserRepository, UserRepository>();
+      
       services
           .AddMvc()
-          .AddJsonOptions(options => options.SerializerSettings.ContractResolver =
-                 new DefaultContractResolver());
+          .AddJsonOptions(options => {
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+          });
 
       services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
     }

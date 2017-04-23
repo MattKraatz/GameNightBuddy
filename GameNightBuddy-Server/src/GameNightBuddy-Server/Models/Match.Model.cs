@@ -14,6 +14,9 @@ namespace GameNightBuddy_Server.Models
         [Required]
         public Guid GameId { get; set; }
         public Game Game { get; set; }
+        [Required]
+        public Guid GameNightId { get; set; }
+        public GameNight GameNight { get; set; }
         public List<MatchPlayer> Players { get; set; }
 
         [Required]
