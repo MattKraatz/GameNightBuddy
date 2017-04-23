@@ -18,7 +18,7 @@ namespace GameNightBuddy_Server.Models
 
         [Required]
         public DateTime Date { get; set; }
-                                
+
         public DateTime DateCreated { get; set; }
     }
 }

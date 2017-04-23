@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameNightBuddy-Server", "src\GameNightBuddy-Server\GameNightBuddy-Server.csproj", "{ED0F6590-E1B7-4B0D-AF7A-23DF64D66C40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameNightBuddy_Server", "src\GameNightBuddy-Server\GameNightBuddy_Server.csproj", "{ED0F6590-E1B7-4B0D-AF7A-23DF64D66C40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
