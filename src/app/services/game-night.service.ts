@@ -76,7 +76,7 @@ export class GameNightService {
 
   loadMyGameNights(id: string) {
     if (!this.nightsLoaded) {
-      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json?orderBy="hosts"`)
+      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights.json`)
         .map(res => res.json())
         .map(this.unpackageGameNights)
         .subscribe(payload => {
