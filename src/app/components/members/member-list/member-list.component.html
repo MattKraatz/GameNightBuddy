@@ -7,7 +7,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let member of members">
-        <td>{{member.dateJoined}}</td>
+        <td>{{member.dateJoined | date }}</td>
         <td>{{member.firstName + " " + member.lastName}}</td>
       </tr>
     </tbody>
