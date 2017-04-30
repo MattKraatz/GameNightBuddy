@@ -4,30 +4,31 @@ import {Game} from './game.model';
 import {Match} from './match.model';
 
 interface IGameNight {
-  id: string;
-  name: string;
-  hosts: Auth[];
-  members?: Member[];
-  collection?: Game[];
-  matches?: Match[];
+  GameNightId: string;
+  Name: string;
+  Members: Member[];
+  Games: Game[];
+  Matches: Match[];
+  DateCreated: Date;
 }
 
 export class GameNight {
 
-  public id: string;
-  public name: string;
-  public hosts: Auth[];
-  public members?: Member[];
-  public collection?: Game[];
-  public matches?: Match[];
+  public GameNightId: string;
+  public Name: string;
+  public Members: Member[];
+  public Games: Game[];
+  public Matches: Match[];
+
+  public DateCreated: Date;
 
   constructor(obj?: IGameNight) {
-    this.id = obj && obj.id || "";
-    this.name = obj && obj.name || "";
-    this.hosts = obj && obj.hosts || new Array<Auth>();
-    this.members = obj && obj.members || new Array<Member>();
-    this.collection = obj && obj.collection || new Array<Game>();
-    this.matches = obj && obj.matches || new Array<Match>();
+    this.GameNightId = obj && obj.GameNightId || "";
+    this.Name = obj && obj.Name || "";
+    this.Members = obj && obj.Members || new Array<Member>();
+    this.Games = obj && obj.Games || new Array<Game>();
+    this.Matches = obj && obj.Matches || new Array<Match>();
+    this.DateCreated = obj && obj.DateCreated || new Date();
   }
   
 }

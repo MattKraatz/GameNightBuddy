@@ -1,25 +1,25 @@
 import {Member, IMember} from './member.model';
 
 interface IPlayer extends IMember {
-  firstTime: boolean;
-  winner: boolean;
-  score?: number;
-  team?: string;
+  FirstTime: boolean;
+  Winner: boolean;
+  Score?: number;
+  Team?: string;
 }
 
 export class Player extends Member {
 
-  public firstTime: boolean;
-  public winner: boolean;
-  public score?: number;
-  public team?: string;
+  public FirstTime: boolean;
+  public Winner: boolean;
+  public Score?: number;
+  public Team?: string;
 
   constructor(obj?: IPlayer) {
     super(obj)
-    this.firstTime = obj && obj.firstTime || false;
-    this.winner = obj && obj.winner || false;
-    this.score = obj && obj.score || null;
-    this.team = obj && obj.team || "";
+    this.FirstTime = obj && obj.FirstTime || false;
+    this.Winner = obj && obj.Winner || false;
+    this.Score = obj && obj.Score || null;
+    this.Team = obj && obj.Team || "";
   }
 
 }

@@ -1,27 +1,30 @@
-import {Auth} from './auth.model';
+import {User} from './user.model';
 
 interface IGame {
-  id: string;
-  name: string;
-  owner: Auth;
-  minPlayers: number;
-  maxPlayers?: number;
+  GameId: string;
+  Name: string;
+  Owner: User;
+  MinPlayers: number;
+  MaxPlayers?: number;
+  DateCreated: Date;
 }
 
 export class Game {
 
-  public id: string;
-  public name: string;
-  public owner: Auth;
-  public minPlayers: number;
-  public maxPlayers?: number;
+  public GameId: string;
+  public Name: string;
+  public Owner: User;
+  public MinPlayers: number;
+  public MaxPlayers?: number;
+  public DateCreated: Date;
 
   constructor(obj?: IGame) {
-    this.id = obj && obj.id || "";
-    this.name = obj && obj.name || "";
-    this.owner = obj && obj.owner || new Auth();
-    this.minPlayers = obj && obj.minPlayers || null;
-    this.maxPlayers = obj && obj.maxPlayers || null;
+    this.GameId = obj && obj.GameId || "";
+    this.Name = obj && obj.Name || "";
+    this.Owner = obj && obj.Owner || new User();
+    this.MinPlayers = obj && obj.MinPlayers || null;
+    this.MaxPlayers = obj && obj.MaxPlayers || null;
+    this.DateCreated = obj && obj.DateCreated || new Date();
+
   }
-  
 }

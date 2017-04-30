@@ -1,18 +1,19 @@
-import {Auth, IAuth} from './auth.model';
+import {User, IUser} from './user.model';
 
-export interface IMember extends IAuth {
-  id: string;
-  dateJoined: string;
+export interface IMember extends IUser {
+  IsHost: boolean;
+  DateJoined: Date;
 }
 
-export class Member extends Auth {
+export class Member extends User {
   
-  public id: string;
-  public dateJoined: string;
+  public IsHost: boolean;
+  public DateJoined: Date;
 
   constructor(obj?: IMember) {
     super(obj)
-    this.id = obj && obj.id || "";
-    this.dateJoined = obj && obj.dateJoined || Date.now().toString();
+    this.IsHost = obj && obj.IsHost || false;
+    this.DateJoined = obj && obj.DateJoined || new Date();
+
   }
 }
