@@ -6,7 +6,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let night of gameNights">
-      <td><a [routerLink]="['/game-night', night.id]">{{night.Name}}</a></td>
+      <td><a [routerLink]="['/game-night', night.GameNightId]">{{night.Name}}</a></td>
     </tr>
   </tbody>
 </table>
