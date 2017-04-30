@@ -2,19 +2,11 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Hosts</th>
-      <th>Members</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let night of gameNights">
-      <td><a [routerLink]="['/game-night', night.id]">{{night.name}}</a></td>
-      <td>
-        <span *ngFor="let host of night.hosts">| {{host.firstName}} {{host.lastName}} </span>
-      </td>
-      <td>
-        <span *ngFor="let member of night.members">| {{member.firstName}} {{member.lastName}} </span>
-      </td>
+      <td><a [routerLink]="['/game-night', night.id]">{{night.Name}}</a></td>
     </tr>
   </tbody>
 </table>

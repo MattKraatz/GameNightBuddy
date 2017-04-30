@@ -8,7 +8,9 @@ import {Router} from '@angular/router';
 
 import {AppStore} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
+import {User} from '../models/user.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
+import {LoginViewModel} from '../viewmodels/login.viewmodel';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -18,10 +20,13 @@ export class AuthService {
   user: Observable<Auth>;
   currentUser: Auth;
 
+  userProfile: Observable<User>;
+  currentUserProfile: User;
   public userLoaded: boolean = false;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http, private router: Router) {
     this.user = store.select("auth");
+    this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
     // Resolve initial Auth status during construction
     this.af.auth.subscribe(auth => {
@@ -46,10 +51,8 @@ export class AuthService {
     this.http.get(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`)
         .map(res => res.json())
         .map(res => {
-          if (res) {
-            user.firstName = res.firstName;
-            user.lastName = res.lastName;
-          }
+          console.log(res);
+          this.currentUserProfile = res;
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))
@@ -85,10 +88,10 @@ export class AuthService {
   }
 
   // TODO: call getAuthRecordFromFB() in this method
-  loginWithEmailAndPassword(user: Auth) {
+  loginWithEmailAndPassword(user: LoginViewModel) {
     this.af.auth.login({
-      email: user.email,
-      password: user.password
+      email: user.Email,
+      password: user.Password
     },
     {
       provider: AuthProviders.Password,
@@ -103,10 +106,10 @@ export class AuthService {
   }
 
   // TODO: call getAuthRecordFromFB() in this method
-  registerEmailAndPassword(user: Auth) {
+  registerEmailAndPassword(user: LoginViewModel) {
     this.af.auth.createUser({
-      email: user.email,
-      password: user.password
+      email: user.Email,
+      password: user.Password
     })
     .then(response => {
       console.log(response);
@@ -116,13 +119,11 @@ export class AuthService {
     });
   }
 
-  // TODO: redirect the user on logout to home
   logout() {
     this.af.auth.logout()
     .then(response => {
       console.log("logout", response);
     });
-    // No redirect on logout, update the store
     this.store.dispatch({type: "LOGOUT_USER", payload: {}});
     this.router.navigate(['/']);
   }

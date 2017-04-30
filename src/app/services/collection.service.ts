@@ -23,12 +23,8 @@ export class CollectionService {
     this.http.get(`${firebaseConfig.databaseURL}/v1/collection.json?orderBy="owner/uid"&equalTo="${id}"`)
       .map(res => res.json())
       .map(games => {
-        // Map the Id from Firebase to each game's Id
-        return Object.keys(games).map((val => {
-          var game = new Game(games[val]);
-          game.id = val;
-          return game;
-        }))
+        console.log(games);
+        return games
       })
       .map(payload => ({ type: 'POPULATE_COLLECTION', payload }))
       .subscribe(action => this.store.dispatch(action));
@@ -36,9 +32,8 @@ export class CollectionService {
 
   createGame(game: Game) {
     this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
-      .map(res => {
-        // UUID is returned, add it to the game object
-        game.id = res.json().name;
+      .map(game => {
+        console.log(game);
         return game;
       })
       .map(payload => ({ type: 'CREATE_GAME', payload }))
@@ -48,8 +43,7 @@ export class CollectionService {
   createGameInGameNightCollection(game: Game, id: string) {
     this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), HEADER)
       .map(res => {
-        // UUID is returned, add it to the game object
-        game.id = res.json().name;
+        console.log(game);
         return game;
       })
       .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
@@ -59,10 +53,8 @@ export class CollectionService {
   createGameInGameNightAndMyCollection(game: Game, id: string) {
     this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
       .map(res => {
-        // UUID is returned, add it to the game object
-        game.id = res.json().name;
-        this.http.put(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection/${game.id}.json`, JSON.stringify(game), HEADER)
-          // ignore the results (res), input is the payload
+        console.log(res);
+        this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), HEADER)
           .map(res => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', game }))
           .subscribe(action => this.store.dispatch(action));
         return game;

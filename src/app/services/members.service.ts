@@ -23,12 +23,8 @@ export class MembersService {
     this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`)
       .map(res => res.json())
       .map(members => {
-        // Map the Id from Firebase to each member's Id
-        return Object.keys(members).map((val => {
-          var member = new Member(members[val]);
-          member.id = val;
-          return member;
-        }))
+        console.log(members)
+        return members;
       })
       .map(payload => ({ type: 'POPULATE_MEMBERS', payload }))
       .subscribe(action => this.store.dispatch(action));
@@ -37,9 +33,7 @@ export class MembersService {
   createMember(member: Member, id: string) {
     this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`, JSON.stringify(member), HEADER)
       .map(res => {
-        // Firebase Id is returned, add it to the member object
-        member.id = res.json().name;
-        member.dateJoined = res.json().dateJoined;
+        console.log(member);
         return member;
       })
       .map(payload => ({ type: 'CREATE_MEMBER_IN_GAME_NIGHT', payload }))

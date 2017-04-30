@@ -3,7 +3,7 @@ import {CanActivate, Router} from '@angular/router';
 import {Observable} from "rxjs/Observable";
 
 import {AuthService} from '../auth.service';
-import {Auth} from '../../models/auth.model';
+import {User} from '../../models/user.model';
 
 @Injectable()
 export class ProfileCompleteGuard implements CanActivate {
@@ -11,17 +11,19 @@ export class ProfileCompleteGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return this.authService.userLoaded ?
-      Observable.of(this.validateProfile(this.authService.currentUser)) :
-      this.authService.user.skip(1).map(auth => this.validateProfile(auth))
-        .catch((e) => Observable.of(false));
+    return Observable.of(true);
+    // BYPASSING UNTIL BACK-END HOOKED UP
+    // return this.authService.userLoaded ?
+    //   Observable.of(this.validateProfile(this.authService.currentUserProfile)) :
+    //   this.authService.userProfile.skip(1).map(auth => this.validateProfile(auth))
+    //     .catch((e) => Observable.of(false));
     }
 
-    validateProfile(user: Auth): boolean {
+    validateProfile(user: User): boolean {
       var output = false;
-      if (user.firstName && user.firstName.length > 0 &&
-          user.lastName && user.lastName.length > 0 &&
-          user.email && user.email.length > 0) {
+      if (user.FirstName && user.FirstName.length > 0 &&
+          user.LastName && user.LastName.length > 0 &&
+          user.Email && user.Email.length > 0) {
             output = true;
           } else {
             this.router.navigate(['profile']);
