@@ -1,26 +1,26 @@
 <form (ngSubmit)="addGame.emit(model); gameForm.reset()" #gameForm="ngForm">
   <div class="form-group">
-    <label for="name">Name</label>
-    <input [(ngModel)]="model.name" name="name" id="name"
-      #name="ngModel" type="text" class="form-control" required />
-    <div [hidden]="name.valid || name.pristine"
+    <label for="Name">Name</label>
+    <input [(ngModel)]="model.Name" name="Name" id="Name"
+      #Name="ngModel" type="text" class="form-control" required />
+    <div [hidden]="Name.valid || Name.pristine"
           class="alert alert-danger">
       Name is required
     </div>
   </div>
   <div class="form-group">
-    <label for="minPlayers">Minimum # of Players</label>
-    <input [(ngModel)]="model.minPlayers" name="minPlayers" id="minPlayers"
-      #minPlayers="ngModel" type="text" class="form-control" required />
-    <div [hidden]="minPlayers.valid || minPlayers.pristine"
+    <label for="MinPlayers">Minimum # of Players</label>
+    <input [(ngModel)]="model.MinPlayers" name="MinPlayers" id="MinPlayers"
+      #MinPlayers="ngModel" type="text" class="form-control" required />
+    <div [hidden]="MinPlayers.valid || MinPlayers.pristine"
       class="alert alert-danger">
       Minimum is required
     </div>
   </div>
   <div class="form-group">
-    <label for="maxPlayers">Maximum # of Players</label>
-    <input [(ngModel)]="model.maxPlayers" name="maxPlayers" id="maxPlayers"
-      #maxPlayers="ngModel" type="number" class="form-control" placeholder="optional" />
+    <label for="<MaxPlayers">Maximum # of Players</label>
+    <input [(ngModel)]="model.MaxPlayers" name="MaxPlayers" id="MaxPlayers"
+      #MaxPlayers="ngModel" type="number" class="form-control" placeholder="optional" />
   </div>
   <button type="submit" class="btn btn-primary btn-block"
     [disabled]="!gameForm.form.valid">

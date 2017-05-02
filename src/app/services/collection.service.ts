@@ -2,13 +2,15 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
-import {Http, Headers} from '@angular/http';
+import {Http, Headers, RequestOptions} from '@angular/http';
 
 import {AppStore} from '../models/appstore.model';
 import {Game} from '../models/game.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
+import {ServerConfig} from '../constants/serverConfig';
 
-const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
+const HEADERS = new Headers({ 'Content-Type': 'application/json' });
+const OPTIONS = new RequestOptions({ headers: HEADERS });
 
 @Injectable()
 export class CollectionService {
@@ -31,7 +33,7 @@ export class CollectionService {
   }
 
   createGame(game: Game) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
+    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), OPTIONS)
       .map(game => {
         console.log(game);
         return game;
@@ -41,7 +43,7 @@ export class CollectionService {
   }
 
   createGameInGameNightCollection(game: Game, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), HEADER)
+    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), OPTIONS)
       .map(res => {
         console.log(game);
         return game;
@@ -51,13 +53,11 @@ export class CollectionService {
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
+    console.log(game);
+    this.http.post(`${ServerConfig.baseUrl}/games/${id}`, JSON.stringify(game), OPTIONS)
       .map(res => {
         console.log(res);
-        this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), HEADER)
-          .map(res => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', game }))
-          .subscribe(action => this.store.dispatch(action));
-        return game;
+        return res;
       })
       .map(payload => ({ type: 'CREATE_GAME', payload }))
       .subscribe(action => this.store.dispatch(action));

@@ -8,11 +8,11 @@ export const collection = (state: Game[] = new Array<Game>(), {type, payload}) =
       return [...state, payload];
     case 'UPDATE_GAME':
       return state.map(game => {
-        return game.id === payload.id ? Object.assign({}, game, payload) : game;
+        return game.GameId === payload.GameId ? Object.assign({}, game, payload) : game;
       });
     case 'DELETE_GAME':
       return state.filter(game => {
-        return game.id !== payload.id;
+        return game.GameId !== payload.GameId;
       });
     default:
       return state;

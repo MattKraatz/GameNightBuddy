@@ -17,6 +17,7 @@ import {matches} from './stores/matches.store';
 import {auth} from './stores/auth.store';
 import {gameNight} from './stores/game-night.store';
 import {myGameNights} from './stores/my-game-nights.store';
+import {user} from './stores/user.store';
 import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
@@ -169,7 +170,7 @@ const authConfig = {
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({collection, matches, auth, gameNight, myGameNights}),
+    StoreModule.provideStore({collection, matches, auth, gameNight, myGameNights, user}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
   providers: [

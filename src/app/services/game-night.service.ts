@@ -33,9 +33,10 @@ export class GameNightService {
 
   loadGameNight(id: string) {
     if (!this.nightLoaded) {
-      this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights/${id}.json`)
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`)
         .map(res => res.json())
         .map(gameNight => {
+          console.log(gameNight)
           var night = new GameNight(gameNight);
           return night;
         })

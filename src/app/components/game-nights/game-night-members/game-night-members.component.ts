@@ -18,8 +18,8 @@ export class GameNightMembersComponent implements OnInit {
   constructor(route: ActivatedRoute, private membersService: MembersService) {
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
-      this.members = night.members;
-      this.nightId = night.id;
+      this.members = night.Members;
+      this.nightId = night.GameNightId;
     })
   }
 

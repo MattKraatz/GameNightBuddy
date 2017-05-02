@@ -19,7 +19,7 @@ export class MatchDetailComponent implements OnInit {
     // query the parent's data struct for that specific match
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
-      this.match = night.matches.find(match => match.id == id);
+      this.match = night.Matches.find(match => match.MatchId == id);
     })
   }
 

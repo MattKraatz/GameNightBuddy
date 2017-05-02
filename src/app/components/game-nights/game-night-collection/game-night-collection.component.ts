@@ -19,8 +19,8 @@ export class GameNightCollectionComponent implements OnInit {
   constructor(route: ActivatedRoute, private authService: AuthService, private collectionService: CollectionService) {
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
-      this.collection = night.collection;
-      this.nightId = night.id;
+      this.collection = night.Games;
+      this.nightId = night.GameNightId;
     })
   }
 
@@ -29,9 +29,9 @@ export class GameNightCollectionComponent implements OnInit {
 
   addGame(model: Game) {
     var game = new Game(model);
-    this.authService.user.subscribe(
+    this.authService.userProfile.subscribe(
       user => {
-        game.owner = user;
+        game.Owner = user;
         this.collectionService.createGameInGameNightAndMyCollection(game, this.nightId);
       }
     )
