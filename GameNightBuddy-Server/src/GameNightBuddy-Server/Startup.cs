@@ -30,6 +30,7 @@ namespace GameNightBuddy_Server
       }
 
       builder.AddEnvironmentVariables();
+
       Configuration = builder.Build();
     }
 
@@ -48,15 +49,17 @@ namespace GameNightBuddy_Server
       services.AddScoped<IGameRepository, GameRepository>();
       services.AddScoped<IMatchRepository, MatchRepository>();
       services.AddScoped<IUserRepository, UserRepository>();
+
+      services.AddCors();
+
+      services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
       
       services
           .AddMvc()
           .AddJsonOptions(options => {
             options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-          });
-
-      services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
+          });    
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -69,6 +72,8 @@ namespace GameNightBuddy_Server
 
       app.UseApplicationInsightsExceptionTelemetry();
 
+      app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod());
+      
       app.UseMvc();
     }
   }

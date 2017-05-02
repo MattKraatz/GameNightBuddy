@@ -57,10 +57,11 @@ namespace GameNightBuddy_Server.Repositories
         .Include(n => n.Matches)
           .ThenInclude(m => m.Game)
             .ThenInclude(g => g.User)
-        // Full Games Tree
-        .Include(n => n.Games)
-          .ThenInclude(g => g.Game)
-            .ThenInclude(g => g.User)
+        // BROKEN AT THE MOMENT
+        //// Full Games Tree
+        //.Include(n => n.Games)
+        //  .ThenInclude(g => g.Game)
+        //    .ThenInclude(g => g.User)
         .SingleOrDefault(n => n.GameNightId == nightId);
     }
 

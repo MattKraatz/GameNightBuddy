@@ -13,11 +13,13 @@ namespace GameNightBuddy_Server.Controllers
   public class GameController
   {
     private readonly IGameRepository gameRepository;
-
-    public GameController(IGameRepository gameRepository)
+    private readonly IGameNightRepository nightRepository;
+    
+    public GameController(IGameRepository gameRepository, IGameNightRepository nightRepository)
     {
       this.gameRepository = gameRepository;
-    }
+      this.nightRepository = nightRepository;
+      }
 
     [HttpGet("my/{userId}")]
     public IActionResult GetMyGames([FromRoute] Guid userId)
@@ -40,6 +42,25 @@ namespace GameNightBuddy_Server.Controllers
 
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
+      return new CreatedResult("games", game);
+    }
+
+    [HttpPost("{nightId}")]
+    public IActionResult CreateAndAddToGameNight([FromBody] object body, [FromRoute] Guid nightId)
+    {
+      if (body == null)
+      {
+        return new BadRequestResult();
+      }
+
+      var game = new Game();
+            
+      this.gameRepository.InsertGame(game);
+      this.gameRepository.Save();
+
+      this.nightRepository.InsertGameNightGame(game.GameId, nightId);
+      this.nightRepository.Save();
+
       return new CreatedResult("games", game);
     }
   }
