@@ -16,12 +16,12 @@ namespace GameNightBuddy_Server.Controllers
   {
     private readonly IGameRepository gameRepository;
     private readonly IGameNightRepository nightRepository;
-    
+
     public GameController(IGameRepository gameRepository, IGameNightRepository nightRepository)
     {
       this.gameRepository = gameRepository;
       this.nightRepository = nightRepository;
-      }
+    }
 
     [HttpGet("my/{userId}")]
     public IActionResult GetMyGames([FromRoute] Guid userId)
@@ -35,12 +35,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Game game)
+    public IActionResult Create([FromBody] GameViewModel vm)
     {
-      if (game == null)
+      if (vm == null)
       {
         return new BadRequestResult();
       }
+
+      var game = new Game(vm);
 
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
@@ -48,14 +50,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost("{nightId}")]
-    public IActionResult CreateAndAddToGameNight([FromBody] GameViewModel body, [FromRoute] Guid nightId)
+    public IActionResult CreateAndAddToGameNight([FromBody] GameViewModel vm, [FromRoute] Guid nightId)
     {
-      if (body == null)
+      if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      var game = new Game(body);
+      var game = new Game(vm);
 
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
@@ -63,7 +65,7 @@ namespace GameNightBuddy_Server.Controllers
       this.nightRepository.InsertGameNightGame(game.GameId, nightId);
       this.nightRepository.Save();
 
-      return new CreatedResult("games", body);
+      return new CreatedResult("games", game);
     }
   }
 }

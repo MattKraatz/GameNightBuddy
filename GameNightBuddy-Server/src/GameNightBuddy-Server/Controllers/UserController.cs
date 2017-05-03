@@ -14,15 +14,15 @@ namespace GameNightBuddy_Server.Controllers
   {
     private readonly IUserRepository userRepository;
 
-    public UserController(UserRepository userRepository)
+    public UserController(IUserRepository userRepository)
     {
       this.userRepository = userRepository;
     }
 
-    [HttpGet("{userId}")]
-    public IActionResult GetUser([FromRoute] Guid userId)
+    [HttpGet("{fbKey}")]
+    public IActionResult GetUserByFbKey([FromRoute] string fbKey)
     {
-      var user = this.userRepository.GetUser(userId);
+      var user = this.userRepository.GetUserByFbKey(fbKey);
       if (user == null)
       {
         return new NoContentResult();
