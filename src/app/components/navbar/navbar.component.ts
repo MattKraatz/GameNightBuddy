@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 
-import {Auth} from '../../models/auth.model';
+import {User} from '../../models/user.model';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
@@ -10,7 +10,7 @@ import {AuthService} from '../../services/auth.service';
 })
 export class NavbarComponent implements OnInit {
 
-  @Input() user: Auth;
+  @Input() user: User;
 
   constructor(private authService: AuthService) {}
 

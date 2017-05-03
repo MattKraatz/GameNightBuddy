@@ -11,6 +11,7 @@ import {Auth} from '../models/auth.model';
 import {User} from '../models/user.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
 import {LoginViewModel} from '../viewmodels/login.viewmodel';
+import {ServerConfig} from '../constants/serverConfig';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -38,30 +39,21 @@ export class AuthService {
           var user = new Auth(auth.facebook);
           user.uid = auth.uid;
         }
-        this.getAuthRecordFromFB(user);
+        this.getAuthRecordFromDB(user);
       }
       else {
         // user not logged in
-        this.store.dispatch({type: "LOGOUT_USER", payload: new Auth()});
+        this.store.dispatch({type: "LOGOUT_USER", payload: new User()});
       }
     })
   }
 
-  getAuthRecordFromFB(user: Auth) {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`)
+  getAuthRecordFromDB(user: Auth) {
+    this.http.get(`${ServerConfig.baseUrl}/users/${user.uid}`)
         .map(res => res.json())
         .map(res => {
-          // faking this until user update switched to azure
-          var fake = new User();
-          fake.DisplayName = 'Matt Kraatz'
-          fake.Email = 'matt.kraatz@gmail.com'
-          fake.FirstName = 'Matt'
-          fake.LastName = 'Kraatz'
-          fake.PhotoURL = 'https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/16105921_3385199355128_2450864181555249132_n.jpg?oh=c9af0cc6b3bd4f62d287cd986b470195&oe=599171A3'
-          fake.UserId = '09F3CFF5-3B92-413A-9D27-2B033ED54BBF'
-
-          this.currentUserProfile = fake;
-          
+          var user = new User(res);
+          this.currentUserProfile = user;
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))
@@ -84,8 +76,8 @@ export class AuthService {
     return output;
   }
 
-  updateUserInFB(user: Auth) {
-    this.http.put(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`,JSON.stringify(user),HEADER)
+  updateUserInDB(user: User) {
+    this.http.put(`${ServerConfig.baseUrl}/users`,JSON.stringify(user),HEADER)
       .map(res => ({ type: 'LOGIN_USER', payload: user }))
       .subscribe(action => this.store.dispatch(action));
   }
