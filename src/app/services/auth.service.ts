@@ -51,8 +51,17 @@ export class AuthService {
     this.http.get(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`)
         .map(res => res.json())
         .map(res => {
-          console.log(res);
-          this.currentUserProfile = res;
+          // faking this until user update switched to azure
+          var fake = new User();
+          fake.DisplayName = 'Matt Kraatz'
+          fake.Email = 'matt.kraatz@gmail.com'
+          fake.FirstName = 'Matt'
+          fake.LastName = 'Kraatz'
+          fake.PhotoURL = 'https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/16105921_3385199355128_2450864181555249132_n.jpg?oh=c9af0cc6b3bd4f62d287cd986b470195&oe=599171A3'
+          fake.UserId = '09F3CFF5-3B92-413A-9D27-2B033ED54BBF'
+
+          this.currentUserProfile = fake;
+          
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))

@@ -8,6 +8,7 @@ import {AppStore} from '../models/appstore.model';
 import {Game} from '../models/game.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
 import {ServerConfig} from '../constants/serverConfig';
+import {User} from '../models/user.model';
 
 const HEADERS = new Headers({ 'Content-Type': 'application/json' });
 const OPTIONS = new RequestOptions({ headers: HEADERS });
@@ -53,8 +54,9 @@ export class CollectionService {
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
+    // Give game.Owner a static value auth is working again
     console.log(game);
-    this.http.post(`${ServerConfig.baseUrl}/games/${id}`, JSON.stringify(game), OPTIONS)
+    this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
       .map(res => {
         console.log(res);
         return res;
