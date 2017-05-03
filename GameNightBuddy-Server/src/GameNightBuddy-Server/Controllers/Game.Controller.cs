@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameNightBuddy_Server.Models;
+using Newtonsoft.Json;
+using GameNightBuddy_Server.ViewModels;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -46,22 +48,22 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost("{nightId}")]
-    public IActionResult CreateAndAddToGameNight([FromBody] object body, [FromRoute] Guid nightId)
+    public IActionResult CreateAndAddToGameNight([FromBody] GameViewModel body, [FromRoute] Guid nightId)
     {
       if (body == null)
       {
         return new BadRequestResult();
       }
 
-      var game = new Game();
-            
+      var game = new Game(body);
+
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
 
       this.nightRepository.InsertGameNightGame(game.GameId, nightId);
       this.nightRepository.Save();
 
-      return new CreatedResult("games", game);
+      return new CreatedResult("games", body);
     }
   }
 }
