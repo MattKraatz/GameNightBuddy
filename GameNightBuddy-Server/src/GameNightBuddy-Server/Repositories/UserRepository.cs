@@ -9,6 +9,7 @@ namespace GameNightBuddy_Server.Repositories
   public interface IUserRepository : IDisposable
   {
     User GetUserByFbKey(string id);
+    List<User> QueryUsers(string query);
     User GetUser(Guid id);
     Guid InsertUser(User user);
     void DeactivateUser(Guid userId);
@@ -28,6 +29,11 @@ namespace GameNightBuddy_Server.Repositories
     public User GetUserByFbKey(string id)
     {
       return this.context.Users.FirstOrDefault(u => u.FirebaseId == id);
+    }
+
+    public List<User> QueryUsers(string query)
+    {
+      return this.context.Users.Where(u => u.DisplayName.Contains(query) || string.Concat(u.FirstName + u.LastName).Contains(query)).ToList();
     }
 
     public void DeactivateUser(Guid userId)

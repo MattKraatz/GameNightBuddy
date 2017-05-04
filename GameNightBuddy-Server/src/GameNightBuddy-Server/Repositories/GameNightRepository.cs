@@ -1,4 +1,5 @@
 ﻿using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace GameNightBuddy_Server.Repositories
   {
     IEnumerable<GameNight> GetGameNights();
     IEnumerable<GameNight> GetMyGameNights(Guid id);
-    GameNight LoadGameNightByID(Guid nightId);
+    GameNightViewModel LoadGameNightByID(Guid nightId);
     Guid InsertGameNight(GameNight night);
     Guid InsertGameNightGame(Guid gameId, Guid nightId);
-    Guid InsertMember(GameNightMember member, Guid id);
+    Guid InsertMember(GameNightMember member);
     void DeactivateGameNight(Guid nightId);
     void UpdateGameNight(GameNight night);
     void Save();
@@ -23,7 +24,7 @@ namespace GameNightBuddy_Server.Repositories
   public class GameNightRepository : IGameNightRepository, IDisposable
   {
     private Context context;
-      
+
     public GameNightRepository(Context context)
     {
       this.context = context;
@@ -43,9 +44,9 @@ namespace GameNightBuddy_Server.Repositories
           .ToList();
     }
 
-    public GameNight LoadGameNightByID(Guid nightId)
+    public GameNightViewModel LoadGameNightByID(Guid nightId)
     {
-      return context.GameNights
+      var night = context.GameNights
         // Full Member Tree
         .Include(n => n.Members)
           .ThenInclude(m => m.User)
@@ -57,17 +58,21 @@ namespace GameNightBuddy_Server.Repositories
         .Include(n => n.Matches)
           .ThenInclude(m => m.Game)
             .ThenInclude(g => g.User)
-        // BROKEN AT THE MOMENT
-        //// Full Games Tree
-        //.Include(n => n.Games)
-        //  .ThenInclude(g => g.Game)
-        //    .ThenInclude(g => g.User)
-        .SingleOrDefault(n => n.GameNightId == nightId);
+        .FirstOrDefault(n => n.GameNightId == nightId);
+
+      night.Games = context.GameNightGames
+        .Include(gng => gng.Game)
+          .ThenInclude(g => g.User)
+        .Where(g => g.GameNightId == nightId).ToList();
+
+      var vm = new GameNightViewModel(night);
+      
+      return vm;
     }
 
-    public Guid InsertMember(GameNightMember member, Guid nightId)
+    public Guid InsertMember(GameNightMember member)
     {
-      context.GameNights.SingleOrDefault(n => n.GameNightId == nightId).Members.Add(member);
+      context.GameNightMembers.Add(member);
       return member.GameNightMemberId;
     }
 

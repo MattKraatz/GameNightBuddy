@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.ViewModels;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -42,14 +43,16 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost("{id}/members")]
-    public IActionResult AddMember([FromBody] GameNightMember member, [FromRoute] Guid id)
+    public IActionResult AddMember([FromBody] MemberViewModel vm, [FromRoute] Guid id)
     {
-      if (member == null)
+      if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      this.gameNightRepository.InsertMember(member, id);
+      var member = new GameNightMember(vm, id);
+
+      this.gameNightRepository.InsertMember(member);
       this.gameNightRepository.Save();
       return new CreatedResult($"game-nights/${id}/members", member);
     }

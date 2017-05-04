@@ -30,6 +30,13 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(user);
     }
 
+    [HttpGet("search/{query}")]
+    public IActionResult QueryUsers([FromRoute] string query)
+    {
+      var users = this.userRepository.QueryUsers(query);
+      return new ObjectResult(users);
+    }
+
     [HttpPost]
     public IActionResult CreateUser([FromBody] User user)
     {
