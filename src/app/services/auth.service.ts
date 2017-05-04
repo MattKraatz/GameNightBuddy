@@ -24,6 +24,8 @@ export class AuthService {
   userProfile: Observable<User>;
   currentUserProfile: User;
   public userLoaded: boolean = false;
+
+  userSearch: Observable<User[]>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http, private router: Router) {
     this.user = store.select("auth");
@@ -61,6 +63,11 @@ export class AuthService {
           this.store.dispatch(action)
           this.userLoaded = true;
         });
+  }
+
+  searchUsers(query: string): Observable<User[]> {
+    return this.http.get(`${ServerConfig.baseUrl}/users/search/${query}`,HEADER)
+      .map(res => res.json())
   }
 
   // TODO: update this method to retrieve status from this.user Observable instead of AF

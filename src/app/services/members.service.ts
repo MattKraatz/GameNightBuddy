@@ -7,6 +7,7 @@ import {Http, Headers} from '@angular/http';
 import {AppStore} from '../models/appstore.model';
 import {Member} from '../models/member.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
+import {ServerConfig} from '../constants/serverConfig';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -20,7 +21,7 @@ export class MembersService {
   }
 
   loadMembers(id: string) {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`)
+    this.http.get(`${firebaseConfig.databaseURL}/game-nights/${id}/members.json`)
       .map(res => res.json())
       .map(members => {
         console.log(members)
@@ -31,7 +32,7 @@ export class MembersService {
   }
 
   createMember(member: Member, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`, JSON.stringify(member), HEADER)
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${id}/members`, JSON.stringify(member), HEADER)
       .map(res => {
         console.log(member);
         return member;

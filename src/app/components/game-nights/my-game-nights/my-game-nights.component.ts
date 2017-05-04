@@ -16,7 +16,7 @@ export class MyGameNightsComponent implements OnInit {
 
   constructor(private gameNightService: GameNightService, private authService: AuthService) {
     this.gameNights = gameNightService.myGameNights;
-    gameNightService.loadMyGameNights(this.authService.currentUser.uid);
+    gameNightService.loadMyGameNights(this.authService.currentUserProfile.UserId);
   }
 
   ngOnInit() {

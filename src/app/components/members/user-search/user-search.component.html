@@ -1,13 +1,13 @@
 <div class="container search-results">
-  <div class="row" *ngFor="let auth of results">
+  <div class="row" *ngFor="let user of results">
     <div class="col-2">
-      <span (click)="addMember.emit(auth)" class="invite-link">Invite</span>
+      <span (click)="addMember.emit(user)" class="invite-link">Invite</span>
     </div>
     <div class="col-4">
-      <span>{{auth.firstName}} {{auth.lastName}}</span>
+      <span>{{user.DisplayName}}</span>
     </div>
     <div class="col-4">
-      <span>{{auth.email}}</span>
+      <span>{{user.FirstName}} {{user.LastName}}</span>
     </div>
   </div>
 </div>

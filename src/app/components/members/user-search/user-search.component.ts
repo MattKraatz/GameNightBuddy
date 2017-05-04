@@ -1,7 +1,8 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Http, Headers} from '@angular/http';
 
-import {Auth} from '../../../models/auth.model';
+import {Member} from '../../../models/member.model';
+import {User} from '../../../models/user.model';
 import {AuthService} from '../../../services/auth.service';
 import {firebaseConfig} from '../../../constants/firebaseConfig';
 
@@ -15,11 +16,12 @@ const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 export class UserSearchComponent implements OnInit {
 
   @Output() addMember = new EventEmitter();
-  @Input() members: Auth[];
+  @Input() members: Member[];
 
-  private results: Auth[];
+  private results: User[];
 
-  constructor(private authService: AuthService, private http: Http) { }
+  constructor(private authService: AuthService, private http: Http) {
+  }
 
   ngOnInit() {
   }
@@ -29,19 +31,8 @@ export class UserSearchComponent implements OnInit {
   // let's do this locally for now, should probably integrate this into the store long-term
   doSearch() {
     this.results = null;
-    this.http.get(`${firebaseConfig.databaseURL}/v1/users.json?orderBy="email"&equalTo="${this.model}"`,HEADER)
-      .map(res => res.json())
-      .map(auths => {
-        // map the keys from Firebase to new Auth objects
-        this.results = Object.keys(auths)
-          .map((val => {
-            var auth = new Auth(auths[val]);
-            return auth;
-          }))
-          // filter out any results that are already included in this game night
-          .filter(val => this.members.findIndex(mem => mem.email == val.email) < 0)
-      })
-      .subscribe()
+    this.authService.searchUsers(this.model)
+      .subscribe(u => this.results = u);
   }
 
 }
