@@ -1,4 +1,6 @@
-export const matches = (state: any = [], {type, payload}) => {
+import {Match} from '../models/match.model';
+
+export const matches = (state: Match[] = new Array<Match>(), {type, payload}) => {
   switch (type) {
     case "POPULATE_MATCHES":
       return payload;
@@ -6,11 +8,11 @@ export const matches = (state: any = [], {type, payload}) => {
       return [...state, payload];
     case 'UPDATE_MATCH':
       return state.map(match => {
-        return match.id === payload.id ? Object.assign({}, match, payload) : match;
+        return match.MatchId === payload.MatchId ? Object.assign({}, match, payload) : match;
       });
     case 'DELETE_MATCH':
       return state.filter(match => {
-        return match.id !== payload.id;
+        return match.MatchId !== payload.MatchId;
       });
     default:
       return state;

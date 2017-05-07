@@ -24,9 +24,9 @@ export class CollectionComponent implements OnInit {
 
   addGame(model: Game) {
     var game = new Game(model);
-    this.authService.user.subscribe(
+    this.authService.userProfile.subscribe(
       user => {
-        game.owner = user;
+        game.Owner = user;
         this.collectionService.createGame(game);
       }
     )

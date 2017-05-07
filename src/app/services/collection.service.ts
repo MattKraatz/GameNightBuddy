@@ -2,13 +2,16 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
-import {Http, Headers} from '@angular/http';
+import {Http, Headers, RequestOptions} from '@angular/http';
 
 import {AppStore} from '../models/appstore.model';
 import {Game} from '../models/game.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
+import {ServerConfig} from '../constants/serverConfig';
+import {User} from '../models/user.model';
 
-const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
+const HEADERS = new Headers({ 'Content-Type': 'application/json' });
+const OPTIONS = new RequestOptions({ headers: HEADERS });
 
 @Injectable()
 export class CollectionService {
@@ -23,22 +26,17 @@ export class CollectionService {
     this.http.get(`${firebaseConfig.databaseURL}/v1/collection.json?orderBy="owner/uid"&equalTo="${id}"`)
       .map(res => res.json())
       .map(games => {
-        // Map the Id from Firebase to each game's Id
-        return Object.keys(games).map((val => {
-          var game = new Game(games[val]);
-          game.id = val;
-          return game;
-        }))
+        console.log(games);
+        return games
       })
       .map(payload => ({ type: 'POPULATE_COLLECTION', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   createGame(game: Game) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
-      .map(res => {
-        // UUID is returned, add it to the game object
-        game.id = res.json().name;
+    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), OPTIONS)
+      .map(game => {
+        console.log(game);
         return game;
       })
       .map(payload => ({ type: 'CREATE_GAME', payload }))
@@ -46,10 +44,9 @@ export class CollectionService {
   }
 
   createGameInGameNightCollection(game: Game, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), HEADER)
+    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), OPTIONS)
       .map(res => {
-        // UUID is returned, add it to the game object
-        game.id = res.json().name;
+        console.log(game);
         return game;
       })
       .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
@@ -57,15 +54,12 @@ export class CollectionService {
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), HEADER)
+    // Give game.Owner a static value auth is working again
+    console.log(game);
+    this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
       .map(res => {
-        // UUID is returned, add it to the game object
-        game.id = res.json().name;
-        this.http.put(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection/${game.id}.json`, JSON.stringify(game), HEADER)
-          // ignore the results (res), input is the payload
-          .map(res => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', game }))
-          .subscribe(action => this.store.dispatch(action));
-        return game;
+        console.log(res);
+        return res;
       })
       .map(payload => ({ type: 'CREATE_GAME', payload }))
       .subscribe(action => this.store.dispatch(action));

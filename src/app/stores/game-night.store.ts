@@ -5,16 +5,16 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case "POPULATE_NIGHT":
       return payload;
     case 'CREATE_GAME_IN_GAME_NIGHT':
-      state.collection.push(payload);
+      state.Games.push(payload);
       return state;
     case 'CREATE_MEMBER_IN_GAME_NIGHT':
-      state.members.push(payload);
+      state.Members.push(payload);
       return state;
     case 'CREATE_MATCH_IN_GAME_NIGHT':
-      state.matches.push(payload);
+      state.Matches.push(payload);
       return state;
     case 'UPDATE_NIGHT':
-      return state.id === payload.id ? Object.assign({}, state, payload) : state;
+      return state.GameNightId === payload.GameNightId ? Object.assign({}, state, payload) : state;
     case 'DELETE_NIGHT':
       return new GameNight();
     default:

@@ -10,9 +10,9 @@
   </div>
   <div class="form-group">
     <label for="game">Game</label>
-    <select [(ngModel)]="model.game" name="game" id="game"
+    <select [(ngModel)]="model.Game" name="game" id="game"
       #game="ngModel" type="text" class="form-control" required >
-      <option *ngFor="let game of games" [ngValue]="game">{{game.name}}</option>
+      <option *ngFor="let game of games" [ngValue]="game">{{game.Name}}</option>
     </select>
     <div [hidden]="game.valid || game.pristine"
           class="alert alert-danger">
@@ -21,15 +21,15 @@
   </div>
   <div class="form-group">
     <label for="players">Players</label>
-    <select multiple [(ngModel)]="model.players" name="players" id="players"
+    <select multiple [(ngModel)]="model.Players" name="players" id="players"
       #players="ngModel" type="text" class="form-control" required >
-      <option *ngFor="let member of members" [ngValue]="member">{{member.firstName + " " + member.lastName}}</option>
+      <option *ngFor="let member of members" [ngValue]="member">{{member.FirstName + " " + member.LastName}}</option>
     </select>
     <div [hidden]="players.valid || players.pristine"
           class="alert alert-danger">
       Players are required
     </div>
-    <table *ngIf="model.players?.length > 0" id="player-table">
+    <table *ngIf="model.Players?.length > 0" id="player-table">
       <thead>
         <tr>
           <th class="player-col">Player</th>
@@ -39,22 +39,22 @@
           <th class="checkbox">Winner</th>
         </tr>
       </thead>
-      <tr *ngFor="let player of model.players">
-        <td>{{player.firstName + " " + player.lastName}}</td>
+      <tr *ngFor="let player of model.Players">
+        <td>{{player.FirstName + " " + player.LastName}}</td>
         <td class="checkbox">
-          <input [(ngModel)]="player.firstTime" name="player.firstTime" id="player.firstTime"
+          <input [(ngModel)]="player.FirstTime" name="player.firstTime" id="player.firstTime"
             type="checkbox" class="form-control" />
         </td>
         <td>
-          <input [(ngModel)]="player.team" name="player.team" id="player.team"
+          <input [(ngModel)]="player.Team" name="player.team" id="player.team"
             type="text" class="form-control" />
         </td>
         <td class="score">
-          <input [(ngModel)]="player.score" name="player.score" id="player.score"
+          <input [(ngModel)]="player.Score" name="player.score" id="player.score"
             type="number" class="form-control" />
         </td>
         <td class="checkbox">
-          <input [(ngModel)]="player.winner" name="player.winner" id="player.winner"
+          <input [(ngModel)]="player.Winner" name="player.winner" id="player.winner"
             type="checkbox" class="form-control" />
         </td>
       </tr>

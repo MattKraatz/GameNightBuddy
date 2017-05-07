@@ -1,4 +1,6 @@
-export const myGameNights = (state: any = [], {type, payload}) => {
+import {GameNight} from '../models/game-night.model';
+
+export const myGameNights = (state: GameNight[] = new Array<GameNight>(), {type, payload}) => {
   switch (type) {
     case "POPULATE_MY_NIGHTS":
       return payload;

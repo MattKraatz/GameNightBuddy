@@ -21,7 +21,6 @@ export class GameNightRegistrationComponent implements OnInit {
     var night = new GameNight(this.model);
     this.authService.user.subscribe(
       user => {
-        night.hosts.push(user);
         this.gameNightService.createGameNight(night);
       }
     )

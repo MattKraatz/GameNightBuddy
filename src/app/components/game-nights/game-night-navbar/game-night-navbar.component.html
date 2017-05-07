@@ -2,17 +2,17 @@
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarGameNight" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" routerLink="/game-night/{{gameNight.id}}">{{gameNight.name}}</a>
+  <a class="navbar-brand" routerLink="/game-night/{{gameNight.GameNightId}}">{{gameNight.Name}}</a>
   <div class="collapse navbar-collapse" id="navbarGameNight">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{gameNight.id}}/collection" routerLinkActive="active">Collection</a>
+        <a class="nav-link" routerLink="/game-night/{{gameNight.GameNightId}}/collection" routerLinkActive="active">Collection</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{gameNight.id}}/members" routerLinkActive="active">Members</a>
+        <a class="nav-link" routerLink="/game-night/{{gameNight.GameNightId}}/members" routerLinkActive="active">Members</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{gameNight.id}}/matches" routerLinkActive="active">Matches</a>
+        <a class="nav-link" routerLink="/game-night/{{gameNight.GameNightId}}/matches" routerLinkActive="active">Matches</a>
       </li>
     </ul>
   </div>

@@ -7,6 +7,7 @@ import {Http, Headers} from '@angular/http';
 import {AppStore} from '../models/appstore.model';
 import {Member} from '../models/member.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
+import {ServerConfig} from '../constants/serverConfig';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -20,26 +21,20 @@ export class MembersService {
   }
 
   loadMembers(id: string) {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`)
+    this.http.get(`${firebaseConfig.databaseURL}/game-nights/${id}/members.json`)
       .map(res => res.json())
       .map(members => {
-        // Map the Id from Firebase to each member's Id
-        return Object.keys(members).map((val => {
-          var member = new Member(members[val]);
-          member.id = val;
-          return member;
-        }))
+        console.log(members)
+        return members;
       })
       .map(payload => ({ type: 'POPULATE_MEMBERS', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   createMember(member: Member, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/members.json`, JSON.stringify(member), HEADER)
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${id}/members`, JSON.stringify(member), HEADER)
       .map(res => {
-        // Firebase Id is returned, add it to the member object
-        member.id = res.json().name;
-        member.dateJoined = res.json().dateJoined;
+        console.log(member);
         return member;
       })
       .map(payload => ({ type: 'CREATE_MEMBER_IN_GAME_NIGHT', payload }))
