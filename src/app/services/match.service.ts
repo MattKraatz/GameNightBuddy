@@ -6,7 +6,7 @@ import {Http, Headers} from '@angular/http';
 
 import {AppStore} from '../models/appstore.model';
 import {Match} from '../models/match.model';
-import {firebaseConfig} from '../constants/firebaseConfig';
+import {ServerConfig} from '../constants/serverConfig';
 import {Player} from '../models/player.model';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
@@ -22,25 +22,10 @@ export class MatchService {
     this.matches = store.select('matches');
   }
 
-  // not getting used currently
-  loadMatches(id: string) {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/matches.json`)
-      .map(res => res.json())
-      .map(matches => {
-        console.log(matches);
-        return matches;
-      })
-      .map(payload => ({ type: 'POPULATE_MATCHES', payload }))
-      .subscribe(action => {
-        this.store.dispatch(action)
-        this.matchesLoaded = true;
-      });
-  }
-
   createMatch(match: Match, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/matches.json`, JSON.stringify(match), HEADER)
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${id}/matches`, JSON.stringify(match), HEADER)
       .map(res => {
-        console.log(match)
+        debugger
         return match;
       })
       .map(payload => ({ type: 'CREATE_MATCH_IN_GAME_NIGHT', payload }))
