@@ -16,6 +16,7 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGameNight(GameNight night);
     Guid InsertGameNightGame(Guid gameId, Guid nightId);
     Guid InsertMember(GameNightMember member);
+    Guid InsertMatch(Guid nightId, MatchViewModel match);
     void DeactivateGameNight(Guid nightId);
     void UpdateGameNight(GameNight night);
     void Save();
@@ -68,6 +69,22 @@ namespace GameNightBuddy_Server.Repositories
       var vm = new GameNightViewModel(night);
       
       return vm;
+    }
+
+    public Guid InsertMatch(Guid nightId, MatchViewModel vm)
+    {
+      var match = new Match(vm);
+      match.GameNightId = nightId;
+      context.Matches.Add(match);
+      foreach (PlayerViewModel pvm in vm.Players)
+      {
+        var player = new MatchPlayer(pvm);
+        player.MatchId = match.MatchId;
+        // TODO: update the GameNight VM to eliminate the need for this MemberId call
+        player.GameNightMemberId = context.GameNightMembers.First(m => m.UserId == pvm.UserId).GameNightMemberId;
+        context.MatchPlayers.Add(player);
+      }
+      return match.MatchId;
     }
 
     public Guid InsertMember(GameNightMember member)

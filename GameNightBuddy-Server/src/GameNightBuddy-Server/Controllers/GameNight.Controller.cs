@@ -70,6 +70,19 @@ namespace GameNightBuddy_Server.Controllers
       return new CreatedResult($"game-nights/${id}/games", game);
     }
 
+    [HttpPost("{id}/matches")]
+    public IActionResult AddGame([FromBody] MatchViewModel match, [FromRoute] Guid id)
+    {
+      if (match == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameNightRepository.InsertMatch(id, match);
+      this.gameNightRepository.Save();
+      return new CreatedResult($"game-nights/${id}/matches", match);
+    }
+
     [HttpPost]
     public IActionResult Create([FromBody] GameNight night)
     {

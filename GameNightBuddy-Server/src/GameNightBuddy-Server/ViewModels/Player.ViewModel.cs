@@ -19,7 +19,7 @@ namespace GameNightBuddy_Server.ViewModels
     {
       FirstTime = player.FirstTimer;
       Winner = player.Winner;
-      Score = (int)player.Score;
+      if (player.Score.HasValue) Score = (int)player.Score;
       Team = player.Team;
     }
   }
