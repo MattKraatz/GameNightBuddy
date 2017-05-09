@@ -1,6 +1,6 @@
 <h2>Match Details</h2>
-<p>Date: {{match.date}}</p>
-<p>Game: {{match.game.name}}</p>
+<p>Date: {{match.Date}}</p>
+<p>Game: {{match.Game.Name}}</p>
 
 <h4>Players</h4>
 <table class="table">
@@ -12,12 +12,13 @@
     <th>Winner</th>
   </thead>
   <tbody>
-    <tr *ngFor="let player of match.players">
-      <td>{{player.firstName}} {{player.lastName}}</td>
-      <td><span *ngIf="player.firstTime">X</span></td>
-      <td>{{player.team}}</td>
-      <td>{{player.score}}</td>
-      <td><span *ngIf="player.winner">X</span></td>
+    <tr *ngFor="let player of match.Players">
+      <td>{{player.FirstName}} {{player.LastName}}</td>
+      <td><span *ngIf="player.FirstName">X</span></td>
+      <td>{{player.Team}}</td>
+      <td>{{player.Score}}</td>
+      <td><span *ngIf="player.Winner">X</span></td>
     </tr>
   </tbody>
 </table>
+<button (click)="back()">Go Back</button>

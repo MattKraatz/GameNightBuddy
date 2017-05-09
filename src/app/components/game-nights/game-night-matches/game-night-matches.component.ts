@@ -22,10 +22,10 @@ export class GameNightMatchesComponent implements OnInit {
   constructor(route: ActivatedRoute, private matchService: MatchService) {
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
-      this.members = night.members;
-      this.collection = night.collection;
-      this.matches = night.matches;
-      this.nightId = night.id;
+      this.members = night.Members;
+      this.collection = night.Games;
+      this.matches = night.Matches;
+      this.nightId = night.GameNightId;
     })
   }
 

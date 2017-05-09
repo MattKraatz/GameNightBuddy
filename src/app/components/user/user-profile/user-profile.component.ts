@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import {Auth} from '../../../models/auth.model';
+import {User} from '../../../models/user.model';
 import {AuthService} from '../../../services/auth.service';
 
 @Component({
@@ -11,17 +11,18 @@ import {AuthService} from '../../../services/auth.service';
 export class UserProfileComponent implements OnInit {
 
   constructor(private authService: AuthService) {
-    this.authService.user.subscribe(auth => this.model = auth);
+    this.authService.userProfile.subscribe(user => this.model = user);
   }
 
   ngOnInit() {
   }
 
   // UPDATE PROFILE FORM //
-  model = new Auth();
+  model = new User();
 
   updateProfile() {
-    var user = new Auth(this.model);
-    this.authService.updateUserInFB(user);
+    var user = new User(this.model);
+    console.log(user);
+    this.authService.updateUserInDB(user);
   }
 }

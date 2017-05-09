@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
+
 import {Auth} from '../../../models/auth.model';
 import {AuthService} from '../../../services/auth.service';
+import {ILoginViewModel, LoginViewModel} from '../../../viewmodels/login.viewmodel';
 
 @Component({
   selector: 'app-email-auth',
@@ -25,14 +27,17 @@ export class EmailAuthComponent implements OnInit {
   }
 
   // NEW USER FORM //
-  model = new Auth();
+  loginModel = new LoginViewModel();
+  registerModel = new LoginViewModel();
+
   onLoginSubmit() {
-    var user = new Auth(this.model);
+    console.log(this.loginModel);
+    var user = new LoginViewModel(this.loginModel);
     this.authService.loginWithEmailAndPassword(user);
   }
   onRegisterSubmit() {
-    var user = new Auth(this.model);
-    this.authService.registerEmailAndPassword(user);
+    var user = new LoginViewModel(this.registerModel);
+    if (user.Password == user.ConfirmPassword) this.authService.registerEmailAndPassword(user);
   }
 
   setTab(tab: string) {

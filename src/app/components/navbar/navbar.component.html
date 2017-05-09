@@ -6,16 +6,16 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/explore" routerLinkActive="active">Explore</a>
+        <a class="nav-link" *ngIf="user && user.UserId" routerLink="/explore" routerLinkActive="active">Explore</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" *ngIf="user && user.uid" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>
+        <a class="nav-link" *ngIf="user && user.UserId" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>
       </li>
     </ul>
     <ul class="navbar-nav">
-      <li class="nav-item dropdown" *ngIf="user && user.uid">
+      <li class="nav-item dropdown" *ngIf="user && user.UserId">
         <a class="nav-link dropdown-toggle" id="navbarProfileDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{user.displayName || user.email }}
+          {{user.DisplayName || user.Email }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" routerLink="/my-collection">My Collection</a>
@@ -23,7 +23,7 @@
           <a class="dropdown-item" (click)="logout()">Logout</a>
         </div>
       </li>
-      <li class="nav-item" *ngIf="!user || !user.uid">
+      <li class="nav-item" *ngIf="!user || !user.UserId">
         <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
       </li>
     </ul>

@@ -3,6 +3,8 @@ import {GameNight} from './game-night.model';
 
 export interface IUser {
   UserId: string;
+  FirstName: string;
+  LastName: string;
   DisplayName: string;
   PhotoURL: string;
   Email: string;
@@ -13,6 +15,8 @@ export interface IUser {
 export class User {
 
   public UserId: string;
+  public FirstName: string;
+  public LastName: string;
   public DisplayName: string;
   public PhotoURL: string;
   public Email: string;
@@ -21,6 +25,8 @@ export class User {
 
   constructor(obj?: IUser) {
     this.UserId = obj && obj.UserId || "";
+    this.FirstName = obj && obj.FirstName || "";
+    this.LastName = obj && obj.LastName || "";    
     this.DisplayName = obj && obj.DisplayName || "";
     this.PhotoURL = obj && obj.PhotoURL || "";
     this.Email = obj && obj.Email || "";

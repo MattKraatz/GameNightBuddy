@@ -8,7 +8,10 @@ import {Router} from '@angular/router';
 
 import {AppStore} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
+import {User} from '../models/user.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
+import {LoginViewModel} from '../viewmodels/login.viewmodel';
+import {ServerConfig} from '../constants/serverConfig';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -18,10 +21,15 @@ export class AuthService {
   user: Observable<Auth>;
   currentUser: Auth;
 
+  userProfile: Observable<User>;
+  currentUserProfile: User;
   public userLoaded: boolean = false;
+
+  userSearch: Observable<User[]>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http, private router: Router) {
     this.user = store.select("auth");
+    this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
     // Resolve initial Auth status during construction
     this.af.auth.subscribe(auth => {
@@ -33,30 +41,34 @@ export class AuthService {
           var user = new Auth(auth.facebook);
           user.uid = auth.uid;
         }
-        this.getAuthRecordFromFB(user);
+        this.getAuthRecordFromDB(user);
       }
       else {
         // user not logged in
-        this.store.dispatch({type: "LOGOUT_USER", payload: new Auth()});
+        this.store.dispatch({type: "LOGOUT_USER", payload: new User()});
       }
     })
   }
 
-  getAuthRecordFromFB(user: Auth) {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`)
+  getAuthRecordFromDB(auth: Auth) {
+    this.http.get(`${ServerConfig.baseUrl}/users/${auth.uid}`)
         .map(res => res.json())
         .map(res => {
-          if (res) {
-            user.firstName = res.firstName;
-            user.lastName = res.lastName;
-          }
+          var user = new User(res);
+          console.log(res);
+          this.currentUserProfile = user;
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))
         .subscribe(action => {
-          this.store.dispatch(action)
+          this.store.dispatch(action);
           this.userLoaded = true;
         });
+  }
+
+  searchUsers(query: string): Observable<User[]> {
+    return this.http.get(`${ServerConfig.baseUrl}/users/search/${query}`,HEADER)
+      .map(res => res.json())
   }
 
   // TODO: update this method to retrieve status from this.user Observable instead of AF
@@ -72,8 +84,8 @@ export class AuthService {
     return output;
   }
 
-  updateUserInFB(user: Auth) {
-    this.http.put(`${firebaseConfig.databaseURL}/v1/users/${user.uid}.json`,JSON.stringify(user),HEADER)
+  updateUserInDB(user: User) {
+    this.http.put(`${ServerConfig.baseUrl}/users`,JSON.stringify(user),HEADER)
       .map(res => ({ type: 'LOGIN_USER', payload: user }))
       .subscribe(action => this.store.dispatch(action));
   }
@@ -85,17 +97,19 @@ export class AuthService {
   }
 
   // TODO: call getAuthRecordFromFB() in this method
-  loginWithEmailAndPassword(user: Auth) {
+  loginWithEmailAndPassword(user: LoginViewModel) {
+    console.log(user);
     this.af.auth.login({
-      email: user.email,
-      password: user.password
+      email: user.Email,
+      password: user.Password
     },
     {
       provider: AuthProviders.Password,
       method: AuthMethods.Password,
     })
     .then(response => {
-      console.log(response);
+      var user = new Auth(response.auth);
+      this.getAuthRecordFromDB(user);
     })
     .catch(response => {
       console.error(response);
@@ -103,26 +117,25 @@ export class AuthService {
   }
 
   // TODO: call getAuthRecordFromFB() in this method
-  registerEmailAndPassword(user: Auth) {
+  registerEmailAndPassword(user: LoginViewModel) {
     this.af.auth.createUser({
-      email: user.email,
-      password: user.password
+      email: user.Email,
+      password: user.Password
     })
     .then(response => {
-      console.log(response);
+      var user = new Auth(response.auth);      
+      this.getAuthRecordFromDB(user);
     })
     .catch(response => {
       console.error(response);
     });
   }
 
-  // TODO: redirect the user on logout to home
   logout() {
     this.af.auth.logout()
     .then(response => {
       console.log("logout", response);
     });
-    // No redirect on logout, update the store
     this.store.dispatch({type: "LOGOUT_USER", payload: {}});
     this.router.navigate(['/']);
   }

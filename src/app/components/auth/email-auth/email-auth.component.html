@@ -9,10 +9,10 @@
   </ul>
 
   <div *ngIf="loginTabClasses.active">
-    <form (ngSubmit)="onLoginSubmit(ngModel); userForm.reset()" #userForm="ngForm">
+    <form (ngSubmit)="onLoginSubmit(ngModel); loginForm.reset()" #loginForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
-        <input [(ngModel)]="model.email" name="email" id="email"
+        <input [(ngModel)]="loginModel.Email" name="email" id="email"
           #email="ngModel" type="email" class="form-control" required />
         <div [hidden]="email.valid || email.pristine"
               class="alert alert-danger">
@@ -21,7 +21,7 @@
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input [(ngModel)]="model.password" name="password" id="password"
+        <input [(ngModel)]="loginModel.Password" name="password" id="password"
           #password="ngModel" type="password" class="form-control" required />
         <div [hidden]="password.valid || password.pristine"
           class="alert alert-danger">
@@ -29,17 +29,17 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary btn-block"
-        [disabled]="!userForm.form.valid">
+        [disabled]="!loginForm.form.valid">
         Login
       </button>
     </form>
   </div>
 
   <div *ngIf="registerTabClasses.active">
-    <form (ngSubmit)="onRegisterSubmit(ngModel); userForm.reset()" #userForm="ngForm">
+    <form (ngSubmit)="onRegisterSubmit(ngModel); registerForm.reset()" #registerForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
-        <input [(ngModel)]="model.email" name="email" id="email"
+        <input [(ngModel)]="registerModel.Email" name="email" id="email"
           #email="ngModel" type="email" class="form-control" required />
         <div [hidden]="email.valid || email.pristine"
               class="alert alert-danger">
@@ -48,7 +48,7 @@
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input [(ngModel)]="model.password" name="password" id="password"
+        <input [(ngModel)]="registerModel.Password" name="password" id="password"
           #password="ngModel" type="password" class="form-control" required />
         <div [hidden]="password.valid || password.pristine"
           class="alert alert-danger">
@@ -57,7 +57,7 @@
       </div>
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input [(ngModel)]="model.confirmPassword" name="confirmPassword" id="confirmPassword"
+        <input [(ngModel)]="registerModel.ConfirmPassword" name="confirmPassword" id="confirmPassword"
           #confirmPassword="ngModel" type="password" class="form-control" required />
         <div [hidden]="confirmPassword.valid || confirmPassword.pristine"
           class="alert alert-danger">
@@ -65,7 +65,7 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary btn-block"
-        [disabled]="!userForm.form.valid">
+        [disabled]="!registerForm.form.valid">
         Register
       </button>
     </form>
