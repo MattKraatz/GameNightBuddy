@@ -17,6 +17,7 @@ import {matches} from './stores/matches.store';
 import {gameNight} from './stores/game-night.store';
 import {myGameNights} from './stores/my-game-nights.store';
 import {user} from './stores/user.store';
+import {otherGameNights} from './stores/other-game-nights.store';
 import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
@@ -115,7 +116,11 @@ const appRoutes: Routes = [
     component: CollectionComponent
   },
   // EXPLORE
-  {path: 'explore', component: ExploreComponent},
+  {
+    path: 'explore',
+    canActivate: [AuthGuard, ProfileCompleteGuard],    
+    component: ExploreComponent
+  },
   // AUTH
   {
     path: 'login',
@@ -169,7 +174,7 @@ const authConfig = {
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    StoreModule.provideStore({collection, matches, gameNight, myGameNights, user}),
+    StoreModule.provideStore({user, collection, matches, gameNight, myGameNights, otherGameNights}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
   providers: [

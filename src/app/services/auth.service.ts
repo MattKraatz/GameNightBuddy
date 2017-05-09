@@ -50,17 +50,18 @@ export class AuthService {
     })
   }
 
-  getAuthRecordFromDB(user: Auth) {
-    this.http.get(`${ServerConfig.baseUrl}/users/${user.uid}`)
+  getAuthRecordFromDB(auth: Auth) {
+    this.http.get(`${ServerConfig.baseUrl}/users/${auth.uid}`)
         .map(res => res.json())
         .map(res => {
           var user = new User(res);
+          console.log(res);
           this.currentUserProfile = user;
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))
         .subscribe(action => {
-          this.store.dispatch(action)
+          this.store.dispatch(action);
           this.userLoaded = true;
         });
   }
@@ -97,6 +98,7 @@ export class AuthService {
 
   // TODO: call getAuthRecordFromFB() in this method
   loginWithEmailAndPassword(user: LoginViewModel) {
+    console.log(user);
     this.af.auth.login({
       email: user.Email,
       password: user.Password
@@ -106,7 +108,8 @@ export class AuthService {
       method: AuthMethods.Password,
     })
     .then(response => {
-      console.log(response);
+      var user = new Auth(response.auth);
+      this.getAuthRecordFromDB(user);
     })
     .catch(response => {
       console.error(response);
@@ -120,7 +123,8 @@ export class AuthService {
       password: user.Password
     })
     .then(response => {
-      console.log(response);
+      var user = new Auth(response.auth);      
+      this.getAuthRecordFromDB(user);
     })
     .catch(response => {
       console.error(response);

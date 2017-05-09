@@ -22,6 +22,7 @@ export class UserProfileComponent implements OnInit {
 
   updateProfile() {
     var user = new User(this.model);
+    console.log(user);
     this.authService.updateUserInDB(user);
   }
 }

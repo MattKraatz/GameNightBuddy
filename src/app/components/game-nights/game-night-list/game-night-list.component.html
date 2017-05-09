@@ -1,12 +1,14 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let night of gameNights">
-      <td><a [routerLink]="['/game-night', night.GameNightId]">{{night.Name}}</a></td>
-    </tr>
-  </tbody>
-</table>
+<div class="game-night-list">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let night of gameNights">
+        <td><a [routerLink]="['/game-night', night.GameNightId]">{{night.Name}}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

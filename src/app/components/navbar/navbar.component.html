@@ -6,7 +6,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/explore" routerLinkActive="active">Explore</a>
+        <a class="nav-link" *ngIf="user && user.UserId" routerLink="/explore" routerLinkActive="active">Explore</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" *ngIf="user && user.UserId" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>

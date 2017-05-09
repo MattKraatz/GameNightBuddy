@@ -11,19 +11,18 @@ export class ProfileCompleteGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return Observable.of(true);
-    // BYPASSING UNTIL BACK-END HOOKED UP
-    // return this.authService.userLoaded ?
-    //   Observable.of(this.validateProfile(this.authService.currentUserProfile)) :
-    //   this.authService.userProfile.skip(1).map(auth => this.validateProfile(auth))
-    //     .catch((e) => Observable.of(false));
+    return this.authService.userLoaded ?
+      Observable.of(this.validateProfile(this.authService.currentUserProfile)) :
+      this.authService.userProfile.skip(1).map(auth => this.validateProfile(auth))
+        .catch((e) => Observable.of(false));
     }
 
     validateProfile(user: User): boolean {
       var output = false;
       if (user.FirstName && user.FirstName.length > 0 &&
           user.LastName && user.LastName.length > 0 &&
-          user.Email && user.Email.length > 0) {
+          user.Email && user.Email.length > 0 &&          
+          user.DisplayName && user.DisplayName.length > 0) {
             output = true;
           } else {
             this.router.navigate(['profile']);

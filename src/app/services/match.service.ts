@@ -25,7 +25,6 @@ export class MatchService {
   createMatch(match: Match, id: string) {
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${id}/matches`, JSON.stringify(match), HEADER)
       .map(res => {
-        debugger
         return match;
       })
       .map(payload => ({ type: 'CREATE_MATCH_IN_GAME_NIGHT', payload }))

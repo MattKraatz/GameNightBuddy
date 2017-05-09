@@ -22,24 +22,22 @@ export class GameNightService {
 
   gameNight: Observable<GameNight>;
   myGameNights: Observable<Array<GameNight>>;
+  otherGameNights: Observable<Array<GameNight>>;
 
   nightLoaded: boolean = false;
-  nightsLoaded: boolean = false;  
+  nightsLoaded: boolean = false;
+  otherNightsLoaded: boolean = false;
 
   constructor(private store: Store<AppStore>, private http: Http, private authService: AuthService) {
     this.gameNight = store.select("gameNight");
     this.myGameNights = store.select("myGameNights");
+    this.otherGameNights = store.select("otherGameNights");
   }
 
   loadGameNight(id: string) {
     if (!this.nightLoaded) {
       this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`)
         .map(res => res.json())
-        .map(gameNight => {
-          console.log(gameNight)
-          var night = new GameNight(gameNight);
-          return night;
-        })
         .map(payload => ({ type: 'POPULATE_NIGHT', payload }))
         .subscribe(action => this.store.dispatch(action));
     }
@@ -48,14 +46,24 @@ export class GameNightService {
 
   loadMyGameNights(id: string) {
     if (!this.nightsLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights`)
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/my/${id}`)
         .map(res => res.json())
         .subscribe(payload => {
-          console.log(payload);
           this.store.dispatch({ type: 'POPULATE_MY_NIGHTS', payload: payload })
       });
     }
     this.nightsLoaded = true;
+  }
+
+  loadOtherGameNights(id: string) {
+    if (!this.otherNightsLoaded) {
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/explore/${id}`)
+        .map(res => res.json())
+        .subscribe(payload => {
+          this.store.dispatch({ type: 'POPULATE_OTHER_NIGHTS', payload: payload })
+      });
+    }
+    this.otherNightsLoaded = true;
   }
 
   createGameNight(night: GameNight) {
