@@ -33,7 +33,8 @@ namespace GameNightBuddy_Server.Repositories
 
     public List<User> QueryUsers(string query)
     {
-      return this.context.Users.Where(u => u.DisplayName.Contains(query) || string.Concat(u.FirstName + u.LastName).Contains(query)).ToList();
+      query = query.ToLower();
+      return this.context.Users.Where(u => (u.DisplayName != null && u.DisplayName.ToLower().Contains(query)) || string.Concat(u.FirstName + u.LastName).ToLower().Contains(query)).ToList();
     }
 
     public void DeactivateUser(Guid userId)
@@ -57,6 +58,7 @@ namespace GameNightBuddy_Server.Repositories
       var dbUser = this.context.Users.First(u => u.UserId == user.UserId);
       dbUser.FirstName = user.FirstName;
       dbUser.LastName = user.LastName;
+      dbUser.Email = user.Email;
       dbUser.DisplayName = user.DisplayName;
       dbUser.PhotoURL = user.PhotoURL;
     }

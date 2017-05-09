@@ -39,8 +39,8 @@ namespace GameNightBuddy_Server.Repositories
 
     public IEnumerable<GameNight> GetOtherGameNights(Guid userId)
     {
-      var nights = context.GameNightMembers.Where(m => m.UserId != userId).Select(m => m.GameNightId);
-      return context.GameNights.Where(n => nights.Contains(n.GameNightId));
+      var nights = context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
+      return context.GameNights.Where(n => !nights.Contains(n.GameNightId)).ToList();
     }
 
 
@@ -72,7 +72,8 @@ namespace GameNightBuddy_Server.Repositories
       night.Games = context.GameNightGames
         .Include(gng => gng.Game)
           .ThenInclude(g => g.User)
-        .Where(g => g.GameNightId == nightId).ToList();
+        .Where(g => g.GameNightId == nightId)
+        .ToList();
 
       var vm = new GameNightViewModel(night);
       
