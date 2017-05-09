@@ -16,9 +16,7 @@ namespace GameNightBuddy_Server.Models
 
     [Required]
     public string FirebaseId { get; set; }
-    [Required]
     public string FirstName { get; set; }
-    [Required]
     public string LastName { get; set; }
     public string DisplayName { get; set; }
     public string PhotoURL { get; set; }

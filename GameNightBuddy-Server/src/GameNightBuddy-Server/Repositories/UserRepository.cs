@@ -48,7 +48,8 @@ namespace GameNightBuddy_Server.Repositories
 
     public Guid InsertUser(User user)
     {
-      throw new NotImplementedException();
+      this.context.Users.Add(user);
+      return user.UserId;
     }
 
     public void UpdateUser(User user)

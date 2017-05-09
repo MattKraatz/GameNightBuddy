@@ -1,5 +1,6 @@
 ﻿using GameNightBuddy_Server.Repositories;
 using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,9 @@ namespace GameNightBuddy_Server.Controllers
       var user = this.userRepository.GetUserByFbKey(fbKey);
       if (user == null)
       {
-        return new NoContentResult();
+        user = new User() { FirebaseId = fbKey };
+        this.userRepository.InsertUser(user);
+        this.userRepository.Save();
       }
       return new ObjectResult(user);
     }
