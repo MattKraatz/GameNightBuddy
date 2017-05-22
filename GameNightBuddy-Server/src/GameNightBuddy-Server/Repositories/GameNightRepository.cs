@@ -11,7 +11,8 @@ namespace GameNightBuddy_Server.Repositories
   public interface IGameNightRepository : IDisposable
   {
     IEnumerable<GameNight> GetGameNights();
-    IEnumerable<GameNight> GetMyGameNights(Guid id);
+    IEnumerable<GameNight> GetMyGameNights(Guid userId);
+    IEnumerable<GameNight> GetOtherGameNights(Guid userId);
     GameNightViewModel LoadGameNightByID(Guid nightId);
     Guid InsertGameNight(GameNight night);
     Guid InsertGameNightGame(Guid gameId, Guid nightId);
@@ -36,9 +37,16 @@ namespace GameNightBuddy_Server.Repositories
       return context.GameNights.ToList();
     }
 
-    public IEnumerable<GameNight> GetMyGameNights(Guid id)
+    public IEnumerable<GameNight> GetOtherGameNights(Guid userId)
     {
-      var nights = context.GameNightMembers.Where(m => m.UserId == id).Select(m => m.GameNightId);
+      var nights = context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
+      return context.GameNights.Where(n => !nights.Contains(n.GameNightId)).ToList();
+    }
+
+
+    public IEnumerable<GameNight> GetMyGameNights(Guid userId)
+    {
+      var nights = context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
       return context.GameNights.Where(n => nights.Contains(n.GameNightId))
           .Include(n => n.Members)
             .ThenInclude(m => m.User)
@@ -64,7 +72,8 @@ namespace GameNightBuddy_Server.Repositories
       night.Games = context.GameNightGames
         .Include(gng => gng.Game)
           .ThenInclude(g => g.User)
-        .Where(g => g.GameNightId == nightId).ToList();
+        .Where(g => g.GameNightId == nightId)
+        .ToList();
 
       var vm = new GameNightViewModel(night);
       

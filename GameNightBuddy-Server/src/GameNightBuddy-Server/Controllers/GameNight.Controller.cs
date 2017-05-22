@@ -31,6 +31,17 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(nights);
     }
 
+    [HttpGet("explore/{userId}")]
+    public IActionResult GetOtherGameNights([FromRoute] Guid userId)
+    {
+      var nights = this.gameNightRepository.GetOtherGameNights(userId);
+      if (nights == null)
+      {
+        return new NoContentResult();
+      }
+      return new ObjectResult(nights);
+    }
+
     [HttpGet("{id}")]
     public IActionResult GetById([FromRoute] Guid id)
     {
