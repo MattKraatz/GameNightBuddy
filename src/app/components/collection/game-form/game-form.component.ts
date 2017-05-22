@@ -9,7 +9,6 @@ import {Member} from '../../../models/member.model';
 })
 export class GameFormComponent implements OnInit {
 
-  @Input() members: Member[];
   @Output() addGame = new EventEmitter();
 
   constructor() { }

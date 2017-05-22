@@ -23,7 +23,7 @@ export class CollectionService {
   }
 
   loadCollection(id: string) {
-    this.http.get(`${firebaseConfig.databaseURL}/v1/collection.json?orderBy="owner/uid"&equalTo="${id}"`)
+    this.http.get(`${ServerConfig.baseUrl}/games/${id}`)
       .map(res => res.json())
       .map(games => {
         console.log(games);
@@ -33,8 +33,10 @@ export class CollectionService {
       .subscribe(action => this.store.dispatch(action));
   }
 
+  // todo: update with back-end method
+  // creates game in personal collection only
   createGame(game: Game) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/collection.json`, JSON.stringify(game), OPTIONS)
+    this.http.post(`${ServerConfig.baseUrl}/games`, JSON.stringify(game), OPTIONS)
       .map(game => {
         console.log(game);
         return game;
