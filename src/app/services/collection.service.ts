@@ -33,8 +33,6 @@ export class CollectionService {
       .subscribe(action => this.store.dispatch(action));
   }
 
-  // todo: update with back-end method
-  // creates game in personal collection only
   createGame(game: Game) {
     this.http.post(`${ServerConfig.baseUrl}/games`, JSON.stringify(game), OPTIONS)
       .map(game => {
@@ -46,7 +44,7 @@ export class CollectionService {
   }
 
   createGameInGameNightCollection(game: Game, id: string) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), OPTIONS)
+    this.http.post(`${ServerConfig.baseUrl}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), OPTIONS)
       .map(res => {
         console.log(game);
         return game;

@@ -9,6 +9,8 @@ import {Router} from '@angular/router';
 import {AppStore} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
 import {User} from '../models/user.model';
+import {Game} from '../models/game.model';
+import {GameNight} from '../models/game-night.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
 import {LoginViewModel} from '../viewmodels/login.viewmodel';
 import {ServerConfig} from '../constants/serverConfig';
@@ -138,6 +140,13 @@ export class AuthService {
     });
     this.store.dispatch({type: "LOGOUT_USER", payload: {}});
     this.router.navigate(['/']);
+  }
+
+  getCurrentUserProfile(): User {
+    var user = this.currentUserProfile;
+    user.Games = new Array<Game>();
+    user.GameNights = new Array<GameNight>();
+    return user;
   }
 
 }

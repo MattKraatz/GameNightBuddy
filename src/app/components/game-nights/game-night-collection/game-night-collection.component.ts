@@ -29,7 +29,7 @@ export class GameNightCollectionComponent implements OnInit {
 
   addGame(model: Game) {
     var game = new Game(model);
-    game.Owner = this.authService.currentUserProfile;
+    game.Owner = this.authService.getCurrentUserProfile();
     this.collectionService.createGameInGameNightAndMyCollection(game, this.nightId);
   }
 
