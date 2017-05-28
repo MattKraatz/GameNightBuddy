@@ -33,5 +33,12 @@ namespace GameNightBuddy_Server.Models
       UserId = vm.UserId;
       IsHost = vm.IsHost;
     }
+
+    public GameNightMember(User vm, Guid nightId)
+    {
+      GameNightId = nightId;
+      UserId = vm.UserId;
+      IsHost = false;
+    }
   }
 }

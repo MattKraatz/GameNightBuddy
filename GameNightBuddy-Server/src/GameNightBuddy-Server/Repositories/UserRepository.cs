@@ -1,4 +1,5 @@
 ﻿using GameNightBuddy_Server.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace GameNightBuddy_Server.Repositories
 
     public User GetUserByFbKey(string id)
     {
-      return this.context.Users.FirstOrDefault(u => u.FirebaseId == id);
+      return this.context.Users
+        .Include(u => u.Games)
+        .FirstOrDefault(u => u.FirebaseId == id);
     }
 
     public List<User> QueryUsers(string query)

@@ -82,7 +82,7 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost("{id}/matches")]
-    public IActionResult AddGame([FromBody] MatchViewModel match, [FromRoute] Guid id)
+    public IActionResult AddMatch([FromBody] MatchViewModel match, [FromRoute] Guid id)
     {
       if (match == null)
       {
@@ -95,15 +95,22 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] GameNight night)
+    public IActionResult Create([FromBody] GameNightViewModel vm)
     {
-      if (night == null)
+      if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var night = new GameNight(vm);
+
       this.gameNightRepository.InsertGameNight(night);
       this.gameNightRepository.Save();
+
+      var member = new GameNightMember(vm.Members.First(), night.GameNightId);
+      this.gameNightRepository.InsertMember(member);
+      this.gameNightRepository.Save();
+      
       return new CreatedResult("game-nights", night);
     }
 
