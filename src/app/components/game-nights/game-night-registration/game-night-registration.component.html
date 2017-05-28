@@ -1,9 +1,9 @@
 <form (ngSubmit)="onSubmit(ngModel); gameNightForm.reset()" #gameNightForm="ngForm">
   <div class="form-group">
-    <label for="name">Name</label>
-    <input [(ngModel)]="model.name" name="name" id="name"
-      #name="ngModel" type="text" class="form-control" required />
-    <div [hidden]="name.valid || name.pristine"
+    <label for="Name">Name</label>
+    <input [(ngModel)]="model.Name" name="Name" id="Name"
+      #Name="ngModel" type="text" class="form-control" required />
+    <div [hidden]="Name.valid || Name.pristine"
           class="alert alert-danger">
       Name is required
     </div>

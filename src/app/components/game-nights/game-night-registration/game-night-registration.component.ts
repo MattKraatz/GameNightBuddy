@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {GameNight} from '../../../models/game-night.model';
+import {Member} from '../../../models/member.model';
 import {GameNightService} from '../../../services/game-night.service';
 import {AuthService} from '../../../services/auth.service';
 
@@ -19,11 +20,12 @@ export class GameNightRegistrationComponent implements OnInit {
 
   onSubmit() {
     var night = new GameNight(this.model);
-    this.authService.user.subscribe(
-      user => {
-        this.gameNightService.createGameNight(night);
-      }
-    )
+    var member = new Member();
+    member.UserId = this.authService.currentUserProfile.UserId;
+    member.IsHost = true;
+    night.Members.push(member);
+
+    this.gameNightService.createGameNight(night);
   }
 
 }

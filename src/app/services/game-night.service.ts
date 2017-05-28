@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
-import {Http, Headers} from '@angular/http';
+import {Http, Headers, RequestOptions} from '@angular/http';
 
 import {AppStore} from '../models/appstore.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
@@ -16,7 +16,8 @@ import {Match} from '../models/match.model';
 import {Player} from '../models/player.model';
 import {ServerConfig} from '../constants/serverConfig';
 
-const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
+const HEADERS = new Headers({ 'Content-Type': 'application/json' });
+const OPTIONS = new RequestOptions({ headers: HEADERS });
 
 @Injectable()
 export class GameNightService {
@@ -68,13 +69,14 @@ export class GameNightService {
   }
 
   createGameNight(night: GameNight) {
-    this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights.json`, JSON.stringify(night), HEADER)
+    console.log("night", night)
+    this.http.post(`${ServerConfig.baseUrl}/game-nights`, JSON.stringify(night), OPTIONS)
       .map(payload => ({ type: 'CREATE_NIGHT', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   joinGameNight(user: User, nightId: string) {
-    this.http.post(`${ServerConfig.baseUrl}/${nightId}/members`,JSON.stringify(user), HEADER)
+    this.http.post(`${ServerConfig.baseUrl}/${nightId}/members`,JSON.stringify(user), OPTIONS)
       .map(payload => ({ type: 'PLEASE_UPDATE', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
