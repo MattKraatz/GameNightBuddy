@@ -14,6 +14,5 @@ export class Member extends User {
     super(obj)
     this.IsHost = obj && obj.IsHost || false;
     this.DateJoined = obj && obj.DateJoined || new Date();
-
   }
 }

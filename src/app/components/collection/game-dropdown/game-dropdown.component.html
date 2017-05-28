@@ -1,0 +1,19 @@
+<form (ngSubmit)="attachGame.emit(model); attachGameForm.reset()" #attachGameForm="ngForm">
+  <div class="form-group">
+    <label for="game">Add a Game from Your Collection</label>
+    <div class="row">
+      <div class="col-9">
+        <select [(ngModel)]="model" name="game" id="game"
+          #gameSelect="ngModel" type="text" class="form-control" required>
+          <option *ngFor="let game of games" [ngValue]="game">{{game.Name}}</option>
+        </select>
+      </div>
+      <div class="col-3">
+        <button type="submit" class="btn btn-primary btn-block"
+            [hidden]="!gameSelect.valid || gameSelect.pristine">
+            Add
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

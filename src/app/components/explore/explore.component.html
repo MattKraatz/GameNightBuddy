@@ -1,2 +1,2 @@
 <h2>Join Other Game Nights!</h2>
-<app-game-night-list [gameNights]="gameNights | async"></app-game-night-list>
+<app-explore-game-night-list [gameNights]="gameNights | async" (joinNight)="joinNight($event)"></app-explore-game-night-list>

@@ -26,7 +26,6 @@ export class CollectionService {
     this.http.get(`${ServerConfig.baseUrl}/games/${id}`)
       .map(res => res.json())
       .map(games => {
-        console.log(games);
         return games
       })
       .map(payload => ({ type: 'POPULATE_COLLECTION', payload }))
@@ -36,7 +35,6 @@ export class CollectionService {
   createGame(game: Game) {
     this.http.post(`${ServerConfig.baseUrl}/games`, JSON.stringify(game), OPTIONS)
       .map(game => {
-        console.log(game);
         return game;
       })
       .map(payload => ({ type: 'CREATE_GAME', payload }))
@@ -46,7 +44,6 @@ export class CollectionService {
   createGameInGameNightCollection(game: Game, id: string) {
     this.http.post(`${ServerConfig.baseUrl}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), OPTIONS)
       .map(res => {
-        console.log(game);
         return game;
       })
       .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
@@ -54,14 +51,20 @@ export class CollectionService {
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
-    // Give game.Owner a static value auth is working again
-    console.log(game);
     this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
       .map(res => {
-        console.log(res);
         return res;
       })
       .map(payload => ({ type: 'CREATE_GAME', payload }))
+      .subscribe(action => this.store.dispatch(action));
+  }
+
+  addGameToGameNight(game: Game, nightId: string) {
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/games`, game, OPTIONS)
+      .map(res => {
+        return res;
+      })
+      .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 }

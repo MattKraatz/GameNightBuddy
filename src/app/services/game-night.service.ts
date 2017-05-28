@@ -11,6 +11,7 @@ import {Game} from '../models/game.model';
 import {Auth, IAuth} from '../models/auth.model';
 import {AuthService} from './auth.service';
 import {Member} from '../models/member.model';
+import {User} from '../models/user.model';
 import {Match} from '../models/match.model';
 import {Player} from '../models/player.model';
 import {ServerConfig} from '../constants/serverConfig';
@@ -69,6 +70,12 @@ export class GameNightService {
   createGameNight(night: GameNight) {
     this.http.post(`${firebaseConfig.databaseURL}/v1/game-nights.json`, JSON.stringify(night), HEADER)
       .map(payload => ({ type: 'CREATE_NIGHT', payload }))
+      .subscribe(action => this.store.dispatch(action));
+  }
+
+  joinGameNight(user: User, nightId: string) {
+    this.http.post(`${ServerConfig.baseUrl}/${nightId}/members`,JSON.stringify(user), HEADER)
+      .map(payload => ({ type: 'PLEASE_UPDATE', payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 }

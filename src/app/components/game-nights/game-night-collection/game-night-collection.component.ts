@@ -15,14 +15,20 @@ export class GameNightCollectionComponent implements OnInit {
 
   collection: Game[];
   nightId: string;
+  myOtherGames: Game[];
 
   constructor(route: ActivatedRoute, private authService: AuthService, private collectionService: CollectionService) {
     route.parent.data.subscribe(data => {
       var night: GameNight = data['gameNight'];
       this.collection = night.Games;
       this.nightId = night.GameNightId;
+
+      this.myOtherGames = this.authService.currentUserProfile.Games.filter(g => {
+        return this.collection.findIndex(c => c.GameId == g.GameId) < 0;
+      })
     })
-  }
+
+    }
 
   ngOnInit() {
   }
@@ -31,6 +37,11 @@ export class GameNightCollectionComponent implements OnInit {
     var game = new Game(model);
     game.Owner = this.authService.getCurrentUserProfile();
     this.collectionService.createGameInGameNightAndMyCollection(game, this.nightId);
+  }
+
+  attachGame(model: Game) {
+    var game = new Game(model);
+    this.collectionService.addGameToGameNight(game, this.nightId);
   }
 
 }
