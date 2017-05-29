@@ -28,6 +28,7 @@ import {AuthGuard} from './services/guards/auth-guard.service';
 import {GameNightService} from './services/game-night.service';
 import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
 import {ProfileCompleteGuard} from './services/guards/profile-complete-guard.service';
+import {HubService} from './services/hub.service';
 
 // Components
 import {AppComponent} from './app.component';
@@ -55,9 +56,9 @@ import {GameNightNavbarComponent} from './components/game-nights/game-night-navb
 import {GameNightComponent} from './components/game-nights/game-night/game-night.component';
 import {MyGameNightsComponent} from './components/game-nights/my-game-nights/my-game-nights.component';
 import {UserSearchComponent} from './components/members/user-search/user-search.component';
-import { MatchDetailComponent } from './components/matches/match-detail/match-detail.component';
-import { GameDropdownComponent } from './components/collection/game-dropdown/game-dropdown.component';
-import { ExploreGameNightListComponent } from './components/explore/explore-game-night-list/explore-game-night-list.component';
+import {MatchDetailComponent} from './components/matches/match-detail/match-detail.component';
+import {GameDropdownComponent} from './components/collection/game-dropdown/game-dropdown.component';
+import {ExploreGameNightListComponent} from './components/explore/explore-game-night-list/explore-game-night-list.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -190,7 +191,8 @@ const authConfig = {
     AuthGuard,
     GameNightService,
     GameNightResolver,
-    ProfileCompleteGuard
+    ProfileCompleteGuard,
+    HubService
   ],
   bootstrap: [
     AppComponent

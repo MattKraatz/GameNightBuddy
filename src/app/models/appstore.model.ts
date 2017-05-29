@@ -10,3 +10,8 @@ export interface AppStore {
   gameNight: GameNight,
   myGameNights: GameNight[]
 }
+
+export interface IStoreAction {
+  type: string,
+  payload: {}
+}

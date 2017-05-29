@@ -1,17 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable, Subject} from "rxjs";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
 import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 import {Http, Headers} from '@angular/http';
 import {Router} from '@angular/router';
 
-import {AppStore} from '../models/appstore.model';
+import {AppStore, IStoreAction} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
 import {User} from '../models/user.model';
 import {Game} from '../models/game.model';
 import {GameNight} from '../models/game-night.model';
-import {firebaseConfig} from '../constants/firebaseConfig';
 import {LoginViewModel} from '../viewmodels/login.viewmodel';
 import {ServerConfig} from '../constants/serverConfig';
 
@@ -33,6 +32,7 @@ export class AuthService {
     this.user = store.select("auth");
     this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
+
     // Resolve initial Auth status during construction
     this.af.auth.subscribe(auth => {
       if(auth) {
@@ -59,6 +59,7 @@ export class AuthService {
           var user = new User(res);
           console.log(res);
           this.currentUserProfile = user;
+          this.userLoaded = true;
           return user;
         })
         .map(payload => ({ type: 'LOGIN_USER', payload }))

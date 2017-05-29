@@ -2,15 +2,15 @@ import {Game} from '../models/game.model';
 
 export const collection = (state: Game[] = new Array<Game>(), {type, payload}) => {
   switch (type) {
-    case "POPULATE_COLLECTION":
+    case "COLLECTION_POPULATE":
       return payload;
-    case "CREATE_GAME":
+    case "COLLECTION_CREATE_GAME":
       return [...state, payload];
-    case 'UPDATE_GAME':
+    case 'COLLECTION_UPDATE_GAME':
       return state.map(game => {
         return game.GameId === payload.GameId ? Object.assign({}, game, payload) : game;
       });
-    case 'DELETE_GAME':
+    case 'COLLECTION_DELETE_GAME':
       return state.filter(game => {
         return game.GameId !== payload.GameId;
       });
