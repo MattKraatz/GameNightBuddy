@@ -15,6 +15,7 @@ import {User} from '../models/user.model';
 import {Match} from '../models/match.model';
 import {Player} from '../models/player.model';
 import {ServerConfig} from '../constants/serverConfig';
+import {StoreActions} from '../constants/storeActions';
 
 const HEADERS = new Headers({ 'Content-Type': 'application/json' });
 const OPTIONS = new RequestOptions({ headers: HEADERS });
@@ -40,7 +41,7 @@ export class GameNightService {
     if (!this.nightLoaded) {
       this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`)
         .map(res => res.json())
-        .map(payload => ({ type: 'POPULATE_NIGHT', payload }))
+        .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));
     }
     this.nightLoaded = true;
@@ -51,7 +52,7 @@ export class GameNightService {
       this.http.get(`${ServerConfig.baseUrl}/game-nights/my/${id}`)
         .map(res => res.json())
         .subscribe(payload => {
-          this.store.dispatch({ type: 'POPULATE_MY_NIGHTS', payload: payload })
+          this.store.dispatch({ type: StoreActions.MY_GAME_NIGHTS_POPULATE, payload: payload })
       });
     }
     this.nightsLoaded = true;
@@ -62,22 +63,25 @@ export class GameNightService {
       this.http.get(`${ServerConfig.baseUrl}/game-nights/explore/${id}`)
         .map(res => res.json())
         .subscribe(payload => {
-          this.store.dispatch({ type: 'POPULATE_OTHER_NIGHTS', payload: payload })
+          this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_POPULATE, payload: payload })
       });
     }
     this.otherNightsLoaded = true;
   }
 
   createGameNight(night: GameNight) {
-    console.log("night", night)
     this.http.post(`${ServerConfig.baseUrl}/game-nights`, JSON.stringify(night), OPTIONS)
-      .map(payload => ({ type: 'CREATE_NIGHT', payload }))
+      .map(res => res.json())
+      .map(payload => ({ type: StoreActions.MY_GAME_NIGHTS_CREATE, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   joinGameNight(user: User, nightId: string) {
-    this.http.post(`${ServerConfig.baseUrl}/${nightId}/members`,JSON.stringify(user), OPTIONS)
-      .map(payload => ({ type: 'PLEASE_UPDATE', payload }))
-      .subscribe(action => this.store.dispatch(action));
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`,JSON.stringify(user), OPTIONS)
+      .map(res => res.json())
+      .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_MEMBER, payload }))
+      .subscribe(action => {
+        this.store.dispatch(action)
+      });
   }
 }

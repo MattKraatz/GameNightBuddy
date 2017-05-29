@@ -1,6 +1,8 @@
 import {GameNight} from '../models/game-night.model';
+import {StoreActions} from '../constants/storeActions';
 
 export const gameNight = (state: GameNight = new GameNight(), {type, payload}) => {
+  console.log("state", state)
   switch (type) {
     case "GAME_NIGHT_POPULATE_NIGHT":
       return payload;
@@ -11,7 +13,7 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
       return state.Games.filter(g => {
         return g.GameId != payload.GameId;
       });
-    case 'GAME_NIGHT_CREATE_MEMBER':
+    case StoreActions.GAME_NIGHT_CREATE_MEMBER:
       state.Members.push(payload);
       return state;
     case 'GAME_NIGHT_DELETE_MEMBER':

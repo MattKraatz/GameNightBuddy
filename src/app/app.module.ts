@@ -20,7 +20,6 @@ import {gameNight} from './stores/game-night.store';
 import {myGameNights} from './stores/my-game-nights.store';
 import {user} from './stores/user.store';
 import {otherGameNights} from './stores/other-game-nights.store';
-import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
 import {AuthService} from './services/auth.service';
@@ -184,7 +183,6 @@ const authConfig = {
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
   providers: [
-    MembersService,
     CollectionService,
     MatchService,
     AuthService,

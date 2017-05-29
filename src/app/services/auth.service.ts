@@ -71,15 +71,15 @@ export class AuthService {
         });
   }
 
-  searchUsers(query: string): Observable<User[]> {
-    return this.http.get(`${ServerConfig.baseUrl}/users/search/${query}`,HEADER)
+  searchUsers(query: string, nightId: string): Observable<User[]> {
+    return this.http.get(`${ServerConfig.baseUrl}/users/search/${nightId}/${query}`,HEADER)
       .map(res => res.json())
   }
 
   updateUserInDB(user: User) {
     this.http.put(`${ServerConfig.baseUrl}/users`,JSON.stringify(user),HEADER)
-      // .map(res => ({ type: 'LOGIN_USER', payload: user }))
-      // .subscribe(action => this.store.dispatch(action));
+      .map(res => ({ type: 'LOGIN_USER', payload: user }))
+      .subscribe(action => this.store.dispatch(action));
   }
 
   loginWithFacebook() {

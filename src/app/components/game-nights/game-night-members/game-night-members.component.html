@@ -1,3 +1,3 @@
 <app-member-list [members]="members"></app-member-list>
 <h4>Invite a New Player</h4>
-<app-user-search [members]="members" (addMember)="addMember($event)"></app-user-search>
+<app-user-search [members]="members" [nightId]="nightId" (addMember)="addMember($event)"></app-user-search>
