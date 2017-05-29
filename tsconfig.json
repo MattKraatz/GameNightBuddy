@@ -5,13 +5,20 @@
     "baseUrl": "src",
     "sourceMap": true,
     "declaration": false,
+    "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": true,
     "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
+    "angularCompilerOptions": {
+      "genDir": ".",
+      "debug": true
+    },
     "lib": [
       "es2016",
       "dom"

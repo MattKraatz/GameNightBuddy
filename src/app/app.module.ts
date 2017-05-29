@@ -6,10 +6,12 @@ import {HttpModule} from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import {StoreModule} from '@ngrx/store';
 import * as firebase from 'firebase';
+import * as $ from 'jquery';
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 
 // Private Keys
 import {firebaseConfig} from './constants/firebaseConfig';
+import {ServerConfig} from './constants/serverConfig';
 
 // Stores and Services
 import {collection} from './stores/collection.store';
@@ -28,7 +30,6 @@ import {AuthGuard} from './services/guards/auth-guard.service';
 import {GameNightService} from './services/game-night.service';
 import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
 import {ProfileCompleteGuard} from './services/guards/profile-complete-guard.service';
-import {HubService} from './services/hub.service';
 
 // Components
 import {AppComponent} from './app.component';
@@ -191,8 +192,7 @@ const authConfig = {
     AuthGuard,
     GameNightService,
     GameNightResolver,
-    ProfileCompleteGuard,
-    HubService
+    ProfileCompleteGuard
   ],
   bootstrap: [
     AppComponent
