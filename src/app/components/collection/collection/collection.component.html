@@ -1,5 +1,5 @@
 <h4>My Games</h4>
 <div id="my-game-list">
-  <app-game-list [games]="games"></app-game-list>
+  <app-game-list [games]="games | async"></app-game-list>
 </div>
 <app-game-form (addGame)="addGame($event)"></app-game-form>

@@ -79,9 +79,11 @@ export class GameNightService {
   joinGameNight(user: User, nightId: string) {
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`,JSON.stringify(user), OPTIONS)
       .map(res => res.json())
-      .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_MEMBER, payload }))
-      .subscribe(action => {
-        this.store.dispatch(action)
+      // what is the payload here?
+      .subscribe(payload => {
+        this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_MEMBER, payload });
+        this.store.dispatch({ type: StoreActions.MY_GAME_NIGHTS_CREATE, payload });
+        this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_DELETE, payload});
       });
   }
 }

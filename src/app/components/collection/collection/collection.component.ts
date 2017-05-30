@@ -12,13 +12,11 @@ import {Observable} from "rxjs/Observable";
 })
 export class CollectionComponent implements OnInit {
 
-  games: Array<Game>;
+  games: Observable<Array<Game>>;
 
   constructor(private collectionService: CollectionService, private authService: AuthService) {
-    authService.userProfile.subscribe(u => {
-      u.Games.forEach(g => g.Owner = this.authService.currentUserProfile);
-      this.games = u.Games;
-    });
+    this.games = this.collectionService.collection;
+    this.collectionService.loadCollection(this.authService.currentUserProfile.UserId);
   }
 
   ngOnInit() {

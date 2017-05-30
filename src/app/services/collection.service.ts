@@ -9,6 +9,7 @@ import {Game} from '../models/game.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
 import {ServerConfig} from '../constants/serverConfig';
 import {User} from '../models/user.model';
+import {StoreActions} from '../constants/storeActions';
 
 const HEADERS = new Headers({ 'Content-Type': 'application/json' });
 const OPTIONS = new RequestOptions({ headers: HEADERS });
@@ -23,48 +24,32 @@ export class CollectionService {
   }
 
   loadCollection(id: string) {
-    this.http.get(`${ServerConfig.baseUrl}/games/${id}`)
+    this.http.get(`${ServerConfig.baseUrl}/games/my/${id}`)
       .map(res => res.json())
-      .map(games => {
-        return games
-      })
-      .map(payload => ({ type: 'POPULATE_COLLECTION', payload }))
+      .map(payload => ({ type: StoreActions.COLLECTION_POPULATE, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   createGame(game: Game) {
     this.http.post(`${ServerConfig.baseUrl}/games`, JSON.stringify(game), OPTIONS)
-      .map(game => {
-        return game;
-      })
-      .map(payload => ({ type: 'CREATE_GAME', payload }))
-      .subscribe(action => this.store.dispatch(action));
-  }
-
-  createGameInGameNightCollection(game: Game, id: string) {
-    this.http.post(`${ServerConfig.baseUrl}/v1/game-nights/${id}/collection.json`, JSON.stringify(game), OPTIONS)
-      .map(res => {
-        return game;
-      })
-      .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
+      .map(res => res.json())
+      .map(payload => ({ type: StoreActions.COLLECTION_CREATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
     this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
-      .map(res => {
-        return res;
-      })
-      .map(payload => ({ type: 'CREATE_GAME', payload }))
-      .subscribe(action => this.store.dispatch(action));
+      .map(res => res.json())
+      .subscribe(payload => {
+        this.store.dispatch({ type: StoreActions.COLLECTION_CREATE_GAME, payload })
+        this.store.dispatch({type: StoreActions.GAME_NIGHT_CREATE_GAME, payload})
+    })
   }
 
   addGameToGameNight(game: Game, nightId: string) {
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/games`, game, OPTIONS)
-      .map(res => {
-        return res;
-      })
-      .map(payload => ({ type: 'CREATE_GAME_IN_GAME_NIGHT', payload }))
+      .map(res => res.json())
+      .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 }

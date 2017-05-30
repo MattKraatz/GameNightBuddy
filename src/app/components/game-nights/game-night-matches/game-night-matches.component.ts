@@ -33,7 +33,8 @@ export class GameNightMatchesComponent implements OnInit {
   }
 
   addMatch(model: Match) {
-    this.matchService.createMatch(model, this.nightId);
+    var match = new Match(model);
+    this.matchService.createMatch(match, this.nightId);
   }
 
 }
