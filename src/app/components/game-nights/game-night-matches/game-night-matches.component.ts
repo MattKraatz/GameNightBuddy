@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
 
 import {MatchService} from '../../../services/match.service';
+import {GameNightService} from '../../../services/game-night.service';
 import {GameNight} from '../../../models/game-night.model';
 import {Member} from '../../../models/member.model';
 import {Game} from '../../../models/game.model';
@@ -14,17 +15,16 @@ import {Match} from '../../../models/match.model';
 })
 export class GameNightMatchesComponent implements OnInit {
 
-  members: Member[];
-  collection: Game[];
-  matches: Match[];
+  members: Observable<Array<Member>>;
+  collection: Observable<Array<Game>>;
+  matches: Observable<Array<Match>>;
   nightId: string;
 
-  constructor(route: ActivatedRoute, private matchService: MatchService) {
-    route.parent.data.subscribe(data => {
-      var night: GameNight = data['gameNight'];
-      this.members = night.Members;
-      this.collection = night.Games;
-      this.matches = night.Matches;
+  constructor(private gameNightService: GameNightService, private matchService: MatchService) {
+    this.gameNightService.currentGameNight.subscribe(night => {
+      this.members = Observable.of(night.Members);
+      this.collection = Observable.of(night.Games);
+      this.matches = Observable.of(night.Matches);
       this.nightId = night.GameNightId;
     })
   }
