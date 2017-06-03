@@ -63,35 +63,39 @@ namespace GameNightBuddy_Server.Controllers
 
       var member = new GameNightMember(vm, id);
 
-      this.gameNightRepository.InsertMember(member);
+      member = this.gameNightRepository.InsertMember(member);
       this.gameNightRepository.Save();
-      return new CreatedResult($"game-nights/${id}/members", member);
+
+      return new CreatedResult($"game-nights/${id}/members", new MemberViewModel(member));
     }
 
     [HttpPost("{id}/games")]
-    public IActionResult AddGame([FromBody] Game game, [FromRoute] Guid id)
+    public IActionResult AddGame([FromBody] Game vm, [FromRoute] Guid id)
     {
-      if (game == null)
+      if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      this.gameNightRepository.InsertGameNightGame(game.GameId, id);
+      var game = this.gameNightRepository.InsertGameNightGame(vm.GameId, id);
       this.gameNightRepository.Save();
-      return new CreatedResult($"game-nights/${id}/games", game);
+      return new CreatedResult($"game-nights/${id}/games", new GameViewModel(game));
     }
 
     [HttpPost("{id}/matches")]
-    public IActionResult AddMatch([FromBody] MatchViewModel match, [FromRoute] Guid id)
+    public IActionResult AddMatch([FromBody] MatchViewModel vm, [FromRoute] Guid id)
     {
-      if (match == null)
+      if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      this.gameNightRepository.InsertMatch(id, match);
+      var match = this.gameNightRepository.InsertMatch(vm, id);
       this.gameNightRepository.Save();
-      return new CreatedResult($"game-nights/${id}/matches", match);
+
+      vm.MatchId = match.MatchId.ToString();
+
+      return new CreatedResult($"game-nights/${id}/matches", vm);
     }
 
     [HttpPost]

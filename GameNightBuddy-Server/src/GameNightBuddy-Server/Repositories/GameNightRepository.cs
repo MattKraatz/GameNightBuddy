@@ -15,9 +15,9 @@ namespace GameNightBuddy_Server.Repositories
     IEnumerable<GameNight> GetOtherGameNights(Guid userId);
     GameNightViewModel LoadGameNightByID(Guid nightId);
     Guid InsertGameNight(GameNight night);
-    Guid InsertGameNightGame(Guid gameId, Guid nightId);
-    Guid InsertMember(GameNightMember member);
-    Guid InsertMatch(Guid nightId, MatchViewModel match);
+    GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
+    GameNightMember InsertMember(GameNightMember member);
+    Match InsertMatch(MatchViewModel vm, Guid nightId);
     void DeactivateGameNight(Guid nightId);
     void UpdateGameNight(GameNight night);
     void Save();
@@ -80,7 +80,7 @@ namespace GameNightBuddy_Server.Repositories
       return vm;
     }
 
-    public Guid InsertMatch(Guid nightId, MatchViewModel vm)
+    public Match InsertMatch(MatchViewModel vm, Guid nightId)
     {
       var match = new Match(vm);
       match.GameNightId = nightId;
@@ -89,24 +89,28 @@ namespace GameNightBuddy_Server.Repositories
       {
         var player = new MatchPlayer(pvm);
         player.MatchId = match.MatchId;
-        // TODO: update the GameNight VM to eliminate the need for this MemberId call
-        player.GameNightMemberId = context.GameNightMembers.First(m => m.UserId == pvm.UserId).GameNightMemberId;
         context.MatchPlayers.Add(player);
       }
-      return match.MatchId;
+      return match;
     }
 
-    public Guid InsertMember(GameNightMember member)
+    public GameNightMember InsertMember(GameNightMember member)
     {
       context.GameNightMembers.Add(member);
-      return member.GameNightMemberId;
+      member.User = context.Users.FirstOrDefault(u => u.UserId == member.UserId);
+      return member;
     }
 
-    public Guid InsertGameNightGame(Guid gameId, Guid nightId)
+    public GameNightGame InsertGameNightGame(Guid gameId, Guid nightId)
     {
       var game = new GameNightGame { GameId = gameId, GameNightId = nightId };
       context.GameNightGames.Add(game);
-      return game.GameNightGameId;
+
+      game.Game = context.Games
+        .Include(g => g.User)
+        .FirstOrDefault(g => g.GameId == game.GameId);
+
+      return game;
     }
 
     public Guid InsertGameNight(GameNight night)

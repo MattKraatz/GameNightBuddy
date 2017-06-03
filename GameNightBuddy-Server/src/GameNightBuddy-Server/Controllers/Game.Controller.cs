@@ -31,7 +31,14 @@ namespace GameNightBuddy_Server.Controllers
       {
         return new NoContentResult();
       }
-      return new ObjectResult(games);
+
+      var output = new List<GameViewModel>();
+      foreach(var game in games)
+      {
+        output.Add(new GameViewModel(game));
+      }
+
+      return new ObjectResult(output);
     }
 
     [HttpPost]
@@ -46,7 +53,9 @@ namespace GameNightBuddy_Server.Controllers
 
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
-      return new CreatedResult("games", game);
+
+      vm = new GameViewModel(game);
+      return new CreatedResult("games", vm);
     }
 
     [HttpPost("{nightId}")]
@@ -62,10 +71,10 @@ namespace GameNightBuddy_Server.Controllers
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
 
-      this.nightRepository.InsertGameNightGame(game.GameId, nightId);
+      var output = this.nightRepository.InsertGameNightGame(game.GameId, nightId);
       this.nightRepository.Save();
 
-      return new CreatedResult("games", game);
+      return new CreatedResult("games", new GameViewModel(output));
     }
   }
 }
