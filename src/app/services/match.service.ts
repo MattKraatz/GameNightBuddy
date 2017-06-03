@@ -28,11 +28,12 @@ export class MatchService {
 
   createMatch(match: Match, id: string) {
     // remove circular references
-    match.Game.Owner.Games = new Array<Game>();
-    match.Game.Owner.GameNights = new Array<GameNight>();
+    console.log(match.Game.Owner)
+    //match.Game.Owner.Games = new Array<Game>();
+    //match.Game.Owner.GameNights = new Array<GameNight>();
     match.Players = match.Players.map(p => {
-      p.GameNights = new Array<GameNight>();
-      p.Games = new Array<Game>();
+      //p.GameNights = new Array<GameNight>();
+      //p.Games = new Array<Game>();
       return p;
     });
 
