@@ -1,11 +1,7 @@
-﻿using GameNightBuddy_Server.Repositories;
-using GameNightBuddy_Server.Models;
-using GameNightBuddy_Server.ViewModels;
+﻿using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -33,10 +29,10 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(user);
     }
 
-    [HttpGet("search/{query}")]
-    public IActionResult QueryUsers([FromRoute] string query)
+    [HttpGet("search/{nightId}/{query}")]
+    public IActionResult QueryUsers([FromRoute] string query, [FromRoute] Guid nightId)
     {
-      var users = this.userRepository.QueryUsers(query);
+      var users = this.userRepository.QueryUsers(query, nightId);
       return new ObjectResult(users);
     }
 
@@ -63,7 +59,7 @@ namespace GameNightBuddy_Server.Controllers
       
       this.userRepository.UpdateUser(user);
       this.userRepository.Save();
-      return new OkResult();
+      return new ObjectResult(user);
     }
   }
 }

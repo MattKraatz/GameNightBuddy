@@ -8,7 +8,7 @@ namespace GameNightBuddy_Server.ViewModels
     public string Name;
     public int MinPlayers;
     public int MaxPlayers;
-    public User Owner;
+    public UserShallowViewModel Owner;
     public string DateCreated;
 
     public GameViewModel() { }
@@ -36,7 +36,7 @@ namespace GameNightBuddy_Server.ViewModels
       Name = game.Name;
       MinPlayers = game.MinPlayers;
       MaxPlayers = game.MaxPlayers;
-      Owner = game.User;
+      Owner = new UserShallowViewModel(game.User);
       DateCreated = game.DateCreated.ToString();
     }
   }

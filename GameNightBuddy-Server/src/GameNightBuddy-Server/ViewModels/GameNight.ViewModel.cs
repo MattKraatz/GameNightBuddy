@@ -15,6 +15,8 @@ namespace GameNightBuddy_Server.ViewModels
     public List<MatchViewModel> Matches;
     public string DateCreated;
 
+    public GameNightViewModel() { }
+
     public GameNightViewModel(GameNight night)
     {
       GameNightId = night.GameNightId.ToString();

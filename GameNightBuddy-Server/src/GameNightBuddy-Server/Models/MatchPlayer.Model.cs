@@ -28,6 +28,7 @@ namespace GameNightBuddy_Server.Models
 
     public MatchPlayer(PlayerViewModel vm)
     {
+      GameNightMemberId = new Guid(vm.MemberId);
       Winner = vm.Winner;
       Score = vm.Score;
       FirstTimer = vm.FirstTime;

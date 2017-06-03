@@ -11,7 +11,7 @@ namespace GameNightBuddy_Server.Repositories
   {
     IEnumerable<Match> GetMatches();
     IEnumerable<Match> GetMyMatches(Guid id);
-    Guid InsertMatch(Match match);
+    Match InsertMatch(Match match);
     void DeleteMatch(Match match);
     void UpdateMatch(Match match);
     void Save();
@@ -46,10 +46,10 @@ namespace GameNightBuddy_Server.Repositories
         .Where(m => players.Contains(m.MatchId));
     }
 
-    public Guid InsertMatch(Match match)
+    public Match InsertMatch(Match match)
     {
       context.Matches.Add(match);
-      return match.MatchId;
+      return match;
     }
 
     public void DeleteMatch(Match match)

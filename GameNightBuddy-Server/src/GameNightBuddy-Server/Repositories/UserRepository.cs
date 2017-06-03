@@ -1,4 +1,5 @@
 ﻿using GameNightBuddy_Server.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace GameNightBuddy_Server.Repositories
   public interface IUserRepository : IDisposable
   {
     User GetUserByFbKey(string id);
-    List<User> QueryUsers(string query);
+    List<User> QueryUsers(string query, Guid nightId);
     User GetUser(Guid id);
     Guid InsertUser(User user);
     void DeactivateUser(Guid userId);
@@ -28,13 +29,22 @@ namespace GameNightBuddy_Server.Repositories
 
     public User GetUserByFbKey(string id)
     {
-      return this.context.Users.FirstOrDefault(u => u.FirebaseId == id);
+      return this.context.Users
+        .Include(u => u.Games)
+          .ThenInclude(g => g.User)
+        .FirstOrDefault(u => u.FirebaseId == id);
     }
 
-    public List<User> QueryUsers(string query)
+    public List<User> QueryUsers(string query, Guid nightId)
     {
+      var memberIds = this.context.GameNightMembers.Where(m => m.GameNightId == nightId).Select(m => m.UserId).ToList();
       query = query.ToLower();
-      return this.context.Users.Where(u => (u.DisplayName != null && u.DisplayName.ToLower().Contains(query)) || string.Concat(u.FirstName + u.LastName).ToLower().Contains(query)).ToList();
+      return this.context.Users.Where(u => 
+        !memberIds.Contains(u.UserId) &&  
+          (
+            (u.DisplayName != null && u.DisplayName.ToLower().Contains(query)) ||
+            string.Concat(u.FirstName + u.LastName).ToLower().Contains(query))
+           ).ToList();
     }
 
     public void DeactivateUser(Guid userId)

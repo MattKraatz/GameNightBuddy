@@ -52,8 +52,6 @@ namespace GameNightBuddy_Server
 
       services.AddCors();
 
-      services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
-      
       services
           .AddMvc()
           .AddJsonOptions(options => {
