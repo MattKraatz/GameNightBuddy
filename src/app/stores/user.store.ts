@@ -6,6 +6,8 @@ export const user = (state: User = new User(), {type, payload}) => {
       return payload;
     case 'LOGOUT_USER':
       return new User();
+    case 'USER_UPDATE':
+      return Object.assign({}, state, payload)
     default:
       return state;
   }

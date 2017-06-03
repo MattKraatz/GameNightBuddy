@@ -1,6 +1,5 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {Member} from '../../../models/member.model';
-import {MembersService} from '../../../services/members.service';
 
 @Component({
   selector: 'app-member-form',
@@ -11,7 +10,7 @@ export class MemberFormComponent implements OnInit {
 
   @Output() addMember = new EventEmitter();
 
-  constructor(private membersService: MembersService) { }
+  constructor() { }
 
   ngOnInit() {
   }

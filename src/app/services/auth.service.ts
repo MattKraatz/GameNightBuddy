@@ -1,19 +1,19 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable, Subject} from "rxjs";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
 import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
 import {Http, Headers} from '@angular/http';
 import {Router} from '@angular/router';
 
-import {AppStore} from '../models/appstore.model';
+import {AppStore, IStoreAction} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
 import {User} from '../models/user.model';
 import {Game} from '../models/game.model';
 import {GameNight} from '../models/game-night.model';
-import {firebaseConfig} from '../constants/firebaseConfig';
 import {LoginViewModel} from '../viewmodels/login.viewmodel';
 import {ServerConfig} from '../constants/serverConfig';
+import {StoreActions} from '../constants/storeActions';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -29,10 +29,12 @@ export class AuthService {
 
   userSearch: Observable<User[]>;
   
-  constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http, private router: Router) {
+  constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http,
+      private router: Router) {
     this.user = store.select("auth");
     this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
+
     // Resolve initial Auth status during construction
     this.af.auth.subscribe(auth => {
       if(auth) {
@@ -57,33 +59,21 @@ export class AuthService {
         .map(res => res.json())
         .map(res => {
           var user = new User(res);
-          console.log(res);
           this.currentUserProfile = user;
+          this.userLoaded = true;
           return user;
         })
-        .map(payload => ({ type: 'LOGIN_USER', payload }))
+        .map(user => {
+          return {type: StoreActions.LOGIN_USER, payload: user}
+        })
         .subscribe(action => {
-          this.store.dispatch(action);
-          this.userLoaded = true;
+          this.store.dispatch(action)
         });
   }
 
-  searchUsers(query: string): Observable<User[]> {
-    return this.http.get(`${ServerConfig.baseUrl}/users/search/${query}`,HEADER)
+  searchUsers(query: string, nightId: string): Observable<User[]> {
+    return this.http.get(`${ServerConfig.baseUrl}/users/search/${nightId}/${query}`,HEADER)
       .map(res => res.json())
-  }
-
-  // TODO: update this method to retrieve status from this.user Observable instead of AF
-  // Add a static user object that accepts the value of the subscribed emmission in the constructor
-  getCurrentUser(): Auth {
-    var output: Auth;
-    this.af.auth.subscribe(auth => {
-      if(auth) {
-        // user logged in
-        if (auth.auth) output = auth.auth;
-      }
-    })
-    return output;
   }
 
   updateUserInDB(user: User) {
@@ -94,11 +84,9 @@ export class AuthService {
 
   loginWithFacebook() {
     // Redirect Method (default) reloads the page, triggering the constructor
-    //  so no store dispatch necessary (handled in constructor)
     this.af.auth.login();
   }
 
-  // TODO: call getAuthRecordFromFB() in this method
   loginWithEmailAndPassword(user: LoginViewModel) {
     console.log(user);
     this.af.auth.login({
@@ -118,7 +106,6 @@ export class AuthService {
     });
   }
 
-  // TODO: call getAuthRecordFromFB() in this method
   registerEmailAndPassword(user: LoginViewModel) {
     this.af.auth.createUser({
       email: user.Email,
@@ -144,6 +131,7 @@ export class AuthService {
 
   getCurrentUserProfile(): User {
     var user = this.currentUserProfile;
+    // Remove circular reference
     user.Games = new Array<Game>();
     user.GameNights = new Array<GameNight>();
     return user;

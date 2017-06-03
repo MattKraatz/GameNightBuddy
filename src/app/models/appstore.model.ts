@@ -8,5 +8,11 @@ export interface AppStore {
   matches: Match[],
   user: Auth,
   gameNight: GameNight,
-  myGameNights: GameNight[]
+  myGameNights: GameNight[],
+  otherGameNights: GameNight[]
+}
+
+export interface IStoreAction {
+  type: string,
+  payload: {}
 }

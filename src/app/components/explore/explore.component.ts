@@ -5,7 +5,6 @@ import {GameNight} from '../../models/game-night.model';
 import {Member} from '../../models/member.model';
 import {GameNightService} from '../../services/game-night.service';
 import {AuthService} from '../../services/auth.service';
-import {MembersService} from '../../services/members.service';
 
 @Component({
   selector: 'app-explore',
@@ -16,7 +15,7 @@ export class ExploreComponent implements OnInit {
 
   gameNights: Observable<Array<GameNight>>;
 
-  constructor(private gameNightService: GameNightService, private authService: AuthService, private membersService: MembersService) {
+  constructor(private gameNightService: GameNightService, private authService: AuthService) {
     this.gameNights = gameNightService.otherGameNights;
     gameNightService.loadOtherGameNights(this.authService.currentUserProfile.UserId);
   }
@@ -28,7 +27,7 @@ export class ExploreComponent implements OnInit {
     var member = new Member();
     member.UserId = this.authService.currentUserProfile.UserId;
     member.IsHost = false;
-    this.membersService.createMember(member, nightId);
+    this.gameNightService.joinGameNight(member, nightId);
   }
 
 }

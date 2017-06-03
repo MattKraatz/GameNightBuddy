@@ -6,10 +6,12 @@ import {HttpModule} from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import {StoreModule} from '@ngrx/store';
 import * as firebase from 'firebase';
+import * as $ from 'jquery';
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 
 // Private Keys
 import {firebaseConfig} from './constants/firebaseConfig';
+import {ServerConfig} from './constants/serverConfig';
 
 // Stores and Services
 import {collection} from './stores/collection.store';
@@ -18,7 +20,6 @@ import {gameNight} from './stores/game-night.store';
 import {myGameNights} from './stores/my-game-nights.store';
 import {user} from './stores/user.store';
 import {otherGameNights} from './stores/other-game-nights.store';
-import {MembersService} from './services/members.service';
 import {CollectionService} from './services/collection.service';
 import {MatchService} from './services/match.service';
 import {AuthService} from './services/auth.service';
@@ -55,9 +56,9 @@ import {GameNightNavbarComponent} from './components/game-nights/game-night-navb
 import {GameNightComponent} from './components/game-nights/game-night/game-night.component';
 import {MyGameNightsComponent} from './components/game-nights/my-game-nights/my-game-nights.component';
 import {UserSearchComponent} from './components/members/user-search/user-search.component';
-import { MatchDetailComponent } from './components/matches/match-detail/match-detail.component';
-import { GameDropdownComponent } from './components/collection/game-dropdown/game-dropdown.component';
-import { ExploreGameNightListComponent } from './components/explore/explore-game-night-list/explore-game-night-list.component';
+import {MatchDetailComponent} from './components/matches/match-detail/match-detail.component';
+import {GameDropdownComponent} from './components/collection/game-dropdown/game-dropdown.component';
+import {ExploreGameNightListComponent} from './components/explore/explore-game-night-list/explore-game-night-list.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -182,7 +183,6 @@ const authConfig = {
     AngularFireModule.initializeApp(firebaseConfig, authConfig)
   ],
   providers: [
-    MembersService,
     CollectionService,
     MatchService,
     AuthService,

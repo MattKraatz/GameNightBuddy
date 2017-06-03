@@ -17,6 +17,7 @@ export class UserSearchComponent implements OnInit {
 
   @Output() addMember = new EventEmitter();
   @Input() members: Member[];
+  @Input() nightId: string;
 
   private results: User[];
 
@@ -31,8 +32,15 @@ export class UserSearchComponent implements OnInit {
   // let's do this locally for now, should probably integrate this into the store long-term
   doSearch() {
     this.results = null;
-    this.authService.searchUsers(this.model)
+    this.authService.searchUsers(this.model, this.nightId)
       .subscribe(u => this.results = u);
+  }
+
+  private handleClick(user: User) {
+    this.addMember.emit(user);
+    this.results = this.results.filter(u => {
+      return u.UserId != user.UserId;
+    })
   }
 
 }
