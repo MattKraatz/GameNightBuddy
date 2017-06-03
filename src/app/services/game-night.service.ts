@@ -88,6 +88,17 @@ export class GameNightService {
     this.otherNightsLoaded = true;
   }
 
+  refreshOtherGameNights(id: string) {
+    if (this.otherNightsLoaded) {
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/explore/${id}`)
+        .map(res => res.json())
+        .subscribe(payload => {
+          this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_POPULATE, payload: payload })
+        });
+    }
+    this.otherNightsLoaded = true;
+  }
+
   createGameNight(night: GameNight) {
     this.http.post(`${ServerConfig.baseUrl}/game-nights`, JSON.stringify(night), OPTIONS)
       .map(res => res.json())

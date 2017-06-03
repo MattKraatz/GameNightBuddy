@@ -30,4 +30,8 @@ export class ExploreComponent implements OnInit {
     this.gameNightService.joinGameNight(member, night);
   }
 
+  refreshExplore() {
+    this.gameNightService.refreshOtherGameNights(this.authService.currentUserProfile.UserId);
+  }
+
 }
