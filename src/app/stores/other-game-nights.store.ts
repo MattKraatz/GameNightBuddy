@@ -5,7 +5,7 @@ export const otherGameNights = (state: GameNight[] = new Array<GameNight>(), {ty
   switch (type) {
     case "OTHER_GAME_NIGHTS_POPULATE":
       return payload;
-    case StoreActions.OTHER_GAME_NIGHTS_DELETE:
+    case StoreActions.OTHER_GAME_NIGHTS_JOIN:
       return state.filter(n => {
         return n.GameNightId != payload.GameNightId
       })

@@ -10,7 +10,7 @@
       <tr *ngFor="let night of gameNights">
         <td>{{night.Name}}</td>
         <td>
-          <button (click)="joinNight.emit(night.GameNightId)" class="btn btn-primary">
+          <button (click)="joinNight.emit(night)" class="btn btn-primary">
             Join
           </button>
         </td>

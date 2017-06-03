@@ -1,5 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {GameNight} from '../../../models/game-night.model';
+import {GameNightService} from '../../../services/game-night.service';
 
 @Component({
   selector: 'app-game-night-navbar',
@@ -10,9 +11,13 @@ export class GameNightNavbarComponent implements OnInit {
 
   @Input() gameNight: GameNight;
 
-  constructor() { }
+  constructor(private gameNightService: GameNightService) { }
 
   ngOnInit() {
+  }
+
+  refreshGameNight() {
+    this.gameNightService.refreshGameNight(this.gameNight.GameNightId);
   }
 
 }

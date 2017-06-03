@@ -28,7 +28,7 @@ export class GameNightMembersComponent implements OnInit {
 
   addMember(model: Member) {
     var member = new Member(model);
-    this.gameNightService.joinGameNight(model, this.nightId);
+    this.gameNightService.addGameNightMember(model, this.nightId);
   }
 
 }
