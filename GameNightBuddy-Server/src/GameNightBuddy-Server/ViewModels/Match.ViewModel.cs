@@ -18,7 +18,7 @@ namespace GameNightBuddy_Server.ViewModels
     public MatchViewModel(Match match)
     {
       MatchId = match.MatchId.ToString();
-      Date = match.Date.ToString();
+      Date = match.Date.ToString("MM/dd/yyyy");
       Game = new GameViewModel(match.Game);
       Players = match.Players.Select(p => new PlayerViewModel(p)).ToList();
     }
