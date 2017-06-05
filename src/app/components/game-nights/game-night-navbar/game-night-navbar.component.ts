@@ -1,4 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import {GameNight} from '../../../models/game-night.model';
 import {GameNightService} from '../../../services/game-night.service';
 
@@ -9,7 +10,7 @@ import {GameNightService} from '../../../services/game-night.service';
 })
 export class GameNightNavbarComponent implements OnInit {
 
-  @Input() gameNight: GameNight;
+  @Input() gameNight: Observable<GameNight>;
 
   constructor(private gameNightService: GameNightService) { }
 
@@ -17,7 +18,7 @@ export class GameNightNavbarComponent implements OnInit {
   }
 
   refreshGameNight() {
-    this.gameNightService.refreshGameNight(this.gameNight.GameNightId);
+    this.gameNightService.refreshGameNight();
   }
 
 }

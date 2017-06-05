@@ -1,0 +1,53 @@
+[debug] [2017-06-05T23:45:27.600Z] ----------------------------------------------------------------------
+[debug] [2017-06-05T23:45:27.603Z] Command:      /usr/local/Cellar/node/7.2.1/bin/node /usr/local/bin/firebase deploy
+[debug] [2017-06-05T23:45:27.603Z] CLI Version:  3.9.1
+[debug] [2017-06-05T23:45:27.603Z] Platform:     darwin
+[debug] [2017-06-05T23:45:27.603Z] Node Version: v7.2.1
+[debug] [2017-06-05T23:45:27.604Z] Time:         Mon Jun 05 2017 18:45:27 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:27.604Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-06-05T23:45:27.619Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-06-05T23:45:27.619Z] > authorizing via signed-in user
+[debug] [2017-06-05T23:45:27.621Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-06-05T23:45:27.621Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/tfA5iBnSxGr4G3fNnZFX03CBdnWJ65b4bjKR5HQUj6M',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Mon Jun 05 2017 18:45:27 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:27.915Z] <<< HTTP RESPONSE 200
+[debug] [2017-06-05T23:45:27.918Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/gamenightcompanion  
+ Mon Jun 05 2017 18:45:27 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:28.660Z] <<< HTTP RESPONSE 200
+[debug] [2017-06-05T23:45:28.661Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/gamenightcompanion/tokens  
+ Mon Jun 05 2017 18:45:28 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:29.273Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'gamenightcompanion'...
+[info] 
+[info] i  deploying database, functions, hosting
+[info] ✔  database: rules ready to deploy.
+[debug] [2017-06-05T23:45:30.350Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "firebase-admin": "~4.1.2",
+    "firebase-functions": "^0.5"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[info] i  runtimeconfig: ensuring necessary APIs are enabled...
+[debug] [2017-06-05T23:45:30.352Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/gamenightcompanion?view=CONSUMER_VIEW  
+ Mon Jun 05 2017 18:45:30 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:30.353Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/gamenightcompanion?view=CONSUMER_VIEW  
+ Mon Jun 05 2017 18:45:30 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:31.119Z] <<< HTTP RESPONSE 200
+[info] ✔  runtimeconfig: all necessary APIs are enabled
+[debug] [2017-06-05T23:45:31.183Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2017-06-05T23:45:31.184Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/gamenightcompanion  
+ Mon Jun 05 2017 18:45:31 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:31.184Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/gamenightcompanion/apiKeys  
+ Mon Jun 05 2017 18:45:31 GMT-0500 (CDT)
+[debug] [2017-06-05T23:45:31.478Z] <<< HTTP RESPONSE 200

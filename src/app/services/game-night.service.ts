@@ -54,9 +54,9 @@ export class GameNightService {
     this.nightLoaded = true;
   }
 
-  refreshGameNight(id: string) {
+  refreshGameNight() {
     if (this.nightLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`)
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/${this.currentGameNight.value.GameNightId}`)
         .map(res => res.json()).map(night => {
           this.currentGameNight.next(night);
           return night;

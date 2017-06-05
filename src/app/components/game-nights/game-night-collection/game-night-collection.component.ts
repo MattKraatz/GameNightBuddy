@@ -26,7 +26,11 @@ export class GameNightCollectionComponent implements OnInit {
       this.nightId = night.GameNightId;
 
       var otherGames = this.authService.currentUserProfile.Games.filter(g => {
-        return night.Games.findIndex(c => c.GameId == g.GameId) < 0;
+        if (night.Games.length) {
+          return night.Games.findIndex(c => c.GameId == g.GameId) < 0;
+        } else {
+          return false;
+        }
       })
       this.myOtherGamesCount = otherGames.length;
       this.myOtherGames = Observable.of(otherGames)
