@@ -70,7 +70,7 @@ namespace GameNightBuddy_Server
 
       app.UseApplicationInsightsExceptionTelemetry();
 
-      app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod());
+      app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
       
       app.UseMvc();
     }
