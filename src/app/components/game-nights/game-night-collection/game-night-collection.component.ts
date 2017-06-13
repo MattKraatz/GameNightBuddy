@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
 
 import {Game} from '../../../models/game.model';
 import {GameNight} from '../../../models/game-night.model';
 import {AuthService} from '../../../services/auth.service';
 import {CollectionService} from '../../../services/collection.service';
+import {GameNightService} from '../../../services/game-night.service';
 
 @Component({
   selector: 'app-game-night-collection',
@@ -13,22 +14,28 @@ import {CollectionService} from '../../../services/collection.service';
 })
 export class GameNightCollectionComponent implements OnInit {
 
-  collection: Game[];
+  collection: Observable<Array<Game>>;
   nightId: string;
-  myOtherGames: Game[];
+  myOtherGames: Observable<Array<Game>>;
 
-  constructor(route: ActivatedRoute, private authService: AuthService, private collectionService: CollectionService) {
-    route.parent.data.subscribe(data => {
-      var night: GameNight = data['gameNight'];
-      this.collection = night.Games;
+  myOtherGamesCount = 0;
+
+  constructor(private authService: AuthService, private collectionService: CollectionService, private gameNightService: GameNightService) {
+    this.gameNightService.currentGameNight.subscribe(night => {
+      this.collection = Observable.of(night.Games);
       this.nightId = night.GameNightId;
 
-      this.myOtherGames = this.authService.currentUserProfile.Games.filter(g => {
-        return this.collection.findIndex(c => c.GameId == g.GameId) < 0;
+      var otherGames = this.authService.currentUserProfile.Games.filter(g => {
+        if (night.Games.length) {
+          return night.Games.findIndex(c => c.GameId == g.GameId) < 0;
+        } else {
+          return false;
+        }
       })
+      this.myOtherGamesCount = otherGames.length;
+      this.myOtherGames = Observable.of(otherGames)
     })
-
-    }
+  }
 
   ngOnInit() {
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 import {GameNight} from '../../models/game-night.model';
@@ -23,11 +23,15 @@ export class ExploreComponent implements OnInit {
   ngOnInit() {
   }
 
-  joinNight(nightId: string) {
+  joinNight(night: GameNight) {
     var member = new Member();
     member.UserId = this.authService.currentUserProfile.UserId;
     member.IsHost = false;
-    this.gameNightService.joinGameNight(member, nightId);
+    this.gameNightService.joinGameNight(member, night);
+  }
+
+  refreshExplore() {
+    this.gameNightService.refreshOtherGameNights(this.authService.currentUserProfile.UserId);
   }
 
 }

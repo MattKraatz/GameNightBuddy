@@ -11,6 +11,7 @@ export class ExploreGameNightListComponent implements OnInit {
 
   @Input() gameNights: GameNight[];
   @Output() joinNight = new EventEmitter();
+  @Output() refreshExplore = new EventEmitter();
 
   constructor() { }
 

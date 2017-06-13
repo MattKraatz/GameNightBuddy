@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
 
 import {GameNight} from '../../../models/game-night.model';
 import {Member} from '../../../models/member.model';
@@ -12,13 +12,12 @@ import {GameNightService} from '../../../services/game-night.service';
 })
 export class GameNightMembersComponent implements OnInit {
 
-  members: Member[];
+  members: Observable<Array<Member>>;
   nightId: string;
 
-  constructor(route: ActivatedRoute, private gameNightService: GameNightService) {
-    route.parent.data.subscribe(data => {
-      var night: GameNight = data['gameNight'];
-      this.members = night.Members;
+  constructor(private gameNightService: GameNightService) {
+    this.gameNightService.currentGameNight.subscribe(night => {
+      this.members = Observable.of(night.Members);
       this.nightId = night.GameNightId;
     })
   }
@@ -28,7 +27,7 @@ export class GameNightMembersComponent implements OnInit {
 
   addMember(model: Member) {
     var member = new Member(model);
-    this.gameNightService.joinGameNight(model, this.nightId);
+    this.gameNightService.addGameNightMember(model, this.nightId);
   }
 
 }

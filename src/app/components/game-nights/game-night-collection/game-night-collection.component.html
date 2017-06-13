@@ -1,5 +1,5 @@
-<app-game-list [games]="collection"></app-game-list>
-<app-game-dropdown *ngIf="myOtherGames.length > 0"
-  [games]="myOtherGames" (attachGame)="attachGame($event)"></app-game-dropdown>
+<app-game-list [games]="collection | async"></app-game-list>
+<app-game-dropdown *ngIf="myOtherGamesCount > 0"
+  [games]="myOtherGames | async" (attachGame)="attachGame($event)"></app-game-dropdown>
 <h4>Create a New Game</h4>
 <app-game-form (addGame)="addGame($event)"></app-game-form>

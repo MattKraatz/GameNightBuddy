@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import {ActivatedRoute} from '@angular/router';
 
 import {GameNight} from '../../../models/game-night.model';
 import {GameNightService} from '../../../services/game-night.service';
@@ -12,12 +11,10 @@ import {GameNightService} from '../../../services/game-night.service';
 })
 export class GameNightComponent implements OnInit {
 
-  gameNight: GameNight;
+  gameNight: Observable<GameNight>;
 
-  constructor(route: ActivatedRoute) {
-    route.data.subscribe(data => {
-      this.gameNight = data['gameNight']
-    })
+  constructor(private gameNightService: GameNightService) {
+    this.gameNight = this.gameNightService.gameNight;
   }
 
   ngOnInit() {

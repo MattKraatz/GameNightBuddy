@@ -4,16 +4,20 @@
       <tr>
         <th>Name</th>
         <th></th>
+        <th class="pull-right">
+          <button class="btn btn-outline-success" type="button" (click)="refreshExplore()">Refresh</button>
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let night of gameNights">
         <td>{{night.Name}}</td>
         <td>
-          <button (click)="joinNight.emit(night.GameNightId)" class="btn btn-primary">
+          <button (click)="joinNight.emit(night)" class="btn btn-primary">
             Join
           </button>
         </td>
+        <td></td>
       </tr>
     </tbody>
   </table>
