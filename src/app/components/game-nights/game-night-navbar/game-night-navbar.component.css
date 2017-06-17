@@ -6,3 +6,17 @@ button {
   padding: 0px 4px;
   margin: 3px 8px;
 }
+
+.reload { 
+  max-height: 22px;
+  margin-bottom: 1px;
+}
+
+.spinning-reload {
+  animation: Indicator-spin infinite 1s linear;
+}
+
+@keyframes Indicator-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

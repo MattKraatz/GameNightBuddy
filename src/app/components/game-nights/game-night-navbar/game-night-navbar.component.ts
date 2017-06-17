@@ -2,6 +2,7 @@ import {Component, OnInit, Input} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {GameNight} from '../../../models/game-night.model';
 import {GameNightService} from '../../../services/game-night.service';
+import {NavbarService} from '../../../services/navbar.service';
 
 @Component({
   selector: 'app-game-night-navbar',
@@ -10,15 +11,35 @@ import {GameNightService} from '../../../services/game-night.service';
 })
 export class GameNightNavbarComponent implements OnInit {
 
-  @Input() gameNight: Observable<GameNight>;
+  @Input() set gameNight(night: Observable<GameNight>) {
+    this._gameNight = night;
+    if (this.isReloading) this.isReloading = false;
+  }
 
-  constructor(private gameNightService: GameNightService) { }
+  _gameNight: Observable<GameNight>;
+
+  isReloading: boolean = false;
+
+  navbarClasses = {
+    show: false
+  }
+
+  constructor(private gameNightService: GameNightService, private navbarService: NavbarService) {
+    navbarService.GameNightNavbarExpanded.subscribe(b => {
+      this.navbarClasses.show = b
+    });
+  }
 
   ngOnInit() {
   }
 
   refreshGameNight() {
+    this.isReloading = true;
     this.gameNightService.refreshGameNight();
+  }
+
+  toggleNavbarExpand() {
+    this.navbarService.toggleGameNightNavbar();
   }
 
 }

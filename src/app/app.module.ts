@@ -29,6 +29,7 @@ import {AuthGuard} from './services/guards/auth-guard.service';
 import {GameNightService} from './services/game-night.service';
 import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
 import {ProfileCompleteGuard} from './services/guards/profile-complete-guard.service';
+import {NavbarService} from './services/navbar.service';
 
 // Components
 import {AppComponent} from './app.component';
@@ -59,6 +60,7 @@ import {UserSearchComponent} from './components/members/user-search/user-search.
 import {MatchDetailComponent} from './components/matches/match-detail/match-detail.component';
 import {GameDropdownComponent} from './components/collection/game-dropdown/game-dropdown.component';
 import {ExploreGameNightListComponent} from './components/explore/explore-game-night-list/explore-game-night-list.component';
+import {SmallLoadingIndicatorComponent} from './components/global/small-loading-indicator/small-loading-indicator.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -131,9 +133,14 @@ const appRoutes: Routes = [
     component: LoginComponent
   },
   {path: 'email-auth', component: EmailAuthComponent},
-  // DEFAULTS
-  {path: '', component: HomeComponent},
-  {path: '**', component: HomeComponent}
+  // 404/REDIRECT
+  {
+    path: '**',
+    canActivate: [AuthGuard, ProfileCompleteGuard],
+    component: HomeComponent
+  },
+  // DEFAULT
+  {path: '', component: HomeComponent}
 ];
 
 // Default Authorization Config for AngularFireModule
@@ -172,7 +179,8 @@ const authConfig = {
     UserSearchComponent,
     MatchDetailComponent,
     GameDropdownComponent,
-    ExploreGameNightListComponent
+    ExploreGameNightListComponent,
+    SmallLoadingIndicatorComponent
   ],
   imports: [
     BrowserModule,
@@ -190,7 +198,8 @@ const authConfig = {
     AuthGuard,
     GameNightService,
     GameNightResolver,
-    ProfileCompleteGuard
+    ProfileCompleteGuard,
+    NavbarService
   ],
   bootstrap: [
     AppComponent

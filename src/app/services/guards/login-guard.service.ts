@@ -11,7 +11,6 @@ export class LoginGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
   // If logged in, navigate to home page
-  // Method below from this thread: https://github.com/angular/angularfire2/issues/282
   return this.authService.af.auth.map(authState => {
       if (authState) this.router.navigate(['/home']);
       return !authState;

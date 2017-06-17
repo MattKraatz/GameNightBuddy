@@ -4,6 +4,7 @@ import {Location} from '@angular/common';
 
 import {Match} from '../../../models/match.model';
 import {GameNight} from '../../../models/game-night.model';
+import {GameNightService} from '../../../services/game-night.service';
 
 @Component({
   selector: 'app-match-detail',
@@ -14,14 +15,10 @@ export class MatchDetailComponent implements OnInit {
 
   match: Match;
 
-  constructor(private route: ActivatedRoute, private location: Location) {
+  constructor(private route: ActivatedRoute, private location: Location, private gameNightService: GameNightService) {
     // grab the id from route params
-    let id = route.snapshot.params['id'];
-    // query the parent's data struct for that specific match
-    route.parent.data.subscribe(data => {
-      var night: GameNight = data['gameNight'];
-      this.match = night.Matches.find(match => match.MatchId == id);
-    })
+    let matchId = route.snapshot.params['id'];
+    this.match = this.gameNightService.currentGameNight.value.Matches.filter(m => m.MatchId == matchId)[0];
   }
 
   ngOnInit() {

@@ -13,7 +13,8 @@ export class ProfileCompleteGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return this.authService.userLoaded ?
       Observable.of(this.validateProfile(this.authService.currentUserProfile)) :
-      this.authService.userProfile.skip(1).map(auth => this.validateProfile(auth))
+      this.authService.userProfile.skip(1)
+        .map(auth => this.validateProfile(auth))
         .catch((e) => Observable.of(false));
     }
 

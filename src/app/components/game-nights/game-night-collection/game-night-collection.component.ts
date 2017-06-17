@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable, BehaviorSubject} from 'rxjs';
 
 import {Game} from '../../../models/game.model';
 import {GameNight} from '../../../models/game-night.model';
@@ -16,7 +16,7 @@ export class GameNightCollectionComponent implements OnInit {
 
   collection: Observable<Array<Game>>;
   nightId: string;
-  myOtherGames: Observable<Array<Game>>;
+  myOtherGames: BehaviorSubject<Array<Game>>;
 
   myOtherGamesCount = 0;
 
@@ -29,11 +29,11 @@ export class GameNightCollectionComponent implements OnInit {
         if (night.Games.length) {
           return night.Games.findIndex(c => c.GameId == g.GameId) < 0;
         } else {
-          return false;
+          return true;
         }
       })
       this.myOtherGamesCount = otherGames.length;
-      this.myOtherGames = Observable.of(otherGames)
+      this.myOtherGames = new BehaviorSubject(otherGames);
     })
   }
 
@@ -48,6 +48,11 @@ export class GameNightCollectionComponent implements OnInit {
 
   attachGame(model: Game) {
     var game = new Game(model);
+
+    // update the game-dropdown component's list
+    var newOtherGamesList = this.myOtherGames.value.filter(g => g.GameId != game.GameId);
+    this.myOtherGames.next(newOtherGamesList);
+
     this.collectionService.addGameToGameNight(game, this.nightId);
   }
 

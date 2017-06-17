@@ -27,6 +27,8 @@ export class AuthService {
   currentUserProfile: User;
   public userLoaded: boolean = false;
 
+  public isUserLoading: Subject<boolean> = new Subject<boolean>();
+
   userSearch: Observable<User[]>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http,
@@ -49,12 +51,14 @@ export class AuthService {
       }
       else {
         // user not logged in
+        this.isUserLoading.next(false);
         this.store.dispatch({type: "LOGOUT_USER", payload: new User()});
       }
     })
   }
 
   getAuthRecordFromDB(auth: Auth) {
+    this.isUserLoading.next(true);
     this.http.get(`${ServerConfig.baseUrl}/users/${auth.uid}`)
         .map(res => res.json())
         .map(res => {
@@ -67,6 +71,7 @@ export class AuthService {
           return {type: StoreActions.LOGIN_USER, payload: user}
         })
         .subscribe(action => {
+          this.isUserLoading.next(false);
           this.store.dispatch(action)
         });
   }

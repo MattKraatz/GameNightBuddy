@@ -1,4 +1,7 @@
 <h4>My Profile</h4>
+<div *ngIf="!hideProfileUpdateSuccess" class="alert alert-success" role="alert">
+  <strong>Well done!</strong> You successfully updated your profile.
+</div>
 <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
   <div [hidden]="profileForm.valid"
         class="alert alert-info">
@@ -41,7 +44,13 @@
     </div>
   </div>
   <button type="submit" class="btn btn-primary btn-block"
+    *ngIf="!isProfileUpdating"
     [disabled]="!profileForm.form.valid">
     Update
+  </button>
+  <button type="button" class="btn btn-primary btn-block"
+    *ngIf="isProfileUpdating"
+    [disabled]="true">
+    <small-loading-indicator></small-loading-indicator>
   </button>
 </form>
