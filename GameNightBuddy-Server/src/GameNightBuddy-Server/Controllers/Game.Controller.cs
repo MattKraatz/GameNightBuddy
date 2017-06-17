@@ -54,7 +54,8 @@ namespace GameNightBuddy_Server.Controllers
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
 
-      vm = new GameViewModel(game);
+      var output = new GameViewModel(game);
+      output.Owner = vm.Owner;
       return new CreatedResult("games", vm);
     }
 
