@@ -1,5 +1,6 @@
 ﻿using GameNightBuddy_Server.Models;
 using GameNightBuddy_Server.Repositories;
+using GameNightBuddy_Server.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -16,13 +17,13 @@ namespace GameNightBuddy_Server.Controllers
       this.userRepository = userRepository;
     }
 
-    [HttpGet("{fbKey}")]
-    public IActionResult GetUserByFbKey([FromRoute] string fbKey)
+    [HttpPost]
+    public IActionResult GetUserByFbKey([FromBody] AuthViewModel input)
     {
-      var user = this.userRepository.GetUserByFbKey(fbKey);
+      var user = this.userRepository.GetUserByFbKey(input.uid);
       if (user == null)
       {
-        user = new User() { FirebaseId = fbKey };
+        user = new User(input);
         this.userRepository.InsertUser(user);
         this.userRepository.Save();
       }
@@ -34,19 +35,6 @@ namespace GameNightBuddy_Server.Controllers
     {
       var users = this.userRepository.QueryUsers(query, nightId);
       return new ObjectResult(users);
-    }
-
-    [HttpPost]
-    public IActionResult CreateUser([FromBody] User user)
-    {
-      if (user == null)
-      {
-        return new BadRequestResult();
-      }
-
-      this.userRepository.InsertUser(user);
-      this.userRepository.Save();
-      return new CreatedResult("users", user);
     }
 
     [HttpPut]
