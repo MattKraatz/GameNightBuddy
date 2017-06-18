@@ -27,6 +27,8 @@ export class AuthService {
   currentUserProfile: User;
   public userLoaded: boolean = false;
 
+  public isUserLoading: Subject<boolean> = new Subject<boolean>();
+
   userSearch: Observable<User[]>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http,
@@ -39,23 +41,25 @@ export class AuthService {
     this.af.auth.subscribe(auth => {
       if(auth) {
         // user logged in
-        if (auth.auth) {
-          var user = new Auth(auth.auth);
-        } else if (auth.facebook) {
+        if (auth.facebook) {
           var user = new Auth(auth.facebook);
           user.uid = auth.uid;
+        } else if (auth.auth) {
+          var user = new Auth(auth.auth);
         }
         this.getAuthRecordFromDB(user);
       }
       else {
         // user not logged in
+        this.isUserLoading.next(false);
         this.store.dispatch({type: "LOGOUT_USER", payload: new User()});
       }
     })
   }
 
   getAuthRecordFromDB(auth: Auth) {
-    this.http.get(`${ServerConfig.baseUrl}/users/${auth.uid}`)
+    this.isUserLoading.next(true);
+    this.http.post(`${ServerConfig.baseUrl}/users`, JSON.stringify(auth), HEADER)
         .map(res => res.json())
         .map(res => {
           var user = new User(res);
@@ -67,6 +71,7 @@ export class AuthService {
           return {type: StoreActions.LOGIN_USER, payload: user}
         })
         .subscribe(action => {
+          this.isUserLoading.next(false);
           this.store.dispatch(action)
         });
   }
@@ -88,7 +93,6 @@ export class AuthService {
   }
 
   loginWithEmailAndPassword(user: LoginViewModel) {
-    console.log(user);
     this.af.auth.login({
       email: user.Email,
       password: user.Password
@@ -98,10 +102,14 @@ export class AuthService {
       method: AuthMethods.Password,
     })
     .then(response => {
-      var user = new Auth(response.auth);
-      this.getAuthRecordFromDB(user);
+      // try to navigate to 'my game nights' after the userProfile is updated
+      // profile complete guard service will catch an incomplete profile
+      this.userProfile.first().subscribe(u => {
+        this.router.navigate(['my-game-nights']);
+      }).unsubscribe();
     })
     .catch(response => {
+      // invalid login
       console.error(response);
     });
   }
@@ -112,10 +120,12 @@ export class AuthService {
       password: user.Password
     })
     .then(response => {
-      var user = new Auth(response.auth);      
-      this.getAuthRecordFromDB(user);
+      this.userProfile.first().subscribe(u => {
+        this.router.navigate(['my-game-nights']);
+      })
     })
     .catch(response => {
+      // invalid registration
       console.error(response);
     });
   }
@@ -136,5 +146,18 @@ export class AuthService {
     user.GameNights = new Array<GameNight>();
     return user;
   }
+
+  validateProfile(user: User): boolean {
+      var output = false;
+      if (user.FirstName && user.FirstName.length > 0 &&
+          user.LastName && user.LastName.length > 0 &&
+          user.Email && user.Email.length > 0 &&          
+          user.DisplayName && user.DisplayName.length > 0) {
+            output = true;
+          } else {
+            this.router.navigate(['profile']);
+          }
+      return output;
+    }
 
 }

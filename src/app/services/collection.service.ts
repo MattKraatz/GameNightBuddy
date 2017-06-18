@@ -38,11 +38,12 @@ export class CollectionService {
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
+    debugger
     this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
       .map(res => res.json())
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.COLLECTION_CREATE_GAME, payload })
-        this.store.dispatch({type: StoreActions.GAME_NIGHT_CREATE_GAME, payload})
+        this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_GAME, payload })
     })
   }
 

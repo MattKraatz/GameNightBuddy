@@ -1,9 +1,12 @@
 <nav class="navbar navbar-toggleable-sm navbar-inverse bg-primary">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavbarExpand()">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="">Game Night Buddy</a>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <a class="navbar-brand" href="">
+    Game Night Buddy
+    <small-loading-indicator *ngIf="isLoading"></small-loading-indicator>
+  </a>
+  <div class="collapse navbar-collapse" [ngClass]="navbarClasses" id="navbarToggleControl">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link" *ngIf="user && user.UserId" routerLink="/explore" routerLinkActive="active">Explore</a>
@@ -13,6 +16,7 @@
       </li>
     </ul>
     <ul class="navbar-nav">
+      
       <li class="nav-item dropdown" *ngIf="user && user.UserId">
         <a class="nav-link dropdown-toggle" id="navbarProfileDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{user.DisplayName || user.Email }}

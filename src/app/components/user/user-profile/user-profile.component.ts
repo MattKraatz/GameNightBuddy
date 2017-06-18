@@ -10,8 +10,18 @@ import {AuthService} from '../../../services/auth.service';
 })
 export class UserProfileComponent implements OnInit {
 
+  isProfileUpdating: boolean = false;
+  hideProfileUpdateSuccess: boolean = true;
+
   constructor(private authService: AuthService) {
-    this.authService.userProfile.subscribe(user => this.model = user);
+    this.authService.userProfile.subscribe(user => {
+      this.model = user
+      if (this.isProfileUpdating) {
+        this.isProfileUpdating = false;
+        this.hideProfileUpdateSuccess = false;
+        setTimeout(() => {this.hideProfileUpdateSuccess = true}, 5000)
+      }
+    });
   }
 
   ngOnInit() {
@@ -22,7 +32,8 @@ export class UserProfileComponent implements OnInit {
 
   updateProfile() {
     var user = new User(this.model);
-    console.log(user);
+    this.isProfileUpdating = true;
+    this.hideProfileUpdateSuccess = true;
     this.authService.updateUserInDB(user);
   }
 }

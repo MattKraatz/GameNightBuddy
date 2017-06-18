@@ -1,20 +1,28 @@
 <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarGameNight" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavbarExpand()">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" routerLink="/game-night/{{gameNight.GameNightId}}">{{gameNight.Name}}</a>
-  <div class="collapse navbar-collapse" id="navbarGameNight">
+  <a class="navbar-brand" routerLink="/game-night/{{_gameNight.GameNightId}}">{{_gameNight.Name}}</a>
+  <div class="collapse navbar-collapse" [ngClass]="navbarClasses" id="navbarGameNight">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{gameNight.GameNightId}}/collection" routerLinkActive="active">Collection</a>
+        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/collection" routerLinkActive="active">Collection</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{gameNight.GameNightId}}/members" routerLinkActive="active">Members</a>
+        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/members" routerLinkActive="active">Members</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{gameNight.GameNightId}}/matches" routerLinkActive="active">Matches</a>
+        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/matches" routerLinkActive="active">Matches</a>
       </li>
     </ul>
-    <button class="btn btn-outline-success" type="button" (click)="refreshGameNight()">Refresh</button>    
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" (click)="refreshGameNight()">
+          <img *ngIf="!isReloading" src="assets/default-reload-spinner.svg" class="reload static-reload" alt="logo" />
+          <img *ngIf="isReloading" src="assets/default-reload-spinner.svg" class="reload spinning-reload" alt="logo" />
+          Reload
+        </a>
+      </li>
+    </ul>
   </div>
 </nav>

@@ -1,0 +1,9 @@
+.small-loading-indicator {
+  animation: Indicator-spin infinite 4s linear;
+  height: 20px;
+}
+
+@keyframes Indicator-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
