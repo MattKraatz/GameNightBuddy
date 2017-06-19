@@ -1,7 +1,7 @@
 <form (ngSubmit)="addMatch.emit(model); matchForm.reset()" #matchForm="ngForm">
   <div class="form-group">
     <label for="date">Date</label>
-    <input [(ngModel)]="model.Date" name="Date" id="Date"
+    <input [ngModel]="model.Date | date:'yyyy-MM-dd'" (ngModelChange)="model.Date = $event" name="Date" id="Date"
       #date="ngModel" type="date" class="form-control" required />
     <div [hidden]="date.valid || date.pristine"
           class="alert alert-danger">
@@ -10,7 +10,7 @@
   </div>
   <div class="form-group">
     <label for="game">Game</label>
-    <select [(ngModel)]="model.Game" name="Game" id="Game"
+    <select [(ngModel)]="model.Game" [compareWith]="byGameId" name="Game" id="Game"
       #game="ngModel" type="text" class="form-control" required >
       <option *ngFor="let game of games" [ngValue]="game">{{game.Name}}</option>
     </select>
@@ -21,7 +21,7 @@
   </div>
   <div class="form-group">
     <label for="players">Players</label>
-    <select multiple [(ngModel)]="model.Players" name="players" id="players"
+    <select multiple [(ngModel)]="model.Players" [compareWith]="byMemberId" name="players" id="players"
       #players="ngModel" type="text" class="form-control" required >
       <option *ngFor="let member of members" [ngValue]="member">{{member.FirstName + " " + member.LastName}}</option>
     </select>
@@ -39,22 +39,22 @@
           <th class="checkbox">Winner</th>
         </tr>
       </thead>
-      <tr *ngFor="let player of model.Players">
+      <tr *ngFor="let player of model.Players; let in = index;">
         <td>{{player.FirstName + " " + player.LastName}}</td>
         <td class="checkbox">
-          <input [(ngModel)]="player.FirstTime" name="player.FirstTime" id="player.FirstTime"
+          <input [(ngModel)]="player.FirstTime" name="FirstTime-{{in}}" id="FirstTime-{{in}}"
             type="checkbox" class="form-control" />
         </td>
         <td>
-          <input [(ngModel)]="player.Team" name="player.Team" id="player.Team"
+          <input [(ngModel)]="player.Team" name="Team-{{in}}" id="Team-{{in}}"
             type="text" class="form-control" />
         </td>
         <td class="score">
-          <input [(ngModel)]="player.Score" name="player.Score" id="player.Score"
+          <input [(ngModel)]="player.Score" name="Score-{{in}}" id="Score-{{in}}"
             type="number" class="form-control" />
         </td>
         <td class="checkbox">
-          <input [(ngModel)]="player.Winner" name="player.Winner" id="player.Winner"
+          <input [(ngModel)]="player.Winner" name="Winner-{{in}}" id="Winner-{{in}}"
             type="checkbox" class="form-control" />
         </td>
       </tr>
@@ -62,6 +62,7 @@
   </div>
   <button type="submit" class="btn btn-primary btn-block"
     [disabled]="!matchForm.form.valid">
-    Add
+    <span *ngIf="!match">Add</span>
+    <span *ngIf="match">Update</span>    
   </button>
 </form>

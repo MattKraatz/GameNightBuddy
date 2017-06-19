@@ -17,7 +17,7 @@ export class Match {
 
   constructor(obj?: IMatch){
     this.MatchId = obj && obj.MatchId || "";
-    this.Date = obj && obj.Date || new Date();
+    this.Date = (obj && obj.Date) ? new Date(obj.Date) : new Date();
     this.Game = obj && obj.Game || new Game();
     this.Players = obj && obj.Players || new Array<Player>();
   }

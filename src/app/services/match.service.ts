@@ -27,19 +27,16 @@ export class MatchService {
   }
 
   createMatch(match: Match, id: string) {
-    // remove circular references
-    console.log(match.Game.Owner)
-    //match.Game.Owner.Games = new Array<Game>();
-    //match.Game.Owner.GameNights = new Array<GameNight>();
-    match.Players = match.Players.map(p => {
-      //p.GameNights = new Array<GameNight>();
-      //p.Games = new Array<Game>();
-      return p;
-    });
-
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${id}/matches`, JSON.stringify(match), OPTIONS)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_MATCH, payload }))
+      .subscribe(action => this.store.dispatch(action));
+  }
+
+  updateMatch(match: Match, id: string) {
+    this.http.put(`${ServerConfig.baseUrl}/game-nights/${id}/matches`, JSON.stringify(match), OPTIONS)
+      .map(res => res.json())
+      .map(payload => ({ type: StoreActions.GAME_NIGHT_UPDATE_MATCH, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 }
