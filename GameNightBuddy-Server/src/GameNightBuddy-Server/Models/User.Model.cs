@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameNightBuddy_Server.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -34,6 +35,13 @@ namespace GameNightBuddy_Server.Models
       LastName = user.LastName;
       DisplayName = user.DisplayName;
       PhotoURL = user.PhotoURL;
+    }
+
+    public User(AuthViewModel auth)
+    {
+      FirebaseId = auth.uid;
+      DisplayName = auth.displayName;
+      Email = auth.email;
     }
   }
 }
