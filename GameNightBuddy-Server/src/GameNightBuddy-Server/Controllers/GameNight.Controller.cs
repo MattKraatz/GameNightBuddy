@@ -98,6 +98,22 @@ namespace GameNightBuddy_Server.Controllers
       return new CreatedResult($"game-nights/${id}/matches", vm);
     }
 
+    [HttpPut("{id}/matches")]
+    public IActionResult UpdateMatch([FromBody] MatchViewModel vm, [FromRoute] Guid id)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      var match = this.gameNightRepository.UpdateMatch(vm);
+      this.gameNightRepository.Save();
+
+      vm = new MatchViewModel(match);
+
+      return new CreatedResult($"game-nights/${id}/matches", vm);
+    }
+
     [HttpPost]
     public IActionResult Create([FromBody] GameNightViewModel vm)
     {

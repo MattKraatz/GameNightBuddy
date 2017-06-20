@@ -18,6 +18,7 @@ namespace GameNightBuddy_Server.Repositories
     GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
     GameNightMember InsertMember(GameNightMember member);
     Match InsertMatch(MatchViewModel vm, Guid nightId);
+    Match UpdateMatch(MatchViewModel vm);
     void DeactivateGameNight(Guid nightId);
     void UpdateGameNight(GameNight night);
     void Save();
@@ -91,6 +92,52 @@ namespace GameNightBuddy_Server.Repositories
         player.MatchId = match.MatchId;
         context.MatchPlayers.Add(player);
       }
+      return match;
+    }
+
+    public Match UpdateMatch(MatchViewModel vm)
+    {
+      var update = new Match(vm);
+
+      // update match properties
+      var match = context.Matches.FirstOrDefault(m => m.MatchId == new Guid(vm.MatchId));
+      match.GameId = update.GameId;
+      match.Date = update.Date;
+
+      var players = context.MatchPlayers.Where(mp => mp.MatchId == match.MatchId).ToList();
+
+      // remove any players as needed
+      var deletedPlayers = players.Where(p => vm.Players.FindIndex(u => u.MemberId == p.GameNightMemberId.ToString()) < 0);
+      context.MatchPlayers.RemoveRange(deletedPlayers);
+      players = players.Where(p => !deletedPlayers.Contains(p)).ToList();
+
+      // edit any existing players
+      players.ForEach(p =>
+      {
+        var player = vm.Players.FirstOrDefault(up => up.MemberId == p.GameNightMemberId.ToString());
+        p.FirstTimer = player.FirstTime;
+        p.Score = player.Score;
+        p.Team = player.Team;
+        p.Winner = player.Winner;
+      });
+
+      // add any new players
+      var newPlayers = vm.Players.Where(vmp => players.FindIndex(p => p.GameNightMemberId.ToString() == vmp.MemberId) < 0).ToList();
+      newPlayers.ForEach(p =>
+      {
+        var player = new MatchPlayer(p);
+        player.MatchId = match.MatchId;
+        context.MatchPlayers.Add(player);
+      });
+
+      match = context.Matches
+        .Include(m => m.Players)
+          .ThenInclude(p => p.Member)
+            .ThenInclude(m => m.User)
+        .Include(m => m.Game)
+          .ThenInclude(g => g.User)   
+        .FirstOrDefault(m => m.MatchId == new Guid(vm.MatchId));
+
       return match;
     }
 
