@@ -14,7 +14,7 @@
         <td>{{match.Game.Name}}</td>
         <td>
           <span *ngFor="let player of match.Players">
-            | {{player.FirstName}} {{player.LastName}}
+            | {{player.DisplayName}}
           </span>
         </td>
       </tr>

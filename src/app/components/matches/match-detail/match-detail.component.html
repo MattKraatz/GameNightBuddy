@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let player of match.Players">
-        <td>{{player.FirstName}} {{player.LastName}}</td>
+        <td>{{player.DisplayName}}</td>
         <td><span *ngIf="player.FirstTime">X</span></td>
         <td>{{player.Team}}</td>
         <td>{{player.Score}}</td>

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
 import {Location} from '@angular/common';
 import {Observable} from 'rxjs';
@@ -29,15 +29,16 @@ export class MatchDetailComponent implements OnInit {
       private gameNightService: GameNightService, private matchService: MatchService) {
     // grab the id from route params
     let matchId = route.snapshot.params['id'];
-    var match = this.gameNightService.currentGameNight.value.Matches.filter(m => m.MatchId == matchId)[0];
-    this.match = new Match(match);
-    // deep copy (for form reset)
-    this.matchModel = JSON.parse(JSON.stringify(this.match));
 
-    var night = this.gameNightService.currentGameNight.value;
-    this.members = night.Members;
-    this.collection = night.Games;
-    this.nightId = night.GameNightId;
+    this.gameNightService.currentGameNight.subscribe(night => {
+      var match = night.Matches.filter(m => m.MatchId == matchId)[0];
+      this.match = match;
+      // deep copy (for form reset)
+      this.matchModel = JSON.parse(JSON.stringify(match));
+      this.members = night.Members;
+      this.collection = night.Games;
+      this.nightId = night.GameNightId;
+    })
   }
 
   ngOnInit() {
@@ -54,11 +55,14 @@ export class MatchDetailComponent implements OnInit {
 
   updateMatch(model: Match){
     var match = new Match(model);
+    this.match = match;
+    this.matchModel = JSON.parse(JSON.stringify(match));
+
     this.matchService.updateMatch(match, this.nightId);
+    this.isEditing = false;
   }
 
   cancelEdit() {
-    // deep copy
     this.matchModel = JSON.parse(JSON.stringify(this.match));
     this.isEditing = false;
   }

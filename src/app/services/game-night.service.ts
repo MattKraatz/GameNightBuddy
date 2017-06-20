@@ -38,16 +38,20 @@ export class GameNightService {
     this.gameNight = store.select("gameNight");
     this.myGameNights = store.select("myGameNights");
     this.otherGameNights = store.select("otherGameNights");
+
+    this.gameNight.subscribe(n => {
+      if (this.currentGameNight == undefined) {
+        this.currentGameNight = new BehaviorSubject(n);
+      } else {
+        this.currentGameNight.next(n);
+      }
+    })
   }
 
   loadGameNight(id: string) {
     if (!this.nightLoaded || id != this.currentGameNight.value.GameNightId) {
       this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`)
         .map(res => res.json())
-        .map(night => {
-          this.currentGameNight = new BehaviorSubject(night);
-          return night;
-        })
         .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));
     }
@@ -57,10 +61,7 @@ export class GameNightService {
   refreshGameNight() {
     if (this.nightLoaded) {
       this.http.get(`${ServerConfig.baseUrl}/game-nights/${this.currentGameNight.value.GameNightId}`)
-        .map(res => res.json()).map(night => {
-          this.currentGameNight.next(night);
-          return night;
-        })
+        .map(res => res.json())
         .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));
     }
@@ -110,7 +111,6 @@ export class GameNightService {
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${night.GameNightId}/members`, JSON.stringify(user), OPTIONS)
       .map(res => res.json())
       .subscribe(payload => {
-        console.log("payload", payload)
         this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_JOIN, payload: night });
       });
   }
@@ -119,7 +119,6 @@ export class GameNightService {
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(user), OPTIONS)
       .map(res => res.json())      
       .subscribe(payload => {
-        console.log("payload", payload)
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_MEMBER, payload });
       });
   }

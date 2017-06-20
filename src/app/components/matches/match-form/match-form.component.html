@@ -40,7 +40,7 @@
         </tr>
       </thead>
       <tr *ngFor="let player of model.Players; let in = index;">
-        <td>{{player.FirstName + " " + player.LastName}}</td>
+        <td>{{player.DisplayName}}</td>
         <td class="checkbox">
           <input [(ngModel)]="player.FirstTime" name="FirstTime-{{in}}" id="FirstTime-{{in}}"
             type="checkbox" class="form-control" />
