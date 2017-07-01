@@ -14,10 +14,12 @@ namespace GameNightBuddy_Server.Controllers
   public class GameNightController
   {
     private readonly IGameNightRepository gameNightRepository;
+    private readonly IMatchRepository matchRepo;
 
-    public GameNightController(IGameNightRepository gameNightRepository)
+    public GameNightController(IGameNightRepository gameNightRepository, IMatchRepository matchRepo)
     {
       this.gameNightRepository = gameNightRepository;
+      this.matchRepo = matchRepo;
     }
 
     [HttpGet("my/{userId}")]
@@ -106,8 +108,10 @@ namespace GameNightBuddy_Server.Controllers
         return new BadRequestResult();
       }
 
-      var match = this.gameNightRepository.UpdateMatch(vm);
+      this.gameNightRepository.UpdateMatch(vm);
       this.gameNightRepository.Save();
+
+      var match = this.matchRepo.GetMatch(new Guid(vm.MatchId));
 
       vm = new MatchViewModel(match);
 

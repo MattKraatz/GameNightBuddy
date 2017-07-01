@@ -130,14 +130,6 @@ namespace GameNightBuddy_Server.Repositories
         context.MatchPlayers.Add(player);
       });
 
-      match = context.Matches
-        .Include(m => m.Players)
-          .ThenInclude(p => p.Member)
-            .ThenInclude(m => m.User)
-        .Include(m => m.Game)
-          .ThenInclude(g => g.User)   
-        .FirstOrDefault(m => m.MatchId == new Guid(vm.MatchId));
-
       return match;
     }
 
