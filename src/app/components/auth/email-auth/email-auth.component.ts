@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Observable} from "rxjs";
 
 import {Auth} from '../../../models/auth.model';
 import {AuthService} from '../../../services/auth.service';
@@ -15,13 +16,28 @@ export class EmailAuthComponent implements OnInit {
     'nav-link': true,
     active: true
   }
-
   registerTabClasses = {
     'nav-link': true,
     active: false
   }
 
-  constructor(private authService: AuthService) { }
+  emailLoginErrorMessage: string;
+  emailRegisterErrorMessage: string;  
+
+  constructor(private authService: AuthService) {
+    authService.emailLoginError.subscribe(m => {
+      this.emailLoginErrorMessage = m;
+      if (m != "") setTimeout(()=> {
+        if (this.emailLoginErrorMessage != "") this.authService.emailLoginError.next("");
+      }, 8000);    
+    });
+    authService.emailRegisterError.subscribe(m => {
+      this.emailRegisterErrorMessage = m;
+      if (m != "") setTimeout(()=> {
+        if (this.emailRegisterErrorMessage != "") this.authService.emailRegisterError.next("");
+      }, 8000);      
+    });
+  }
 
   ngOnInit() {
   }
@@ -38,6 +54,14 @@ export class EmailAuthComponent implements OnInit {
   onRegisterSubmit() {
     var user = new LoginViewModel(this.registerModel);
     if (user.Password == user.ConfirmPassword) this.authService.registerEmailAndPassword(user);
+  }
+
+  clearLoginError(){
+    this.authService.emailLoginError.next("");
+  }
+
+  clearRegisterError(){
+    this.authService.emailRegisterError.next("");
   }
 
   setTab(tab: string) {

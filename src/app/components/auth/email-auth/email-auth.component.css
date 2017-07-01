@@ -7,3 +7,8 @@
 #email-auth-component div {
   margin: 10px 0
 }
+
+.pull-right {
+  float: right;
+  margin-top: 2px;
+}

@@ -9,7 +9,12 @@
   </ul>
 
   <div *ngIf="loginTabClasses.active">
-    <form (ngSubmit)="onLoginSubmit(ngModel); loginForm.reset()" #loginForm="ngForm">
+    <div *ngIf="emailLoginErrorMessage && emailLoginErrorMessage.length > 0"
+         class="alert alert-danger">
+      {{emailLoginErrorMessage}}
+      <img src="assets/remove.png" alt="clear message" (click)="clearLoginError()" class="pull-right">
+    </div>
+    <form (ngSubmit)="onLoginSubmit(ngModel); password.reset()" #loginForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
         <input [(ngModel)]="loginModel.Email" name="email" id="email"
@@ -36,7 +41,12 @@
   </div>
 
   <div *ngIf="registerTabClasses.active">
-    <form (ngSubmit)="onRegisterSubmit(ngModel); registerForm.reset()" #registerForm="ngForm">
+    <div *ngIf="emailRegisterErrorMessage && emailRegisterErrorMessage.length > 0"
+         class="alert alert-danger">
+      {{emailRegisterErrorMessage}}
+      <img src="assets/remove.png" alt="clear message" (click)="clearRegisterError()" class="pull-right">
+    </div>
+    <form (ngSubmit)="onRegisterSubmit(ngModel); password.reset(); confirmPassword.reset();" #registerForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
         <input [(ngModel)]="registerModel.Email" name="email" id="email"

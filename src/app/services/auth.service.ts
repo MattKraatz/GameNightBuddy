@@ -25,9 +25,11 @@ export class AuthService {
 
   userProfile: Observable<User>;
   currentUserProfile: User;
-  public userLoaded: boolean = false;
+  userLoaded: boolean = false;
 
-  public isUserLoading: Subject<boolean> = new Subject<boolean>();
+  isUserLoading: Subject<boolean> = new Subject<boolean>();
+  emailLoginError: Subject<string> = new Subject<string>();
+  emailRegisterError: Subject<string> = new Subject<string>();
 
   userSearch: Observable<User[]>;
   
@@ -110,7 +112,7 @@ export class AuthService {
     })
     .catch(response => {
       // invalid login
-      console.error(response);
+      this.emailLoginError.next(response.message);
     });
   }
 
@@ -126,7 +128,7 @@ export class AuthService {
     })
     .catch(response => {
       // invalid registration
-      console.error(response);
+      this.emailRegisterError.next(response.message);
     });
   }
 
