@@ -21,7 +21,8 @@
   </div>
   <div class="form-group">
     <label for="players">Players</label>
-    <select multiple [(ngModel)]="model.Players" [compareWith]="byMemberId" name="players" id="players"
+    <select multiple [(ngModel)]="playersModel" (ngModelChange)="playerSelectOnChange($event)"
+      [compareWith]="byMemberId" name="players" id="players"
       #players="ngModel" type="text" class="form-control" required >
       <option *ngFor="let member of members" [ngValue]="member">{{member.FirstName + " " + member.LastName}}</option>
     </select>
