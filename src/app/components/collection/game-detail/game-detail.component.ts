@@ -1,4 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
+import {Location} from '@angular/common';
+import {Observable} from 'rxjs';
+
+import {Match} from '../../../models/match.model';
+import {Member} from '../../../models/member.model';
+import {Game} from '../../../models/game.model';
+import {GameNight} from '../../../models/game-night.model';
+import {GameNightService} from '../../../services/game-night.service';
+import {CollectionService} from '../../../services/collection.service';
 
 @Component({
   selector: 'app-game-detail',
@@ -7,9 +17,57 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameDetailComponent implements OnInit {
 
-  constructor() { }
+  game: Game;
+  gameModel: Match;
+  isEditing: boolean = false;
+
+  members: Member[];
+  gameId: string;
+  nightId: string;
+
+  constructor(private route: ActivatedRoute, private location: Location,
+      private gameNightService: GameNightService, private collectionService: CollectionService) {
+    // grab the id from route params
+    this.gameId = route.snapshot.params['gameId'];
+    this.nightId = route.snapshot.params['id'];
+
+    if (this.nightId) {
+      this.gameNightService.currentGameNight.subscribe(night => {
+        var game = night.Games.filter(g => g.gameId == this.gameId)[0];
+        if (game) {
+          this.game = game;
+          // deep copy (for form reset)
+          this.gameModel = JSON.parse(JSON.stringify(game));
+          this.members = night.Members;
+        }
+    })
+    }
+  }
 
   ngOnInit() {
+  }
+
+  back(){
+    this.location.back();
+  }
+
+  toggleEdit(){
+    var bool = this.isEditing;
+    this.isEditing = bool === true ? false : true;
+  }
+
+  updateGame(model: Game){
+    var game = new Game(model);
+    this.game = game;
+    this.gameModel = JSON.parse(JSON.stringify(game));
+
+    this.collectionService.updateGame(game);
+    this.isEditing = false;
+  }
+
+  cancelEdit() {
+    this.gameModel = JSON.parse(JSON.stringify(this.game));
+    this.isEditing = false;
   }
 
 }

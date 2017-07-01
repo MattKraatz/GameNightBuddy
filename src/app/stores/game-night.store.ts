@@ -13,6 +13,11 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
         return g.GameId != payload.GameId;
       });
       return state;
+    case StoreActions.UPDATE_GAME:
+      state.Games = state.Games.map(game => {
+        return game.GameId === payload.GameId ? Object.assign({}, game, payload) : game;
+      })
+      return state;
     case StoreActions.GAME_NIGHT_CREATE_MEMBER:
       state.Members.push(payload);
       return state;

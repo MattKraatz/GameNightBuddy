@@ -77,5 +77,23 @@ namespace GameNightBuddy_Server.Controllers
 
       return new CreatedResult("games", new GameViewModel(output));
     }
+
+    [HttpPut]
+    public IActionResult Update([FromBody] GameViewModel vm)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      var game = new Game(vm);
+
+      this.gameRepository.UpdateGame(game);
+      this.gameRepository.Save();
+
+      var output = new GameViewModel(game);
+      output.Owner = vm.Owner;
+      return new CreatedResult("games", vm);
+    }
   }
 }

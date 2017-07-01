@@ -1,3 +1,13 @@
-<p>
-  game-detail works!
-</p>
+<div *ngIf="!isEditing">
+  <h3>Game Detail</h3>
+  <app-game-info [game]="game"></app-game-info>
+
+  <button class="btn btn-primary" (click)="toggleEdit()">Edit</button>
+  <button class="btn btn-secondary" (click)="back()">Go Back</button>
+
+</div>
+
+<div *ngIf="isEditing">
+  <app-game-form [members]="members" (addGame)="updateGame($event)"></app-game-form>
+  <button class="btn btn-danger" id="cancel-edit" (click)="cancelEdit()">Cancel</button>
+</div>

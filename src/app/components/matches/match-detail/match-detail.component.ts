@@ -29,7 +29,7 @@ export class MatchDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private location: Location,
       private gameNightService: GameNightService, private matchService: MatchService) {
     // grab the id from route params
-    this.matchId = route.snapshot.params['id'];
+    this.matchId = route.snapshot.params['matchId'];
 
     this.gameNightService.currentGameNight.subscribe(night => {
       var match = night.Matches.filter(m => m.MatchId == this.matchId)[0];

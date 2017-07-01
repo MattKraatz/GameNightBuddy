@@ -52,4 +52,11 @@ export class CollectionService {
       .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
+
+  updateGame(game: Game) {
+    this.http.put(`${ServerConfig.baseUrl}/games`, game, OPTIONS)
+      .map(res => res.json())
+      .map(payload => ({ type: StoreActions.UPDATE_GAME, payload }))
+      .subscribe(action => this.store.dispatch(action));
+  }
 }

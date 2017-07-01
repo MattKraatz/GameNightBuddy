@@ -85,11 +85,15 @@ const appRoutes: Routes = [
         component: GameNightCollectionComponent
       },
       {
+        path: 'collection/:gameId',
+        component: GameNightCollectionComponent
+      },
+      {
         path: 'matches',
         component: GameNightMatchesComponent
       },
       {
-        path: 'matches/:id',
+        path: 'matches/:matchId',
         component: MatchDetailComponent
       },
       {
