@@ -61,6 +61,7 @@ import {MatchDetailComponent} from './components/matches/match-detail/match-deta
 import {GameDropdownComponent} from './components/collection/game-dropdown/game-dropdown.component';
 import {ExploreGameNightListComponent} from './components/explore/explore-game-night-list/explore-game-night-list.component';
 import {SmallLoadingIndicatorComponent} from './components/global/small-loading-indicator/small-loading-indicator.component';
+import { MatchInfoComponent } from './components/matches/match-info/match-info.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -180,7 +181,8 @@ const authConfig = {
     MatchDetailComponent,
     GameDropdownComponent,
     ExploreGameNightListComponent,
-    SmallLoadingIndicatorComponent
+    SmallLoadingIndicatorComponent,
+    MatchInfoComponent
   ],
   imports: [
     BrowserModule,

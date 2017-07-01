@@ -24,20 +24,23 @@ export class MatchDetailComponent implements OnInit {
   members: Member[];
   collection: Game[];
   nightId: string;
+  matchId: string;
 
   constructor(private route: ActivatedRoute, private location: Location,
       private gameNightService: GameNightService, private matchService: MatchService) {
     // grab the id from route params
-    let matchId = route.snapshot.params['id'];
+    this.matchId = route.snapshot.params['id'];
 
     this.gameNightService.currentGameNight.subscribe(night => {
-      var match = night.Matches.filter(m => m.MatchId == matchId)[0];
-      this.match = match;
-      // deep copy (for form reset)
-      this.matchModel = JSON.parse(JSON.stringify(match));
-      this.members = night.Members;
-      this.collection = night.Games;
-      this.nightId = night.GameNightId;
+      var match = night.Matches.filter(m => m.MatchId == this.matchId)[0];
+      if (match) {
+        this.match = match;
+        // deep copy (for form reset)
+        this.matchModel = JSON.parse(JSON.stringify(match));
+        this.members = night.Members;
+        this.collection = night.Games;
+        this.nightId = night.GameNightId;
+      }
     })
   }
 

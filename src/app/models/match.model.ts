@@ -19,7 +19,14 @@ export class Match {
     this.MatchId = obj && obj.MatchId || "";
     this.Date = (obj && obj.Date) ? new Date(obj.Date) : new Date();
     this.Game = obj && obj.Game || new Game();
-    this.Players = obj && obj.Players || new Array<Player>();
+    if (obj && obj.Players) {
+      this.Players = new Array<Player>();
+      obj.Players.forEach((p) => {
+        this.Players.push(new Player(p));
+      })
+    } else {
+      this.Players = new Array<Player>();
+    }
   }
   
 }

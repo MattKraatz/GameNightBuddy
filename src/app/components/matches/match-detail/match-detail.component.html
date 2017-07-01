@@ -1,27 +1,6 @@
 <div *ngIf="!isEditing">
   <h3>Match Detail</h3>
-  <p><strong>Game:</strong> {{match.Game.Name}}</p>
-  <p><strong>Date:</strong> {{match.Date | date}}</p>
-
-  <h4>Players</h4>
-  <table class="table">
-    <thead>
-      <th>Name</th>
-      <th>First Timer</th>
-      <th>Team</th>
-      <th>Score</th>
-      <th>Winner</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let player of match.Players">
-        <td>{{player.DisplayName}}</td>
-        <td><span *ngIf="player.FirstTime">X</span></td>
-        <td>{{player.Team}}</td>
-        <td>{{player.Score}}</td>
-        <td><span *ngIf="player.Winner">X</span></td>
-      </tr>
-    </tbody>
-  </table>
+  <app-match-info [match]="match"></app-match-info>
 
   <button class="btn btn-primary" (click)="toggleEdit()">Edit</button>
   <button class="btn btn-secondary" (click)="back()">Go Back</button>
