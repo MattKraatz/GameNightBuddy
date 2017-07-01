@@ -9,5 +9,5 @@
 
 <div *ngIf="isEditing">
   <app-match-form [members]="members" [games]="collection" [match]="matchModel" (addMatch)="updateMatch($event)"></app-match-form>
-  <button class="btn btn-danger" id="cancel-edit" (click)="cancelEdit()">Cancel</button>
+  <button class="btn btn-danger btn-block" id="cancel-edit" (click)="cancelEdit()">Cancel</button>
 </div>

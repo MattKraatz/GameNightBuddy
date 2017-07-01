@@ -64,6 +64,7 @@ import {ExploreGameNightListComponent} from './components/explore/explore-game-n
 import {SmallLoadingIndicatorComponent} from './components/global/small-loading-indicator/small-loading-indicator.component';
 import { MatchInfoComponent } from './components/matches/match-info/match-info.component';
 import { GameDetailComponent } from './components/collection/game-detail/game-detail.component';
+import { GameInfoComponent } from './components/collection/game-info/game-info.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -86,7 +87,7 @@ const appRoutes: Routes = [
       },
       {
         path: 'collection/:gameId',
-        component: GameNightCollectionComponent
+        component: GameDetailComponent
       },
       {
         path: 'matches',
@@ -126,6 +127,11 @@ const appRoutes: Routes = [
     path: 'my-collection',
     canActivate: [AuthGuard, ProfileCompleteGuard],
     component: CollectionComponent
+  },
+  {
+    path: 'my-collection/:gameId',
+    canActivate: [AuthGuard, ProfileCompleteGuard],
+    component: GameDetailComponent
   },
   // EXPLORE
   {
@@ -189,7 +195,8 @@ const authConfig = {
     ExploreGameNightListComponent,
     SmallLoadingIndicatorComponent,
     MatchInfoComponent,
-    GameDetailComponent
+    GameDetailComponent,
+    GameInfoComponent
   ],
   imports: [
     BrowserModule,

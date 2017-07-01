@@ -1,5 +1,4 @@
 <div *ngIf="!isEditing">
-  <h3>Game Detail</h3>
   <app-game-info [game]="game"></app-game-info>
 
   <button class="btn btn-primary" (click)="toggleEdit()">Edit</button>
@@ -8,6 +7,6 @@
 </div>
 
 <div *ngIf="isEditing">
-  <app-game-form [members]="members" (addGame)="updateGame($event)"></app-game-form>
-  <button class="btn btn-danger" id="cancel-edit" (click)="cancelEdit()">Cancel</button>
+  <app-game-form [game]="game" [members]="members" (addGame)="updateGame($event)"></app-game-form>
+  <button class="btn btn-danger btn-block" id="cancel-edit" (click)="cancelEdit()">Cancel</button>
 </div>

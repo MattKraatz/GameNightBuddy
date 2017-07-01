@@ -11,5 +11,7 @@
       </tr>
     </tbody>
   </table>
-  <pagination-controls *ngIf="gameNights.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>  
+  <div id="page-control">
+    <pagination-controls *ngIf="gameNights.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>  
+  </div>
 </div>

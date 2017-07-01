@@ -12,6 +12,7 @@ import {AuthService} from '../../../services/auth.service';
 export class GameFormComponent implements OnInit {
 
   @Input() members: Member[];
+  @Input() game: Game;  
   @Output() addGame = new EventEmitter();
 
   constructor(private authService: AuthService) {
@@ -20,6 +21,9 @@ export class GameFormComponent implements OnInit {
   ngOnInit() {
     if (this.members && this.members.length) {
       this.model.Owner = this.authService.currentUserProfile;
+    }
+    if (this.game) {
+      this.model = this.game;
     }
   }
 

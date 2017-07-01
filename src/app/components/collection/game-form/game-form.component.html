@@ -33,8 +33,9 @@
       Owner is required
     </div>
   </div>
-  <button type="submit" class="btn btn-primary btn-block"
+  <button type="submit" class="btn btn-primary btn-block submit-btn"
     [disabled]="!gameForm.form.valid">
-    Add
+    <span *ngIf="!game">Add</span>  
+    <span *ngIf="game">Update</span>  
   </button>
 </form>

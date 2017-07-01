@@ -1,5 +1,5 @@
 import {Game} from '../models/game.model';
-import {StoreActions} from '../constants/storeactions';
+import {StoreActions} from '../constants/storeActions';
 
 export const collection = (state: Game[] = new Array<Game>(), {type, payload}) => {
   switch (type) {

@@ -8,10 +8,14 @@
   </thead>
   <tbody>
     <tr *ngFor="let game of games | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-      <td>{{game.Name}}</td>
+      <td>
+        <a routerLink="{{game.GameId}}">{{game.Name}}</a>
+      </td>
       <td>{{game.MinPlayers + " - " + game.MaxPlayers}}</td>
       <td>{{game.Owner.DisplayName}}</td>
     </tr>
   </tbody>
 </table>
-<pagination-controls *ngIf="games.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>
+<div id="page-control">
+  <pagination-controls *ngIf="games.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>
+</div>

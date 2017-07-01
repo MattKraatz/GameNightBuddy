@@ -24,3 +24,7 @@
 .score {
   max-width: 85px;
 }
+
+button {
+  margin: 10px 0;
+}

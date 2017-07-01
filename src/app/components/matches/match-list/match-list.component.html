@@ -20,4 +20,6 @@
     </tr>
   </tbody>
 </table>
-<pagination-controls *ngIf="matches.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>
+<div id="page-control">
+  <pagination-controls *ngIf="matches.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>
+</div>

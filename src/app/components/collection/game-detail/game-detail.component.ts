@@ -29,18 +29,27 @@ export class GameDetailComponent implements OnInit {
       private gameNightService: GameNightService, private collectionService: CollectionService) {
     // grab the id from route params
     this.gameId = route.snapshot.params['gameId'];
-    this.nightId = route.snapshot.params['id'];
+    this.nightId = route.parent.snapshot.params['id'];
 
     if (this.nightId) {
       this.gameNightService.currentGameNight.subscribe(night => {
-        var game = night.Games.filter(g => g.gameId == this.gameId)[0];
+        var game = night.Games.filter(g => g.GameId == this.gameId)[0];
         if (game) {
           this.game = game;
           // deep copy (for form reset)
           this.gameModel = JSON.parse(JSON.stringify(game));
           this.members = night.Members;
         }
-    })
+      })
+    } else if (this.gameId){
+      this.collectionService.collection.subscribe(games => {
+        var game = games.filter(g => g.GameId === this.gameId)[0];
+        if (game) {
+          this.game = game;
+          // deep copy (for form reset)
+          this.gameModel = JSON.parse(JSON.stringify(game));
+        }
+      })
     }
   }
 
