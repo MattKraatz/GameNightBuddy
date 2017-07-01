@@ -1,22 +1,23 @@
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Game</th>
-        <th>Players</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let match of matches">
-        <a routerLink="{{match.MatchId}}">
-          <td>{{match.Date | date}}</td>
-        </a>
-        <td>{{match.Game.Name}}</td>
-        <td>
-          <span *ngFor="let player of match.Players">
-            | {{player.DisplayName}}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Game</th>
+      <th>Players</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let match of matches | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+      <a routerLink="{{match.MatchId}}">
+        <td>{{match.Date | date}}</td>
+      </a>
+      <td>{{match.Game.Name}}</td>
+      <td>
+        <span *ngFor="let player of match.Players">
+          | {{player.DisplayName}}
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<pagination-controls *ngIf="matches.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>

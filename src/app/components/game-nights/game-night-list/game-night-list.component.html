@@ -6,9 +6,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let night of gameNights">
+      <tr *ngFor="let night of gameNights | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
         <td><a [routerLink]="['/game-night', night.GameNightId]">{{night.Name}}</a></td>
       </tr>
     </tbody>
   </table>
+  <pagination-controls *ngIf="gameNights.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>  
 </div>

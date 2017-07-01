@@ -10,6 +10,9 @@ export class MemberListComponent implements OnInit {
 
   @Input() members: Member[];
 
+  page: number = 1;
+  itemsPerPage: number = 6;
+
   constructor() {
   }
 

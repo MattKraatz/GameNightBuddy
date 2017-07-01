@@ -6,9 +6,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let member of members">
+      <tr *ngFor="let member of members | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
         <td>{{member.DateJoined | date }}</td>
         <td>{{member.DisplayName}}</td>
       </tr>
     </tbody>
   </table>
+  <pagination-controls *ngIf="members.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>

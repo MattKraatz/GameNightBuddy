@@ -2,4 +2,4 @@
 <app-game-dropdown *ngIf="myOtherGamesCount > 0"
   [games]="myOtherGames | async" (attachGame)="attachGame($event)"></app-game-dropdown>
 <h4>Create a New Game</h4>
-<app-game-form (addGame)="addGame($event)"></app-game-form>
+<app-game-form (addGame)="addGame($event)" [members]="members | async"></app-game-form>

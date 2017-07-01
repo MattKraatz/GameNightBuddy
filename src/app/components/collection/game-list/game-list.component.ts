@@ -10,6 +10,9 @@ export class GameListComponent implements OnInit {
 
   @Input() games: Game[];
 
+  page: number = 1;
+  itemsPerPage: number = 6;
+
   constructor() { }
 
   ngOnInit() {

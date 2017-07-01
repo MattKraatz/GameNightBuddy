@@ -38,7 +38,6 @@ export class CollectionService {
   }
 
   createGameInGameNightAndMyCollection(game: Game, id: string) {
-    debugger
     this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
       .map(res => res.json())
       .subscribe(payload => {

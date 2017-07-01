@@ -11,6 +11,9 @@ export class MatchListComponent implements OnInit {
   @Input() matches: Match[];
   @Input() nightId: string;
 
+  page: number = 1;
+  itemsPerPage: number = 6;
+
   constructor() { }
 
   ngOnInit() {

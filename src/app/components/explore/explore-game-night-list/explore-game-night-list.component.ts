@@ -12,6 +12,9 @@ export class ExploreGameNightListComponent implements OnInit {
   @Input() gameNights: GameNight[];
   @Output() joinNight = new EventEmitter();
 
+  page: number = 1;
+  itemsPerPage: number = 6;
+
   constructor() { }
 
   ngOnInit() {

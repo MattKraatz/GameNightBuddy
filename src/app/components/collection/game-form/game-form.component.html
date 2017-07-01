@@ -11,7 +11,7 @@
   <div class="form-group">
     <label for="MinPlayers">Minimum # of Players</label>
     <input [(ngModel)]="model.MinPlayers" name="MinPlayers" id="MinPlayers"
-      #MinPlayers="ngModel" type="text" class="form-control" required />
+      #MinPlayers="ngModel" type="number" class="form-control" required />
     <div [hidden]="MinPlayers.valid || MinPlayers.pristine"
       class="alert alert-danger">
       Minimum is required
@@ -21,6 +21,17 @@
     <label for="<MaxPlayers">Maximum # of Players</label>
     <input [(ngModel)]="model.MaxPlayers" name="MaxPlayers" id="MaxPlayers"
       #MaxPlayers="ngModel" type="number" class="form-control" placeholder="optional" />
+  </div>
+  <div *ngIf="members && members.length" class="form-group">
+    <label for="Owner">Owner</label>
+    <select [(ngModel)]="model.Owner" [compareWith]="byUserId" name="Owner" id="Owner"
+      #owner="ngModel" type="text" class="form-control" required >
+      <option *ngFor="let member of members" [ngValue]="member">{{member.FirstName}} {{member.LastName}}</option>
+    </select>
+    <div [hidden]="owner.valid || owner.pristine"
+      class="alert alert-danger">
+      Owner is required
+    </div>
   </div>
   <button type="submit" class="btn btn-primary btn-block"
     [disabled]="!gameForm.form.valid">

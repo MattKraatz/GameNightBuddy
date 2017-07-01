@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable, BehaviorSubject} from 'rxjs';
 
 import {Game} from '../../../models/game.model';
+import {Member} from '../../../models/member.model';
 import {GameNight} from '../../../models/game-night.model';
 import {AuthService} from '../../../services/auth.service';
 import {CollectionService} from '../../../services/collection.service';
@@ -17,6 +18,7 @@ export class GameNightCollectionComponent implements OnInit {
   collection: Observable<Array<Game>>;
   nightId: string;
   myOtherGames: BehaviorSubject<Array<Game>>;
+  members: Observable<Array<Member>>;
 
   myOtherGamesCount = 0;
 
@@ -34,6 +36,7 @@ export class GameNightCollectionComponent implements OnInit {
       })
       this.myOtherGamesCount = otherGames.length;
       this.myOtherGames = new BehaviorSubject(otherGames);
+      this.members = Observable.of(night.Members);
     })
   }
 
@@ -42,7 +45,6 @@ export class GameNightCollectionComponent implements OnInit {
 
   addGame(model: Game) {
     var game = new Game(model);
-    game.Owner = this.authService.getCurrentUserProfile();
     this.collectionService.createGameInGameNightAndMyCollection(game, this.nightId);
   }
 

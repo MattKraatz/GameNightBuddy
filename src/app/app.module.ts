@@ -8,6 +8,7 @@ import {StoreModule} from '@ngrx/store';
 import * as firebase from 'firebase';
 import * as $ from 'jquery';
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
+import {NgxPaginationModule} from 'ngx-pagination';
 
 // Private Keys
 import {firebaseConfig} from './constants/firebaseConfig';
@@ -62,6 +63,7 @@ import {GameDropdownComponent} from './components/collection/game-dropdown/game-
 import {ExploreGameNightListComponent} from './components/explore/explore-game-night-list/explore-game-night-list.component';
 import {SmallLoadingIndicatorComponent} from './components/global/small-loading-indicator/small-loading-indicator.component';
 import { MatchInfoComponent } from './components/matches/match-info/match-info.component';
+import { GameDetailComponent } from './components/collection/game-detail/game-detail.component';
 
 // Route Definitions for NG Router
 const appRoutes: Routes = [
@@ -182,7 +184,8 @@ const authConfig = {
     GameDropdownComponent,
     ExploreGameNightListComponent,
     SmallLoadingIndicatorComponent,
-    MatchInfoComponent
+    MatchInfoComponent,
+    GameDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -190,7 +193,8 @@ const authConfig = {
     HttpModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.provideStore({user, collection, matches, gameNight, myGameNights, otherGameNights}),
-    AngularFireModule.initializeApp(firebaseConfig, authConfig)
+    AngularFireModule.initializeApp(firebaseConfig, authConfig),
+    NgxPaginationModule
   ],
   providers: [
     CollectionService,
