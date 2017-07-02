@@ -31,6 +31,7 @@ export class GameNightService {
   nightLoaded: boolean = false;
   nightsLoaded: boolean = false;
   otherNightsLoaded: boolean = false;
+  isHost: boolean = false;
 
   currentGameNight: BehaviorSubject<GameNight>;
 
@@ -45,6 +46,8 @@ export class GameNightService {
       } else {
         this.currentGameNight.next(n);
       }
+      var user = this.authService.currentUserProfile;
+      this.isHost = n.Members.findIndex(m => m.IsHost && m.UserId === user.UserId) > -1;
     })
   }
 
@@ -120,6 +123,14 @@ export class GameNightService {
       .map(res => res.json())      
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_MEMBER, payload });
+      });
+  }
+
+  updateGameNightMember(member: Member, nightId: string) {
+    this.http.put(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(member), OPTIONS)
+      .map(res => res.json())
+      .subscribe(payload => {
+        this.store.dispatch({ type: StoreActions.GAME_NIGHT_UPDATE_MEMBER, payload });
       });
   }
 }

@@ -20,6 +20,7 @@ export class MatchDetailComponent implements OnInit {
   match: Match;
   matchModel: Match;
   isEditing: boolean = false;
+  isHost: boolean = false;
 
   members: Member[];
   collection: Game[];
@@ -40,6 +41,7 @@ export class MatchDetailComponent implements OnInit {
         this.members = night.Members;
         this.collection = night.Games;
         this.nightId = night.GameNightId;
+        this.isHost = this.gameNightService.isHost;
       }
     })
   }

@@ -8,7 +8,14 @@
     <tbody>
       <tr *ngFor="let member of members | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
         <td>{{member.DateJoined | date }}</td>
-        <td>{{member.DisplayName}}</td>
+        <td>
+          {{member.DisplayName}}
+          <button *ngIf="isHost && !member.IsHost" (click)="promoteMember(member)"
+            class="btn btn-info float-right">
+            Promote
+          </button>
+          <button *ngIf="member.IsHost" class="btn btn-info float-right" disabled>Host</button>          
+        </td>
       </tr>
     </tbody>
   </table>
