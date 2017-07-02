@@ -7,6 +7,12 @@ button {
   margin: 3px 8px;
 }
 
+#game-night-name {
+  margin-right: 50px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .reload { 
   max-height: 22px;
   margin-bottom: 1px;
