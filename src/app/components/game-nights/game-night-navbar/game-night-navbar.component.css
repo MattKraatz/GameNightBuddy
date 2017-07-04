@@ -8,7 +8,6 @@ button {
 }
 
 #game-night-name {
-  margin-right: 50px;
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -20,6 +19,12 @@ button {
 
 .spinning-reload {
   animation: Indicator-spin infinite 1s linear;
+}
+
+@media screen and (max-width: 415px) {
+    #game-night-name {
+      margin-right: 50px;
+    }
 }
 
 @keyframes Indicator-spin {
