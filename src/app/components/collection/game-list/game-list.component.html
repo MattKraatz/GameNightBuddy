@@ -2,8 +2,9 @@
   <thead>
     <tr>
       <th>Game</th>
-      <th>Players</th>
+      <th class="centered">Players</th>
       <th>Owner</th>
+      <th class="centered">My Rating</th>   
     </tr>
   </thead>
   <tbody>
@@ -11,8 +12,19 @@
       <td>
         <a routerLink="{{game.GameId}}">{{game.Name}}</a>
       </td>
-      <td>{{game.MinPlayers + " - " + game.MaxPlayers}}</td>
+      <td class="centered">{{game.MinPlayers + " - " + game.MaxPlayers}}</td>
       <td>{{game.Owner.DisplayName}}</td>
+      <td class="centered">
+        <star-rating-comp
+          [starType]="'svg'"
+          [rating]="3"
+          [hoverEnabled]="true"
+          (onClick)="onClick($event)" 
+          (onRatingChange)="onRatingChange($event)"
+          (onHoverRatingChange)="onHoverRatingChange($event)">
+          </star-rating-comp>
+        
+      </td>
     </tr>
   </tbody>
 </table>

@@ -9,6 +9,7 @@ import * as firebase from 'firebase';
 import * as $ from 'jquery';
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 import {NgxPaginationModule} from 'ngx-pagination';
+import {StarRatingModule} from 'angular-star-rating';
 
 // Private Keys
 import {firebaseConfig} from './constants/firebaseConfig';
@@ -205,7 +206,8 @@ const authConfig = {
     RouterModule.forRoot(appRoutes),
     StoreModule.provideStore({user, collection, matches, gameNight, myGameNights, otherGameNights}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig),
-    NgxPaginationModule
+    NgxPaginationModule,
+    StarRatingModule
   ],
   providers: [
     CollectionService,
