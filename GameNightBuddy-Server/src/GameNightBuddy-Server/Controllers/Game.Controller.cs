@@ -1,12 +1,9 @@
-﻿using GameNightBuddy_Server.Repositories;
+﻿using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.Repositories;
+using GameNightBuddy_Server.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GameNightBuddy_Server.Models;
-using Newtonsoft.Json;
-using GameNightBuddy_Server.ViewModels;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -94,6 +91,48 @@ namespace GameNightBuddy_Server.Controllers
       var output = new GameViewModel(game);
       output.Owner = vm.Owner;
       return new CreatedResult("games", vm);
+    }
+
+    [HttpPost("rating")]
+    public IActionResult AddRating([FromBody] GameRating vm)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameRepository.AddRating(vm);
+      this.gameRepository.Save();
+
+      return new CreatedResult("ratings", vm);
+    }
+
+    [HttpPut("rating")]
+    public IActionResult UpdateRating([FromBody] GameRating vm)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameRepository.UpdateRating(vm);
+      this.gameRepository.Save();
+
+      return new OkObjectResult(vm);
+    }
+
+    [HttpDelete("rating")]
+    public IActionResult DeleteRating([FromBody] GameRating vm)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      this.gameRepository.DeleteRating(vm);
+      this.gameRepository.Save();
+
+      return new OkResult();
     }
   }
 }

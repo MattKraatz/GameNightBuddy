@@ -17,6 +17,8 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGameNight(GameNight night);
     GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
     GameNightMember InsertMember(GameNightMember member);
+    GameNightMember GetMember(Guid id);
+    void UpdateMember(GameNightMember member);
     Match InsertMatch(MatchViewModel vm, Guid nightId);
     Match UpdateMatch(MatchViewModel vm);
     void DeactivateGameNight(Guid nightId);
@@ -73,8 +75,17 @@ namespace GameNightBuddy_Server.Repositories
       night.Games = context.GameNightGames
         .Include(gng => gng.Game)
           .ThenInclude(g => g.User)
+        .Include(gng => gng.Game)
+          .ThenInclude(g => g.GameRatings)
         .Where(g => g.GameNightId == nightId)
         .ToList();
+
+      // only provide ratings from group members
+      foreach(GameNightGame game in night.Games)
+      {
+        game.Game.GameRatings = game.Game.GameRatings
+            .Where(r => night.Members.FindIndex(m => m.UserId == r.UserId) > -1).ToList();
+      }
 
       var vm = new GameNightViewModel(night);
       
@@ -138,6 +149,16 @@ namespace GameNightBuddy_Server.Repositories
       context.GameNightMembers.Add(member);
       member.User = context.Users.FirstOrDefault(u => u.UserId == member.UserId);
       return member;
+    }
+
+    public void UpdateMember(GameNightMember member)
+    {
+      context.Entry(member).State = EntityState.Modified;
+    }
+
+    public GameNightMember GetMember(Guid id)
+    {
+      return context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == id);
     }
 
     public GameNightGame InsertGameNightGame(Guid gameId, Guid nightId)

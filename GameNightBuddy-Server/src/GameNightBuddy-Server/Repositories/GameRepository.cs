@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.Repositories
 {
@@ -14,6 +13,9 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGame(Game game);
     void DeactivateGame(Guid gameId);
     void UpdateGame(Game game);
+    Guid AddRating(GameRating rating);
+    void UpdateRating(GameRating rating);
+    void DeleteRating(GameRating rating);
     void Save();
   }
 
@@ -40,8 +42,17 @@ namespace GameNightBuddy_Server.Repositories
 
     public IEnumerable<Game> GetMyGames(Guid id)
     {
-      return context.Games.Where(g => g.UserId == id)
-          .Include(g => g.User);
+      var games = context.Games.Where(g => g.UserId == id)
+          .Include(g => g.User)
+          .Include(g => g.GameRatings);   
+
+      // only show ratings from owner
+      foreach(Game game in games)
+      {
+        game.GameRatings = game.GameRatings.Where(r => r.UserId == game.UserId).ToList();
+      }
+
+      return games;
     }
 
     public Guid InsertGame(Game game)
@@ -61,6 +72,22 @@ namespace GameNightBuddy_Server.Repositories
     public void UpdateGame(Game game)
     {
       context.Entry(game).State = EntityState.Modified;
+    }
+
+    public Guid AddRating(GameRating rating)
+    {
+      context.GameRatings.Add(rating);
+      return rating.GameRatingId;
+    }
+
+    public void UpdateRating(GameRating rating)
+    {
+      context.Entry(rating).State = EntityState.Modified;
+    }
+
+    public void DeleteRating(GameRating rating)
+    {
+      context.GameRatings.Remove(rating);
     }
 
     public void Save()

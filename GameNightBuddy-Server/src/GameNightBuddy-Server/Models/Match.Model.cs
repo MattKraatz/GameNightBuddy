@@ -24,6 +24,7 @@ namespace GameNightBuddy_Server.Models
     public DateTime Date { get; set; }
 
     public DateTime DateCreated { get; set; }
+    public bool IsActive { get; set; }
 
     public Match() { }
 

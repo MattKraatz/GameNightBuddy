@@ -71,6 +71,23 @@ namespace GameNightBuddy_Server.Controllers
       return new CreatedResult($"game-nights/${id}/members", new MemberViewModel(member));
     }
 
+    [HttpPut("{id}/members")]
+    public IActionResult UpdateMember([FromBody] MemberViewModel vm, [FromRoute] Guid id)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      var member = this.gameNightRepository.GetMember(new Guid(vm.MemberId));
+      member.IsHost = vm.IsHost;
+      
+      //this.gameNightRepository.UpdateMember(member);
+      this.gameNightRepository.Save();
+
+      return new ObjectResult(vm);
+    }
+
     [HttpPost("{id}/games")]
     public IActionResult AddGame([FromBody] Game vm, [FromRoute] Guid id)
     {
