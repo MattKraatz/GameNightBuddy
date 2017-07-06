@@ -34,8 +34,19 @@ export class GameListComponent implements OnInit {
     rating.GameId = gameId;
     rating.Rating = $event.rating;
     rating.UserId = this.authService.currentUserProfile.UserId;
+
     this.collectionService.updateGameRating(rating);
     this.onClickResult = $event;
+
+    // update rating state locally
+    this.games = this.games.map(g => {
+      if (g.GameId === gameId){
+        g.MyRating = $event.rating;
+        return g;
+      } else {
+        return g;
+      }
+    })
   };
 
   onRatingChange = ($event: IStarRatingOnRatingChangeEven) => {
