@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameNightBuddy_Server.ViewModels;
+using System;
 
 namespace GameNightBuddy_Server.Models
 {
@@ -20,5 +21,11 @@ namespace GameNightBuddy_Server.Models
 
     public GameRating() { }
 
+    public GameRating(GameRatingViewModel vm) {
+      UserId = new Guid(vm.UserId);
+      GameId = new Guid(vm.GameId);
+      Rating = vm.Rating;
+    }
+    
   }
 }

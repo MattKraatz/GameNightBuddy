@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameNightBuddy_Server.Models;
 using GameNightBuddy_Server.ViewModels;
+using System.Net.Http;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -44,10 +45,10 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(nights);
     }
 
-    [HttpGet("{id}")]
-    public IActionResult GetById([FromRoute] Guid id)
+    [HttpGet("{id}/{userId}")]
+    public IActionResult GetById([FromRoute] Guid id, [FromRoute] Guid userId)
     {
-      var night = this.gameNightRepository.LoadGameNightByID(id);
+      var night = this.gameNightRepository.LoadGameNightByID(id, userId);
       if (night == null)
       {
         return new NoContentResult();
@@ -98,7 +99,7 @@ namespace GameNightBuddy_Server.Controllers
 
       var game = this.gameNightRepository.InsertGameNightGame(vm.GameId, id);
       this.gameNightRepository.Save();
-      return new CreatedResult($"game-nights/${id}/games", new GameViewModel(game));
+      return new CreatedResult($"game-nights/${id}/games", new GameShallowViewModel(game));
     }
 
     [HttpPost("{id}/matches")]

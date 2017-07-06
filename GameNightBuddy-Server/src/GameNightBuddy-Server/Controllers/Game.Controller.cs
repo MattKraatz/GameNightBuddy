@@ -4,6 +4,7 @@ using GameNightBuddy_Server.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameNightBuddy_Server.Controllers
 {
@@ -32,7 +33,11 @@ namespace GameNightBuddy_Server.Controllers
       var output = new List<GameViewModel>();
       foreach(var game in games)
       {
-        output.Add(new GameViewModel(game));
+        var vm = new GameViewModel(game, userId)
+        {
+          MyRating = game.GameRatings.FirstOrDefault(r => r.UserId == userId).Rating
+        };
+        output.Add(vm);
       }
 
       return new ObjectResult(output);
@@ -51,9 +56,27 @@ namespace GameNightBuddy_Server.Controllers
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
 
-      var output = new GameViewModel(game);
-      output.Owner = vm.Owner;
+      var output = new GameShallowViewModel(game)
+      {
+        Owner = vm.Owner
+      };
       return new CreatedResult("games", vm);
+    }
+
+    [HttpPut("rating")]
+    public IActionResult UpdateGameRating([FromBody] GameRatingViewModel vm)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      var rating = new GameRating(vm);
+
+      this.gameRepository.UpdateRating(rating);
+      this.gameRepository.Save();
+
+      return new CreatedResult("ratings", vm);
     }
 
     [HttpPost("{nightId}")]
@@ -72,7 +95,7 @@ namespace GameNightBuddy_Server.Controllers
       var output = this.nightRepository.InsertGameNightGame(game.GameId, nightId);
       this.nightRepository.Save();
 
-      return new CreatedResult("games", new GameViewModel(output));
+      return new CreatedResult("games", new GameShallowViewModel(output));
     }
 
     [HttpPut]
@@ -88,51 +111,27 @@ namespace GameNightBuddy_Server.Controllers
       this.gameRepository.UpdateGame(game);
       this.gameRepository.Save();
 
-      var output = new GameViewModel(game);
-      output.Owner = vm.Owner;
+      var output = new GameShallowViewModel(game)
+      {
+        Owner = vm.Owner
+      };
       return new CreatedResult("games", vm);
     }
 
-    [HttpPost("rating")]
-    public IActionResult AddRating([FromBody] GameRating vm)
-    {
-      if (vm == null)
-      {
-        return new BadRequestResult();
-      }
-
-      this.gameRepository.AddRating(vm);
-      this.gameRepository.Save();
-
-      return new CreatedResult("ratings", vm);
-    }
-
-    [HttpPut("rating")]
-    public IActionResult UpdateRating([FromBody] GameRating vm)
-    {
-      if (vm == null)
-      {
-        return new BadRequestResult();
-      }
-
-      this.gameRepository.UpdateRating(vm);
-      this.gameRepository.Save();
-
-      return new OkObjectResult(vm);
-    }
-
     [HttpDelete("rating")]
-    public IActionResult DeleteRating([FromBody] GameRating vm)
+    public IActionResult DeleteRating([FromBody] GameRatingViewModel vm)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      this.gameRepository.DeleteRating(vm);
-      this.gameRepository.Save();
+      throw new NotImplementedException();
 
-      return new OkResult();
+      //this.gameRepository.DeleteRating(vm);
+      //this.gameRepository.Save();
+
+      //return new OkResult();
     }
   }
 }

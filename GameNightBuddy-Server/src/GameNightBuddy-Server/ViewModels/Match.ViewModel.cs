@@ -10,7 +10,7 @@ namespace GameNightBuddy_Server.ViewModels
   {
     public string MatchId;
     public string Date;
-    public GameViewModel Game;
+    public GameShallowViewModel Game;
     public List<PlayerViewModel> Players;
 
     public MatchViewModel() { }
@@ -19,7 +19,7 @@ namespace GameNightBuddy_Server.ViewModels
     {
       MatchId = match.MatchId.ToString();
       Date = match.Date.ToString("MM/dd/yyyy");
-      Game = new GameViewModel(match.Game);
+      Game = new GameShallowViewModel(match.Game);
       Players = match.Players.Select(p => new PlayerViewModel(p)).ToList();
     }
   }

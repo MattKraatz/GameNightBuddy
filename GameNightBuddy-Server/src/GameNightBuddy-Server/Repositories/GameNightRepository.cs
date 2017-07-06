@@ -13,7 +13,7 @@ namespace GameNightBuddy_Server.Repositories
     IEnumerable<GameNight> GetGameNights();
     IEnumerable<GameNight> GetMyGameNights(Guid userId);
     IEnumerable<GameNight> GetOtherGameNights(Guid userId);
-    GameNightViewModel LoadGameNightByID(Guid nightId);
+    GameNightViewModel LoadGameNightByID(Guid nightId, Guid userId);
     Guid InsertGameNight(GameNight night);
     GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
     GameNightMember InsertMember(GameNightMember member);
@@ -56,7 +56,7 @@ namespace GameNightBuddy_Server.Repositories
           .ToList();
     }
 
-    public GameNightViewModel LoadGameNightByID(Guid nightId)
+    public GameNightViewModel LoadGameNightByID(Guid nightId, Guid userId)
     {
       var night = context.GameNights
         // Full Member Tree
@@ -81,26 +81,38 @@ namespace GameNightBuddy_Server.Repositories
         .ToList();
 
       // only provide ratings from group members
-      foreach(GameNightGame game in night.Games)
-      {
-        game.Game.GameRatings = game.Game.GameRatings
+      night.Games.ForEach(g => {
+        g.Game.GameRatings = g.Game.GameRatings
             .Where(r => night.Members.FindIndex(m => m.UserId == r.UserId) > -1).ToList();
-      }
+      });
 
-      var vm = new GameNightViewModel(night);
-      
+      var vm = new GameNightViewModel(night, userId);
+
+      vm.Games.ForEach(g =>
+      {
+        var myRating = night.Games
+          .First(gm => gm.GameId.ToString() == g.GameId)
+          .Game.GameRatings.FirstOrDefault(r => r.UserId == userId);
+
+        g.MyRating = myRating!= null ? myRating.Rating : 0;
+      });
+
       return vm;
     }
 
     public Match InsertMatch(MatchViewModel vm, Guid nightId)
     {
-      var match = new Match(vm);
-      match.GameNightId = nightId;
+      var match = new Match(vm)
+      {
+        GameNightId = nightId
+      };
       context.Matches.Add(match);
       foreach (PlayerViewModel pvm in vm.Players)
       {
-        var player = new MatchPlayer(pvm);
-        player.MatchId = match.MatchId;
+        var player = new MatchPlayer(pvm)
+        {
+          MatchId = match.MatchId
+        };
         context.MatchPlayers.Add(player);
       }
       return match;
@@ -136,8 +148,10 @@ namespace GameNightBuddy_Server.Repositories
       var newPlayers = vm.Players.Where(vmp => players.FindIndex(p => p.GameNightMemberId.ToString() == vmp.MemberId) < 0).ToList();
       newPlayers.ForEach(p =>
       {
-        var player = new MatchPlayer(p);
-        player.MatchId = match.MatchId;
+        var player = new MatchPlayer(p)
+        {
+          MatchId = match.MatchId
+        };
         context.MatchPlayers.Add(player);
       });
 

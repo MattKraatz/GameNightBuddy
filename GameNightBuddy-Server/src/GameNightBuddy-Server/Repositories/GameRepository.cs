@@ -1,4 +1,5 @@
 ﻿using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,8 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGame(Game game);
     void DeactivateGame(Guid gameId);
     void UpdateGame(Game game);
-    Guid AddRating(GameRating rating);
     void UpdateRating(GameRating rating);
-    void DeleteRating(GameRating rating);
+    void DeleteRating(GameRatingViewModel rating);
     void Save();
   }
 
@@ -74,20 +74,22 @@ namespace GameNightBuddy_Server.Repositories
       context.Entry(game).State = EntityState.Modified;
     }
 
-    public Guid AddRating(GameRating rating)
-    {
-      context.GameRatings.Add(rating);
-      return rating.GameRatingId;
-    }
-
     public void UpdateRating(GameRating rating)
     {
-      context.Entry(rating).State = EntityState.Modified;
+      var dbRating = context.GameRatings.FirstOrDefault(r => r.GameId == rating.GameId && r.UserId == rating.UserId);
+      if (dbRating != null)
+      {
+        dbRating.Rating = rating.Rating;
+        context.Entry(dbRating).State = EntityState.Modified;
+      } else
+      {
+        context.GameRatings.Add(rating);
+      }
     }
 
-    public void DeleteRating(GameRating rating)
+    public void DeleteRating(GameRatingViewModel vm)
     {
-      context.GameRatings.Remove(rating);
+      throw new NotImplementedException();
     }
 
     public void Save()
