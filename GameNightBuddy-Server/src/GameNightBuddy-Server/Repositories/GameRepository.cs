@@ -1,9 +1,9 @@
 ﻿using GameNightBuddy_Server.Models;
+using GameNightBuddy_Server.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.Repositories
 {
@@ -14,6 +14,8 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGame(Game game);
     void DeactivateGame(Guid gameId);
     void UpdateGame(Game game);
+    void UpdateRating(GameRating rating);
+    void DeleteRating(GameRatingViewModel rating);
     void Save();
   }
 
@@ -40,8 +42,17 @@ namespace GameNightBuddy_Server.Repositories
 
     public IEnumerable<Game> GetMyGames(Guid id)
     {
-      return context.Games.Where(g => g.UserId == id)
-          .Include(g => g.User);
+      var games = context.Games.Where(g => g.UserId == id)
+          .Include(g => g.User)
+          .Include(g => g.GameRatings);   
+
+      // only show ratings from owner
+      foreach(Game game in games)
+      {
+        game.GameRatings = game.GameRatings.Where(r => r.UserId == game.UserId).ToList();
+      }
+
+      return games;
     }
 
     public Guid InsertGame(Game game)
@@ -61,6 +72,24 @@ namespace GameNightBuddy_Server.Repositories
     public void UpdateGame(Game game)
     {
       context.Entry(game).State = EntityState.Modified;
+    }
+
+    public void UpdateRating(GameRating rating)
+    {
+      var dbRating = context.GameRatings.FirstOrDefault(r => r.GameId == rating.GameId && r.UserId == rating.UserId);
+      if (dbRating != null)
+      {
+        dbRating.Rating = rating.Rating;
+        context.Entry(dbRating).State = EntityState.Modified;
+      } else
+      {
+        context.GameRatings.Add(rating);
+      }
+    }
+
+    public void DeleteRating(GameRatingViewModel vm)
+    {
+      throw new NotImplementedException();
     }
 
     public void Save()
