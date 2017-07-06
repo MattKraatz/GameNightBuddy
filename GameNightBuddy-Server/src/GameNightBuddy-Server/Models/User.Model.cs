@@ -14,6 +14,7 @@ namespace GameNightBuddy_Server.Models
     // Foreign Keys
     public List<GameNightMember> GameNightsMembers { get; set; }
     public List<Game> Games { get; set; }
+    public List<GameRating> GameRatings { get; set; }
 
     [Required]
     public string FirebaseId { get; set; }

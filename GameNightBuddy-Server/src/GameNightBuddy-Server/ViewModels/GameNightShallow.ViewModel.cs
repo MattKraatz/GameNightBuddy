@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.ViewModels
 {
-  public class GameNightViewModel
+  public class GameNightShallowViewModel
   {
     public string GameNightId;
     public string Name;
     public List<MemberViewModel> Members;
-    public List<GameViewModel> Games;
+    public List<GameShallowViewModel> Games;
     public List<MatchViewModel> Matches;
     public string DateCreated;
 
-    public GameNightViewModel() { }
+    public GameNightShallowViewModel() { }
 
-    public GameNightViewModel(GameNight night, Guid userId)
+    public GameNightShallowViewModel(GameNight night)
     {
       GameNightId = night.GameNightId.ToString();
       Name = night.Name;
       Matches = night.Matches.Select(m => new MatchViewModel(m)).ToList();
-      Games = night.Games.Select(gng => new GameViewModel(gng, userId)).ToList();
+      Games = night.Games.Select(gng => new GameShallowViewModel(gng)).ToList();
       Members = night.Members.Select(m => new MemberViewModel(m)).ToList();
       DateCreated = night.DateCreated.ToString();
     }
