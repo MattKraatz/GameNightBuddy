@@ -33,10 +33,12 @@ namespace GameNightBuddy_Server.Controllers
       var output = new List<GameViewModel>();
       foreach(var game in games)
       {
-        var vm = new GameViewModel(game, userId)
+        var vm = new GameViewModel(game, userId);
+        var myRating = game.GameRatings.FirstOrDefault(r => r.UserId == userId);
+        if (myRating != null)
         {
-          MyRating = game.GameRatings.FirstOrDefault(r => r.UserId == userId).Rating
-        };
+          vm.MyRating = myRating.Rating;
+        }
         output.Add(vm);
       }
 
