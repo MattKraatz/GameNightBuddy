@@ -24,6 +24,7 @@ export class GameNightCollectionComponent implements OnInit {
 
   constructor(private authService: AuthService, private collectionService: CollectionService, private gameNightService: GameNightService) {
     this.gameNightService.currentGameNight.subscribe(night => {
+      debugger;
       this.collection = Observable.of(night.Games);
       this.nightId = night.GameNightId;
 

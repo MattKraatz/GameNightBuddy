@@ -8,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let game of games | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+    <tr *ngFor="let game of (games | paginate: { itemsPerPage: itemsPerPage, currentPage: page }); let in = index" id="in">
       <td>
         <a routerLink="{{game.GameId}}">{{game.Name}}</a>
       </td>
@@ -17,9 +17,9 @@
       <td class="centered">
         <star-rating-comp
           [starType]="'svg'"
-          [rating]="0"
+          [rating]="game.MyRating"
           [hoverEnabled]="true"
-          (onClick)="onClick($event)" 
+          (onClick)="onClick($event, game.GameId)" 
           (onRatingChange)="onRatingChange($event)"
           (onHoverRatingChange)="onHoverRatingChange($event)">
           </star-rating-comp>

@@ -52,8 +52,9 @@ export class GameNightService {
   }
 
   loadGameNight(id: string) {
+    var userId = this.authService.currentUserProfile.UserId;
     if (!this.nightLoaded || id != this.currentGameNight.value.GameNightId) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`)
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}/${userId}`)
         .map(res => res.json())
         .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));
@@ -62,8 +63,9 @@ export class GameNightService {
   }
 
   refreshGameNight() {
+    var userId = this.authService.currentUserProfile.UserId;    
     if (this.nightLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/${this.currentGameNight.value.GameNightId}`)
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/${this.currentGameNight.value.GameNightId}/${userId}`)
         .map(res => res.json())
         .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));

@@ -9,6 +9,7 @@ import {Game} from '../models/game.model';
 import {firebaseConfig} from '../constants/firebaseConfig';
 import {ServerConfig} from '../constants/serverConfig';
 import {User} from '../models/user.model';
+import {GameRating} from '../models/game-rating.model';
 import {StoreActions} from '../constants/storeActions';
 
 const HEADERS = new Headers({ 'Content-Type': 'application/json' });
@@ -58,5 +59,10 @@ export class CollectionService {
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.UPDATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
+  }
+
+  updateGameRating(rating: GameRating) {
+    this.http.put(`${ServerConfig.baseUrl}/games/rating`, rating, OPTIONS)
+      .subscribe(res => res.json());
   }
 }

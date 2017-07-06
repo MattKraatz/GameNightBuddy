@@ -1,6 +1,10 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {IStarRatingOnClickEvent, IStarRatingOnRatingChangeEven, IStarRatingIOnHoverRatingChangeEvent} from "angular-star-rating/src/star-rating-struct";
-import {Game} from '../../../models/game.model';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { IStarRatingOnClickEvent, IStarRatingOnRatingChangeEven, IStarRatingIOnHoverRatingChangeEvent } from "angular-star-rating/src/star-rating-struct";
+
+import { Game } from '../../../models/game.model';
+import { GameRating } from '../../../models/game-rating.model';
+import { CollectionService } from '../../../services/collection.service';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-game-list',
@@ -15,27 +19,31 @@ export class GameListComponent implements OnInit {
   page: number = 1;
   itemsPerPage: number = 6;
 
-  constructor() { }
+  constructor(private collectionService: CollectionService, private authService: AuthService) { }
 
   ngOnInit() {
   }
 
   // STAR RATING
-  onClickResult:IStarRatingOnClickEvent;
-  onHoverRatingChangeResult:IStarRatingIOnHoverRatingChangeEvent;
-  onRatingChangeResult:IStarRatingOnRatingChangeEven;
- 
-  onClick = ($event:IStarRatingOnClickEvent) => {
-      console.log('onClick $event: ', $event);
-      this.onClickResult = $event;
+  onClickResult: IStarRatingOnClickEvent;
+  onHoverRatingChangeResult: IStarRatingIOnHoverRatingChangeEvent;
+  onRatingChangeResult: IStarRatingOnRatingChangeEven;
+
+  onClick = ($event: IStarRatingOnClickEvent, gameId: string) => {
+    var rating = new GameRating();
+    rating.GameId = gameId;
+    rating.Rating = $event.rating;
+    rating.UserId = this.authService.currentUserProfile.UserId;
+    this.collectionService.updateGameRating(rating);
+    this.onClickResult = $event;
   };
 
-  onRatingChange = ($event:IStarRatingOnRatingChangeEven) => {
-      this.onRatingChangeResult = $event;
+  onRatingChange = ($event: IStarRatingOnRatingChangeEven) => {
+    this.onRatingChangeResult = $event;
   };
 
-  onHoverRatingChange = ($event:IStarRatingIOnHoverRatingChangeEvent) => {
-      this.onHoverRatingChangeResult = $event;
+  onHoverRatingChange = ($event: IStarRatingIOnHoverRatingChangeEvent) => {
+    this.onHoverRatingChangeResult = $event;
   };
 
 }
