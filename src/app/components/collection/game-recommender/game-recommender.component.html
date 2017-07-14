@@ -1,0 +1,18 @@
+<h3>What Should We Play?</h3>
+<form (ngSubmit)="getRecommendations(model); recForm.reset()" #recForm="ngForm">
+  <div class="form-group">
+    <label for="players">Who's Playing?</label>
+    <select multiple [ngModel]="model" name="selectedPlayers" id="selectedPlayers"
+      #playersModel="ngModel" type="text" class="form-control" required >
+      <option *ngFor="let member of players" [ngValue]="member">{{member.FirstName + " " + member.LastName}}</option>
+    </select>
+    <div [hidden]="playersModel.valid || playersModel.pristine"
+          class="alert alert-danger">
+      Please select at least one player
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary btn-block"
+    [disabled]="!recForm.form.valid">
+    <span>Show Me Some Games!</span>   
+  </button>
+</form>

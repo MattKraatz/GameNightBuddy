@@ -1,0 +1,13 @@
+ul {
+  padding: 0 20px;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px lightgray dashed;
+}
+
+ul li {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0px 5px;
+}
+

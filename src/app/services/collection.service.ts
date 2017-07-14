@@ -11,6 +11,7 @@ import {ServerConfig} from '../constants/serverConfig';
 import {User} from '../models/user.model';
 import {GameRating} from '../models/game-rating.model';
 import {StoreActions} from '../constants/storeActions';
+import {Member} from '../models/member.model';
 
 const HEADERS = new Headers({ 'Content-Type': 'application/json' });
 const OPTIONS = new RequestOptions({ headers: HEADERS });
@@ -64,5 +65,9 @@ export class CollectionService {
   updateGameRating(rating: GameRating) {
     this.http.put(`${ServerConfig.baseUrl}/games/rating`, rating, OPTIONS)
       .subscribe(res => res.json());
+  }
+
+  getGameRecommendation(members: Member[]){
+    console.log("I'm not doing anything with this yet", members);
   }
 }

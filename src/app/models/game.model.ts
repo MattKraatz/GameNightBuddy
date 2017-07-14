@@ -29,7 +29,7 @@ export class Game {
     this.MinPlayers = obj && obj.MinPlayers || null;
     this.MaxPlayers = obj && obj.MaxPlayers || null;
     this.MyRating = obj && obj.MyRating || 0;
-    this.AvgRating = obj && obj.AvgRating || null;    
+    this.AvgRating = obj && obj.AvgRating || 0;    
     this.DateCreated = obj && obj.DateCreated || new Date();
     
   }

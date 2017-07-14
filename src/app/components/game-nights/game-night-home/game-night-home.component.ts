@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+
+import {GameNightService} from '../../../services/game-night.service';
+import {GameNight} from '../../../models/game-night.model';
 
 @Component({
   selector: 'app-game-night-home',
@@ -7,7 +10,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameNightHomeComponent implements OnInit {
 
-  constructor() { }
+  gameNight: GameNight;
+
+  constructor(private gameNightService: GameNightService) {
+    this.gameNightService.currentGameNight.subscribe(night => {
+      this.gameNight = night;
+    })
+  }
 
   ngOnInit() {
   }
