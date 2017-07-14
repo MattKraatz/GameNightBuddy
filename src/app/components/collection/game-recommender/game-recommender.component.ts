@@ -15,9 +15,9 @@ export class GameRecommenderComponent implements OnInit {
 
   model: Member[];
   players: Member[];
-  selectedPlayers: Member[];
 
   constructor(private gameNightService: GameNightService, private collectionService: CollectionService) {
+    this.model = new Array<Member>()
     this.gameNightService.currentGameNight.subscribe(night => {
       this.players = night.Members;
     })
