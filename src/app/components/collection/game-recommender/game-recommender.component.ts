@@ -1,4 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Observable} from 'rxjs';
+
 import {Game} from '../../../models/game.model';
 import {Member} from '../../../models/member.model';
 import {Match} from '../../../models/match.model';
@@ -15,12 +17,16 @@ export class GameRecommenderComponent implements OnInit {
 
   model: Member[];
   players: Member[];
+  recommendations: Game[];
 
   constructor(private gameNightService: GameNightService, private collectionService: CollectionService) {
     this.model = new Array<Member>()
     this.gameNightService.currentGameNight.subscribe(night => {
       this.players = night.Members;
     })
+    this.collectionService.gameRecommendations.subscribe(r => {
+      this.recommendations = r;
+    });
   }
 
   ngOnInit() {

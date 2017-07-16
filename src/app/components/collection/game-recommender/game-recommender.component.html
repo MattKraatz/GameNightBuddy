@@ -16,3 +16,7 @@
     <span>Show Me Some Games!</span>   
   </button>
 </form>
+<div *ngIf="recommendations.length">
+  <h4>How about one of these?</h4>
+  <app-game-list [games]="recommendations"></app-game-list>
+</div>

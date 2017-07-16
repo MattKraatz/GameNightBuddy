@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable, BehaviorSubject} from "rxjs";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
 import {Http, Headers, RequestOptions} from '@angular/http';
@@ -12,6 +12,9 @@ import {User} from '../models/user.model';
 import {GameRating} from '../models/game-rating.model';
 import {StoreActions} from '../constants/storeActions';
 import {Member} from '../models/member.model';
+import {GameRecRequest} from '../models/game-rec-request.model';
+import {AuthService} from '../services/auth.service';
+import {GameNightService} from '../services/game-night.service';
 
 const HEADERS = new Headers({ 'Content-Type': 'application/json' });
 const OPTIONS = new RequestOptions({ headers: HEADERS });
@@ -20,9 +23,12 @@ const OPTIONS = new RequestOptions({ headers: HEADERS });
 export class CollectionService {
   
   collection: Observable<Array<Game>>;
+  gameRecommendations: BehaviorSubject<Array<Game>>;
   
-  constructor(private store: Store<AppStore>, private http: Http) {
+  constructor(private store: Store<AppStore>, private http: Http,
+              private gameNightService: GameNightService, private authService: AuthService) {
     this.collection = store.select('collection');
+    this.gameRecommendations = new BehaviorSubject<Array<Game>>(new Array<Game>());
   }
 
   loadCollection(id: string) {
@@ -68,6 +74,16 @@ export class CollectionService {
   }
 
   getGameRecommendation(members: Member[]){
-    console.log("I'm not doing anything with this yet", members);
+    // build request using other services
+    var request = new GameRecRequest();
+    request.GameNightId = this.gameNightService.currentGameNight.value.GameNightId;
+    request.RequestingUserId = this.authService.currentUserProfile.UserId;
+    request.UserIds = members.map(m => m.UserId);
+
+    this.http.post(`${ServerConfig.baseUrl}/games/recommend`, request, OPTIONS)
+    .map(res => {
+      return res.json();
+    })
+    .subscribe(games => this.gameRecommendations.next(games));
   }
 }
