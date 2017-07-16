@@ -135,5 +135,28 @@ namespace GameNightBuddy_Server.Controllers
 
       //return new OkResult();
     }
+
+    [HttpPost("recommend")]
+    public IActionResult RecommendGame([FromBody] GameRecRequestViewModel vm)
+    {
+      if (vm == null)
+      {
+        return new BadRequestResult();
+      }
+
+      var recs = new List<GameViewModel>();
+
+      var games = this.gameRepository.GetGameRecommendations(vm);
+
+      if (games.Count() > 0)
+      {
+        foreach(Game game in games)
+        {
+          recs.Add(new GameViewModel(game, vm.RequestingUserId));
+        }
+      }
+
+      return new ObjectResult(recs);
+    }
   }
 }

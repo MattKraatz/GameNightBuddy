@@ -16,6 +16,7 @@ namespace GameNightBuddy_Server.Repositories
     void UpdateGame(Game game);
     void UpdateRating(GameRating rating);
     void DeleteRating(GameRatingViewModel rating);
+    List<Game> GetGameRecommendations(GameRecRequestViewModel request);
     void Save();
   }
 
@@ -44,10 +45,10 @@ namespace GameNightBuddy_Server.Repositories
     {
       var games = context.Games.Where(g => g.UserId == id)
           .Include(g => g.User)
-          .Include(g => g.GameRatings);   
+          .Include(g => g.GameRatings);
 
       // only show ratings from owner
-      foreach(Game game in games)
+      foreach (Game game in games)
       {
         game.GameRatings = game.GameRatings.Where(r => r.UserId == game.UserId).ToList();
       }
@@ -81,7 +82,8 @@ namespace GameNightBuddy_Server.Repositories
       {
         dbRating.Rating = rating.Rating;
         context.Entry(dbRating).State = EntityState.Modified;
-      } else
+      }
+      else
       {
         context.GameRatings.Add(rating);
       }
@@ -90,6 +92,50 @@ namespace GameNightBuddy_Server.Repositories
     public void DeleteRating(GameRatingViewModel vm)
     {
       throw new NotImplementedException();
+    }
+
+    public List<Game> GetGameRecommendations(GameRecRequestViewModel request)
+    {
+      List<Game> games = null;
+      var playerCount = request.UserIds.Count;
+
+      var gameIds = context.GameNightGames
+            .Where(gng => gng.GameNightId == request.GameNightId)
+            .Select(gng => gng.GameId).ToList();
+
+      if (gameIds.Count > 0)
+      {
+        // Get games from the member's game night, include ratings
+        games = context.Games
+            .Include(g => g.User)
+            .Where(g => gameIds.FindIndex(id => g.GameId == id) > -1)
+            // only evaluate games that can handle the number of players
+            .Where(g => g.MaxPlayers >= playerCount && g.MinPlayers <= playerCount)
+            .ToList();
+      }
+
+      if (games != null)
+      {
+        foreach (Game game in games)
+        {
+          game.GameRatings = context.GameRatings
+                        .Where(r => request.UserIds.Contains(r.UserId) && r.GameId == game.GameId)
+                        .ToList();
+          // if any members haven't rated the game yet, add temp ratings
+          for(var i = game.GameRatings.Count; i < playerCount; i++)
+          {
+            game.GameRatings.Add(new GameRating { Rating = 0 });
+          }
+        }
+        // order games by average rating 
+        var output = games.OrderByDescending(g => g.GameRatings.Sum(r => r.Rating != 0 ? r.Rating : 3)).Take(3).ToList();
+        return output;
+      }
+      else
+      {
+        return new List<Game>();
+      }
+
     }
 
     public void Save()

@@ -42,10 +42,9 @@ namespace GameNightBuddy_Server.ViewModels
       MinPlayers = game.MinPlayers;
       MaxPlayers = game.MaxPlayers;
       Owner = new UserShallowViewModel(game.User);
-      AvgRating = game.GameRatings?.Count > 1 ? game.GameRatings.Average(r => r.Rating) : 0;
-      MyRating = game.GameRatings?.Count > 0 ? game.GameRatings.FirstOrDefault(r => r.UserId == userId).Rating : 0;
+      AvgRating = game.GameRatings != null && game.GameRatings?.Count > 1 ? game.GameRatings.Average(r => r.Rating) : 0;
+      MyRating = game.GameRatings != null && game.GameRatings?.Count > 0 && game.GameRatings.FirstOrDefault(r => r.UserId == userId) != null ? game.GameRatings.FirstOrDefault(r => r.UserId == userId).Rating : 0;
       DateCreated = game.DateCreated.ToString();
     }
-
   }
 }
