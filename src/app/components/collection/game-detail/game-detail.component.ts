@@ -52,6 +52,7 @@ export class GameDetailComponent implements OnInit {
           this.game = game;
           // deep copy (for form reset)
           this.gameModel = JSON.parse(JSON.stringify(game));
+          this.isOwner = game.Owner.UserId === this.authService.currentUserProfile.UserId;          
         }
       })
     }
