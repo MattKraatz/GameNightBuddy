@@ -13,7 +13,7 @@ import {Match} from '../../../models/match.model';
   templateUrl: './game-night-matches.component.html',
   styleUrls: ['./game-night-matches.component.css']
 })
-export class GameNightMatchesComponent implements OnInit {
+export class GameNightMatchesContainer implements OnInit {
 
   members: Observable<Array<Member>>;
   collection: Observable<Array<Game>>;
