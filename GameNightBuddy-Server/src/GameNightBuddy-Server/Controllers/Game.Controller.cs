@@ -145,6 +145,7 @@ namespace GameNightBuddy_Server.Controllers
       }
 
       var recs = new List<GameViewModel>();
+      bool requesterIsInParty = vm.UserIds.Contains(vm.RequestingUserId);
 
       var games = this.gameRepository.GetGameRecommendations(vm);
 
@@ -152,7 +153,23 @@ namespace GameNightBuddy_Server.Controllers
       {
         foreach(Game game in games)
         {
-          recs.Add(new GameViewModel(game, vm.RequestingUserId));
+          int myRating = 0;
+
+          // if requester isn't in party, filter their rating out (for averaging in the constructor) 
+          if (!requesterIsInParty)
+          {
+            myRating = game.GameRatings.FirstOrDefault(r => r.UserId == vm.RequestingUserId).Rating;
+            game.GameRatings = game.GameRatings.Where(r => r.UserId != vm.RequestingUserId).ToList();
+          }
+
+          var gameVM = new GameViewModel(game, vm.RequestingUserId);
+
+          if (myRating != 0)
+          {
+            gameVM.MyRating = myRating;
+          }
+
+          recs.Add(gameVM);
         }
       }
 

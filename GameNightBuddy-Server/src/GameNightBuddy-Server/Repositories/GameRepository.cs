@@ -97,20 +97,21 @@ namespace GameNightBuddy_Server.Repositories
     public List<Game> GetGameRecommendations(GameRecRequestViewModel request)
     {
       List<Game> games = null;
-      var playerCount = request.UserIds.Count;
+      int playerCount = request.UserIds.Count;
+      bool requesterIsInParty = request.UserIds.Contains(request.RequestingUserId);
 
-      var gameIds = context.GameNightGames
+      var gameNightGameIds = context.GameNightGames
             .Where(gng => gng.GameNightId == request.GameNightId)
             .Select(gng => gng.GameId).ToList();
 
-      if (gameIds.Count > 0)
+      if (gameNightGameIds.Count > 0)
       {
         // Get games from the member's game night, include ratings
         games = context.Games
             .Include(g => g.User)
-            .Where(g => gameIds.FindIndex(id => g.GameId == id) > -1)
             // only evaluate games that can handle the number of players
             .Where(g => g.MaxPlayers >= playerCount && g.MinPlayers <= playerCount)
+            .Where(g => gameNightGameIds.FindIndex(id => g.GameId == id) > -1)
             .ToList();
       }
 
@@ -118,8 +119,9 @@ namespace GameNightBuddy_Server.Repositories
       {
         foreach (Game game in games)
         {
+          // Grab game ratings for each game, party user
           game.GameRatings = context.GameRatings
-                        .Where(r => request.UserIds.Contains(r.UserId) && r.GameId == game.GameId)
+                        .Where(r => r.GameId == game.GameId && request.UserIds.Contains(r.UserId))
                         .ToList();
           // if any members haven't rated the game yet, add temp ratings
           for(var i = game.GameRatings.Count; i < playerCount; i++)
@@ -128,7 +130,22 @@ namespace GameNightBuddy_Server.Repositories
           }
         }
         // order games by average rating 
-        var output = games.OrderByDescending(g => g.GameRatings.Sum(r => r.Rating != 0 ? r.Rating : 3)).Take(3).ToList();
+        var output = games.OrderByDescending(g => g.GameRatings.Sum(r => r.Rating != 0 ? r.Rating : 3))
+                        .Take(3)
+                        .ToList();
+        // grab the requester's rating if they aren't in the party
+        if (!requesterIsInParty)
+        {
+          output.ForEach(g =>
+          {
+            var requesterGameRating = context.GameRatings
+                        .FirstOrDefault(r => r.UserId == request.RequestingUserId && r.GameId == g.GameId);
+            if (requesterGameRating != null)
+            {
+              g.GameRatings.Add(requesterGameRating);
+            }
+          });
+        }
         return output;
       }
       else
