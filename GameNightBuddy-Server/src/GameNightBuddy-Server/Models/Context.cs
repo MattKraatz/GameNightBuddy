@@ -13,6 +13,7 @@ namespace GameNightBuddy_Server.Models
     public DbSet<Game> Games { get; set; }
     public DbSet<GameNightGame> GameNightGames { get; set; }
     public DbSet<GameRating> GameRatings { get; set; }
+    public DbSet<Activity> Activities { get; set; }
     
     public Context(DbContextOptions<Context> options) : base(options)
     {
@@ -49,6 +50,10 @@ namespace GameNightBuddy_Server.Models
           .HasDefaultValueSql("GETDATE()");
 
       modelBuilder.Entity<GameRating>()
+          .Property(n => n.DateCreated)
+          .HasDefaultValueSql("GETDATE()");
+
+      modelBuilder.Entity<Activity>()
           .Property(n => n.DateCreated)
           .HasDefaultValueSql("GETDATE()");
 
