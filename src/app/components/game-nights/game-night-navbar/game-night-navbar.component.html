@@ -2,17 +2,29 @@
   <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavbarExpand()">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" id="game-night-name" routerLink="/game-night/{{_gameNight.GameNightId}}">{{_gameNight.Name}}</a>    
+  <a class="navbar-brand" id="game-night-name" routerLink="/game-night/{{_gameNight.GameNightId}}">
+    <img src="assets/icons/game-assets/svg/pawn.svg" id="night-nav-logo" alt="pawn logo">
+    {{_gameNight.Name}}
+  </a>    
   <div class="collapse navbar-collapse" [ngClass]="navbarClasses" id="navbarGameNight">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/collection" routerLinkActive="active">Collection</a>
+        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/collection" routerLinkActive="active">
+          <img src="assets/icons/boardgames-line/svg/board-games-set.svg" class="nav-icons" alt="collection">
+          Collection
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/members" routerLinkActive="active">Members</a>
+        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/members" routerLinkActive="active">
+          <img src="assets/icons/boardgames-line/svg/family-board-games.svg" class="nav-icons" alt="members">
+          Members
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/matches" routerLinkActive="active">Matches</a>
+        <a class="nav-link" routerLink="/game-night/{{_gameNight.GameNightId}}/matches" routerLinkActive="active">
+          <img src="assets/icons/boardgames-line/svg/board-gaming.svg" class="nav-icons" alt="matches">
+          <span class="nav-text">Matches</span>
+        </a>
       </li>
     </ul>
     <ul class="navbar-nav">

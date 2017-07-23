@@ -12,7 +12,7 @@ export class MatchListComponent implements OnInit {
   @Input() nightId: string;
 
   page: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 10;
 
   constructor() { }
 

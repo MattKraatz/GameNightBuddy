@@ -17,7 +17,7 @@ export class GameListComponent implements OnInit {
 
   // PAGINATION
   page: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 10;
 
   constructor(private collectionService: CollectionService, private authService: AuthService) { }
 

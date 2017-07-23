@@ -1,0 +1,81 @@
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 22/06/2016 15:27
+  	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+        font-size: 20px;
+font-style: normal;
+margin-left: 20px;
+}
+
+.flaticon-air-hockey:before { content: "\f100"; }
+.flaticon-backgammon:before { content: "\f101"; }
+.flaticon-bag-with-checkers-game:before { content: "\f102"; }
+.flaticon-battleship:before { content: "\f103"; }
+.flaticon-billiards:before { content: "\f104"; }
+.flaticon-board-game-blocks:before { content: "\f105"; }
+.flaticon-board-game-box:before { content: "\f106"; }
+.flaticon-board-game-map:before { content: "\f107"; }
+.flaticon-board-games-set:before { content: "\f108"; }
+.flaticon-board-games-with-roles:before { content: "\f109"; }
+.flaticon-board-gaming:before { content: "\f10a"; }
+.flaticon-carrom:before { content: "\f10b"; }
+.flaticon-checkers:before { content: "\f10c"; }
+.flaticon-chess:before { content: "\f10d"; }
+.flaticon-chinese-checkers:before { content: "\f10e"; }
+.flaticon-constructor:before { content: "\f10f"; }
+.flaticon-darts:before { content: "\f110"; }
+.flaticon-dice:before { content: "\f111"; }
+.flaticon-domino:before { content: "\f112"; }
+.flaticon-economy-games:before { content: "\f113"; }
+.flaticon-family-board-games:before { content: "\f114"; }
+.flaticon-game-board:before { content: "\f115"; }
+.flaticon-game-chips:before { content: "\f116"; }
+.flaticon-game-with-hexagons:before { content: "\f117"; }
+.flaticon-go-game:before { content: "\f118"; }
+.flaticon-hourglass:before { content: "\f119"; }
+.flaticon-labyrinth:before { content: "\f11a"; }
+.flaticon-logic-board-games:before { content: "\f11b"; }
+.flaticon-loto:before { content: "\f11c"; }
+.flaticon-magic-board-games:before { content: "\f11d"; }
+.flaticon-mahjong:before { content: "\f11e"; }
+.flaticon-mancala:before { content: "\f11f"; }
+.flaticon-memory-board-games:before { content: "\f120"; }
+.flaticon-mill-game:before { content: "\f121"; }
+.flaticon-parchis:before { content: "\f122"; }
+.flaticon-pawn:before { content: "\f123"; }
+.flaticon-pinball:before { content: "\f124"; }
+.flaticon-playing-cards:before { content: "\f125"; }
+.flaticon-puzzle:before { content: "\f126"; }
+.flaticon-roulette:before { content: "\f127"; }
+.flaticon-roulette-table:before { content: "\f128"; }
+.flaticon-scrabble:before { content: "\f129"; }
+.flaticon-shogi:before { content: "\f12a"; }
+.flaticon-snakes-and-ladders:before { content: "\f12b"; }
+.flaticon-sudoku:before { content: "\f12c"; }
+.flaticon-table-soccer:before { content: "\f12d"; }
+.flaticon-table-tennis:before { content: "\f12e"; }
+.flaticon-tangram:before { content: "\f12f"; }
+.flaticon-tic-tac-toe:before { content: "\f130"; }
+.flaticon-yahtzee:before { content: "\f131"; }

@@ -16,7 +16,7 @@ export class MemberListComponent implements OnInit {
   nightId: string;
 
   page: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 10;
 
   constructor(private gameNightService: GameNightService) {
     this.isHost = this.gameNightService.isHost;

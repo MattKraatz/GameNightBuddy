@@ -12,7 +12,7 @@ export class GameNightListComponent implements OnInit {
   @Input() gameNights: GameNight[];
 
   page: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 10;
 
   constructor() {}
 

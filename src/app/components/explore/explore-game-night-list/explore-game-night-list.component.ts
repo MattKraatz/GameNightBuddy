@@ -13,7 +13,7 @@ export class ExploreGameNightListComponent implements OnInit {
   @Output() joinNight = new EventEmitter();
 
   page: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 10;
 
   constructor() { }
 

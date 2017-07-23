@@ -1,10 +1,30 @@
 nav {
-  padding: 0 24px 2px;
+  padding: 0 8px 2px;
 }
 
 button {
   padding: 0px 4px;
   margin: 3px 8px;
+}
+
+#night-nav-logo {
+  max-height: 30px;
+  max-width: 30px;
+  margin-top: -4px;
+}
+
+#game-night-name {
+  margin-right: 36px;
+}
+
+.nav-link {
+  text-align: center;
+}
+
+.nav-icons {
+  max-height: 20px;
+  max-width: 20px;
+  margin-top: -4px;
 }
 
 .reload { 
@@ -17,11 +37,17 @@ button {
 }
 
 @media (max-width: 415px) {
-    #game-night-name {
-      margin-right: 50px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
+  #game-night-name {
+    margin-right: 58px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 767px) {
+  .nav-link {
+    text-align: right;
+  }
 }
 
 @keyframes Indicator-spin {

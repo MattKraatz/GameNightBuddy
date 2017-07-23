@@ -10,12 +10,28 @@
 <div class="container home-container">
   <div class="row">
     <div class="col">
-      <h4>Welcome to {{gameNight.Name}}!</h4>
-      <p>If this is your first time, check out the <b>Collection</b> page to see what games are available to play. Add your own games to the list, and rate games that you've played before.</p>
-      <p>The <b>Members</b> page lets you scope out the competition and invite other gamers in on the fun.</p>    
-      <p>And most importantly, the <b>Matches</b> area let's you review past match-ups and record victories for the entire game night to see!</p>
-      <br/>
-      <p>Finally, from the top of this <b>Home</b> page, you'll find other tools at your disposal...</p>
+      <div class="welcome-message">
+        <h4>Welcome to {{gameNight.Name}}!</h4>
+        <p>Hosted by: <span *ngFor="let host of hosts" class="host-names">{{host.DisplayName}} </span></p>
+      </div>
+      <div class="page-info">
+        <a routerLink="collection">
+          <img src="assets/icons/boardgames-line/svg/board-games-set.svg" class="page-icons" alt="collection">
+        </a>
+        <p>If this is your first time, check out the <b><a routerLink="collection">Collection</a></b> page to see what games are available to play. Add your own games to the list, and rate games that you've played before.</p>        
+      </div>
+      <div class="page-info">
+        <a routerLink="members">
+          <img src="assets/icons/boardgames-line/svg/family-board-games.svg" class="page-icons" alt="members">
+        </a>
+        <p>The <b><a routerLink="members">Members</a></b> page lets you scope out the competition and invite other gamers in on the fun.</p>
+      </div>
+      <div class="page-info">
+        <a routerLink="matches">
+          <img src="assets/icons/boardgames-line/svg/board-gaming.svg" class="page-icons" alt="matches">
+        </a>
+        <p>And most importantly, the <b><a routerLink="collection">Matches</a></b> area let's you review past match-ups and record victories for the entire game night to see!</p>
+      </div>
     </div>
   </div>
 </div>
