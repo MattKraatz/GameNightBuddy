@@ -12,26 +12,34 @@
     <div class="col">
       <div class="welcome-message">
         <h4>Welcome to {{gameNight.Name}}!</h4>
-        <p>Hosted by: <span *ngFor="let host of hosts" class="host-names">{{host.DisplayName}} </span></p>
+        <p><i>Hosted by: <span *ngFor="let host of hosts" class="host-names">{{host.DisplayName}} </span></i></p>
       </div>
-      <div class="page-info">
-        <a routerLink="collection">
-          <img src="assets/icons/boardgames-line/svg/board-games-set.svg" class="page-icons" alt="collection">
-        </a>
-        <p>If this is your first time, check out the <b><a routerLink="collection">Collection</a></b> page to see what games are available to play. Add your own games to the list, and rate games that you've played before.</p>        
-      </div>
-      <div class="page-info">
-        <a routerLink="members">
-          <img src="assets/icons/boardgames-line/svg/family-board-games.svg" class="page-icons" alt="members">
-        </a>
-        <p>The <b><a routerLink="members">Members</a></b> page lets you scope out the competition and invite other gamers in on the fun.</p>
-      </div>
-      <div class="page-info">
-        <a routerLink="matches">
-          <img src="assets/icons/boardgames-line/svg/board-gaming.svg" class="page-icons" alt="matches">
-        </a>
-        <p>And most importantly, the <b><a routerLink="collection">Matches</a></b> area let's you review past match-ups and record victories for the entire game night to see!</p>
-      </div>
+      <table>
+        <tr>
+          <td>
+            <img src="assets/icons/boardgames-line/svg/board-games-set.svg" routerLink="collection" class="page-icons" alt="collection">            
+          </td>
+          <td>
+            <p>If this is your first time, check out the <b><a routerLink="collection">Collection</a></b> page to see what games are available to play. Add your own games to the list, and rate games that you've played before.</p>        
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img src="assets/icons/boardgames-line/svg/family-board-games.svg" routerLink="members" class="page-icons" alt="members">
+          </td>
+          <td>
+            <p>The <b><a routerLink="members">Members</a></b> page lets you scope out the competition and invite other gamers in on the fun.</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img src="assets/icons/boardgames-line/svg/board-gaming.svg" routerLink="matches" class="page-icons" alt="matches">
+          </td>
+          <td>
+            <p>And most importantly, the <b><a routerLink="collection">Matches</a></b> area let's you review past match-ups and record victories for the entire game night to see!</p>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

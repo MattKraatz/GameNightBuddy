@@ -13,12 +13,17 @@ hr {
   margin: 4px 0;
 }
 
-.welcome-message {
-  text-align: center;
+p {
+  margin-bottom: 0px;
 }
 
-div.page-info {
-  min-height: 74px;
+td {
+  vertical-align: center;
+  padding: 14px 0 0;
+}
+
+.welcome-message {
+  text-align: center;
 }
 
 .host-names {
@@ -32,8 +37,7 @@ div.page-info {
 }
 
 .page-icons {
-  float: left;
-  max-height: 50px;
-  max-width: 50px;
-  margin: 12px;
+  height: 50px;
+  width: 50px;
+  margin: 6px 12px;
 }
