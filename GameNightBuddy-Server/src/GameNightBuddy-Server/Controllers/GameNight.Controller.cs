@@ -102,20 +102,20 @@ namespace GameNightBuddy_Server.Controllers
       return new CreatedResult($"game-nights/${id}/games", new GameShallowViewModel(game));
     }
 
-    [HttpPost("{id}/matches")]
-    public IActionResult AddMatch([FromBody] MatchViewModel vm, [FromRoute] Guid id)
+    [HttpPost("{nightId}/matches")]
+    public IActionResult AddMatch([FromBody] MatchViewModel vm, [FromRoute] Guid nightId)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      var match = this.gameNightRepository.InsertMatch(vm, id);
+      var match = this.gameNightRepository.InsertMatch(vm, nightId);
       this.gameNightRepository.Save();
 
       vm.MatchId = match.MatchId.ToString();
 
-      return new CreatedResult($"game-nights/${id}/matches", vm);
+      return new CreatedResult($"game-nights/${nightId}/matches", vm);
     }
 
     [HttpPut("{id}/matches")]

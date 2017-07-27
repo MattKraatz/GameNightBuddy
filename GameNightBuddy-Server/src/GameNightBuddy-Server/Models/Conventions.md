@@ -1,6 +1,13 @@
 ﻿# Conventions
 The following conventions are required in models and contexts to ensure proper migrations are created by Entity Framework.
 
+## Commands
+
+In Powershell
+- dotnet ef migrations add <MigrationName>
+- dotnet ef migrations remove
+- dotnet ef database update
+
 ## Primary Key
 
 - All models must have a Guid property titled `<model-name>Id`

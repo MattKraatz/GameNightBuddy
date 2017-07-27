@@ -15,6 +15,7 @@ namespace GameNightBuddy_Server.Models
     public List<GameNightMember> GameNightsMembers { get; set; }
     public List<Game> Games { get; set; }
     public List<GameRating> GameRatings { get; set; }
+    public List<Activity> Activities { get; set; }
 
     [Required]
     public string FirebaseId { get; set; }

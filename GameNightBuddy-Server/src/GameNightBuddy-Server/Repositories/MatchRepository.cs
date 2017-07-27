@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GameNightBuddy_Server.Constants;
 
 namespace GameNightBuddy_Server.Repositories
 {
@@ -63,6 +64,7 @@ namespace GameNightBuddy_Server.Repositories
     public Match InsertMatch(Match match)
     {
       context.Matches.Add(match);
+
       return match;
     }
 
