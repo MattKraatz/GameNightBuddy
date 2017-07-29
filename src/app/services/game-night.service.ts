@@ -1,25 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Observable } from "rxjs/Observable";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import {Injectable} from '@angular/core';
+import {Observable} from "rxjs/Observable";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import 'rxjs/Rx';
-import { Store } from '@ngrx/store';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import {Store} from '@ngrx/store';
+import {Http, Headers, RequestOptions} from '@angular/http';
 
-import { AppStore } from '../models/appstore.model';
-import { firebaseConfig } from '../constants/firebaseConfig';
-import { GameNight } from '../models/game-night.model';
-import { Game } from '../models/game.model';
-import { Auth, IAuth } from '../models/auth.model';
-import { AuthService } from './auth.service';
-import { Member } from '../models/member.model';
-import { User } from '../models/user.model';
-import { Match } from '../models/match.model';
-import { Player } from '../models/player.model';
-import { ServerConfig } from '../constants/serverConfig';
-import { StoreActions } from '../constants/storeActions';
-
-const HEADERS = new Headers({ 'Content-Type': 'application/json' });
-const OPTIONS = new RequestOptions({ headers: HEADERS });
+import {AppStore} from '../models/appstore.model';
+import {firebaseConfig} from '../constants/firebaseConfig';
+import {GameNight} from '../models/game-night.model';
+import {Game} from '../models/game.model';
+import {Auth, IAuth} from '../models/auth.model';
+import {AuthService} from './auth.service';
+import {Member} from '../models/member.model';
+import {User} from '../models/user.model';
+import {Match} from '../models/match.model';
+import {Player} from '../models/player.model';
+import {ServerConfig} from '../constants/serverConfig';
+import {StoreActions} from '../constants/storeActions';
+import {HttpOptions} from '../models/http-options.model';
 
 @Injectable()
 export class GameNightService {
@@ -52,9 +50,9 @@ export class GameNightService {
   }
 
   loadGameNight(id: string) {
-    var userId = this.authService.currentUserProfile.UserId;
     if (!this.nightLoaded || id != this.currentGameNight.value.GameNightId) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}/${userId}`)
+      var options = new HttpOptions(this.authService.currentUserProfile.UserId);      
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`, options)
         .map(res => res.json())
         .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));
@@ -63,18 +61,19 @@ export class GameNightService {
   }
 
   refreshGameNight() {
-    var userId = this.authService.currentUserProfile.UserId;    
     if (this.nightLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/${this.currentGameNight.value.GameNightId}/${userId}`)
+      var options = new HttpOptions(this.authService.currentUserProfile.UserId);      
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/${this.currentGameNight.value.GameNightId}`, options)
         .map(res => res.json())
         .map(payload => ({ type: StoreActions.GAME_NIGHT_POPULATE_NIGHT, payload }))
         .subscribe(action => this.store.dispatch(action));
     }
   }
 
-  loadMyGameNights(id: string) {
+  loadMyGameNights() {
     if (!this.nightsLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/my/${id}`)
+      var options = new HttpOptions(this.authService.currentUserProfile.UserId);      
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/my`, options)
         .map(res => res.json())
         .subscribe(payload => {
           this.store.dispatch({ type: StoreActions.MY_GAME_NIGHTS_POPULATE, payload })
@@ -85,7 +84,8 @@ export class GameNightService {
 
   loadOtherGameNights(id: string) {
     if (!this.otherNightsLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/explore/${id}`)
+      var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/explore`, options)
         .map(res => res.json())
         .subscribe(payload => {
           this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_POPULATE, payload: payload })
@@ -96,7 +96,8 @@ export class GameNightService {
 
   refreshOtherGameNights(id: string) {
     if (this.otherNightsLoaded) {
-      this.http.get(`${ServerConfig.baseUrl}/game-nights/explore/${id}`)
+      var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+      this.http.get(`${ServerConfig.baseUrl}/game-nights/explore`, options)
         .map(res => res.json())
         .subscribe(payload => {
           this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_POPULATE, payload: payload })
@@ -106,14 +107,16 @@ export class GameNightService {
   }
 
   createGameNight(night: GameNight) {
-    this.http.post(`${ServerConfig.baseUrl}/game-nights`, JSON.stringify(night), OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.post(`${ServerConfig.baseUrl}/game-nights`, JSON.stringify(night), options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.MY_GAME_NIGHTS_CREATE, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   joinGameNight(user: User, night: GameNight) {
-    this.http.post(`${ServerConfig.baseUrl}/game-nights/${night.GameNightId}/members`, JSON.stringify(user), OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);    
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${night.GameNightId}/members`, JSON.stringify(user), options)
       .map(res => res.json())
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.OTHER_GAME_NIGHTS_JOIN, payload: night });
@@ -121,7 +124,8 @@ export class GameNightService {
   }
 
   addGameNightMember(user: User, nightId: string) {
-    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(user), OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);    
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(user), options)
       .map(res => res.json())      
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_MEMBER, payload });
@@ -129,7 +133,8 @@ export class GameNightService {
   }
 
   updateGameNightMember(member: Member, nightId: string) {
-    this.http.put(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(member), OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);    
+    this.http.put(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(member), options)
       .map(res => res.json())
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_UPDATE_MEMBER, payload });
