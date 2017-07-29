@@ -34,7 +34,7 @@
     "jquery": "^3.2.1",
     "ngx-pagination": "^3.0.1",
     "rxjs": "^5.1.0",
-    "signalr": "^2.2.1",
+    "socket.io-client": "^2.0.3",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {

@@ -31,6 +31,7 @@ import {GameNightService} from './services/game-night.service';
 import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
 import {ProfileCompleteGuard} from './services/guards/profile-complete-guard.service';
 import {NavbarService} from './services/navbar.service';
+import {HubService} from './services/hub.service';
 
 // Routes
 import {appRoutes} from './constants/routes';
@@ -134,7 +135,8 @@ const authConfig = {
     GameNightService,
     GameNightResolver,
     ProfileCompleteGuard,
-    NavbarService
+    NavbarService,
+    HubService
   ],
   bootstrap: [
     AppComponent

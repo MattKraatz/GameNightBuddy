@@ -14,6 +14,7 @@ import {GameNight} from '../models/game-night.model';
 import {LoginViewModel} from '../viewmodels/login.viewmodel';
 import {ServerConfig} from '../constants/serverConfig';
 import {StoreActions} from '../constants/storeActions';
+import {HubService} from './hub.service';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -34,7 +35,7 @@ export class AuthService {
   userSearch: Observable<User[]>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http,
-      private router: Router) {
+      private router: Router, private hubService: HubService) {
     this.user = store.select("auth");
     this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
@@ -74,6 +75,9 @@ export class AuthService {
         })
         .subscribe(action => {
           this.isUserLoading.next(false);
+          this.hubService.startConnection().subscribe(m => {
+            console.log(m);
+          });
           this.store.dispatch(action)
         });
   }
