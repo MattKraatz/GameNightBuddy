@@ -23,9 +23,10 @@ namespace GameNightBuddy_Server.Controllers
       this.matchRepo = matchRepo;
     }
 
-    [HttpGet("my/{userId}")]
-    public IActionResult GetMyGameNights([FromRoute] Guid userId)
+    [HttpGet("my")]
+    public IActionResult GetMyGameNights([FromHeader] string uid)
     {
+      var userId = new Guid(uid);
       var nights = this.gameNightRepository.GetMyGameNights(userId);
       if (nights == null)
       {
@@ -34,9 +35,10 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(nights);
     }
 
-    [HttpGet("explore/{userId}")]
-    public IActionResult GetOtherGameNights([FromRoute] Guid userId)
+    [HttpGet("explore")]
+    public IActionResult GetOtherGameNights([FromHeader] string uid)
     {
+      var userId = new Guid(uid);
       var nights = this.gameNightRepository.GetOtherGameNights(userId);
       if (nights == null)
       {
@@ -45,10 +47,11 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(nights);
     }
 
-    [HttpGet("{id}/{userId}")]
-    public IActionResult GetById([FromRoute] Guid id, [FromRoute] Guid userId)
+    [HttpGet("{nightId}")]
+    public IActionResult GetById([FromHeader] string uid, [FromRoute] Guid nightId)
     {
-      var night = this.gameNightRepository.LoadGameNightByID(id, userId);
+      var userId = new Guid(uid);
+      var night = this.gameNightRepository.LoadGameNightByID(nightId, userId);
       if (night == null)
       {
         return new NoContentResult();
@@ -56,24 +59,25 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(night);
     }
 
-    [HttpPost("{id}/members")]
-    public IActionResult AddMember([FromBody] MemberViewModel vm, [FromRoute] Guid id)
+    [HttpPost("{nightId}/members")]
+    public IActionResult AddMember([FromBody] MemberViewModel vm, [FromRoute] Guid nightId)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      var member = new GameNightMember(vm, id);
+      var member = new GameNightMember(vm, nightId);
 
       member = this.gameNightRepository.InsertMember(member);
       this.gameNightRepository.Save();
 
-      return new CreatedResult($"game-nights/${id}/members", new MemberViewModel(member));
+      return new CreatedResult($"game-nights/${nightId}/members", new MemberViewModel(member));
     }
 
-    [HttpPut("{id}/members")]
-    public IActionResult UpdateMember([FromBody] MemberViewModel vm, [FromRoute] Guid id)
+    [HttpPut("{nightId}/members")]
+    // upgrades a member to a host, need to expand functionality
+    public IActionResult UpdateMember([FromBody] MemberViewModel vm)
     {
       if (vm == null)
       {
@@ -82,24 +86,25 @@ namespace GameNightBuddy_Server.Controllers
 
       var member = this.gameNightRepository.GetMember(new Guid(vm.MemberId));
       member.IsHost = vm.IsHost;
-      
+
       //this.gameNightRepository.UpdateMember(member);
+
       this.gameNightRepository.Save();
 
       return new ObjectResult(vm);
     }
 
-    [HttpPost("{id}/games")]
-    public IActionResult AddGame([FromBody] Game vm, [FromRoute] Guid id)
+    [HttpPost("{nightId}/games")]
+    public IActionResult AddGame([FromBody] Game vm, [FromRoute] Guid nightId)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
-      var game = this.gameNightRepository.InsertGameNightGame(vm.GameId, id);
+      var game = this.gameNightRepository.InsertGameNightGame(vm.GameId, nightId);
       this.gameNightRepository.Save();
-      return new CreatedResult($"game-nights/${id}/games", new GameShallowViewModel(game));
+      return new CreatedResult($"game-nights/${nightId}/games", new GameShallowViewModel(game));
     }
 
     [HttpPost("{nightId}/matches")]
@@ -118,8 +123,8 @@ namespace GameNightBuddy_Server.Controllers
       return new CreatedResult($"game-nights/${nightId}/matches", vm);
     }
 
-    [HttpPut("{id}/matches")]
-    public IActionResult UpdateMatch([FromBody] MatchViewModel vm, [FromRoute] Guid id)
+    [HttpPut("{nightId}/matches")]
+    public IActionResult UpdateMatch([FromBody] MatchViewModel vm, [FromRoute] Guid nightId)
     {
       if (vm == null)
       {
@@ -133,7 +138,7 @@ namespace GameNightBuddy_Server.Controllers
 
       vm = new MatchViewModel(match);
 
-      return new CreatedResult($"game-nights/${id}/matches", vm);
+      return new CreatedResult($"game-nights/${nightId}/matches", vm);
     }
 
     [HttpPost]
