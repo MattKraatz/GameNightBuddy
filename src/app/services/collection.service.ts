@@ -15,9 +15,8 @@ import {Member} from '../models/member.model';
 import {GameRecRequest} from '../models/game-rec-request.model';
 import {AuthService} from '../services/auth.service';
 import {GameNightService} from '../services/game-night.service';
+import {HttpOptions} from '../models/http-options.model';
 
-const HEADERS = new Headers({ 'Content-Type': 'application/json' });
-const OPTIONS = new RequestOptions({ headers: HEADERS });
 
 @Injectable()
 export class CollectionService {
@@ -32,55 +31,60 @@ export class CollectionService {
   }
 
   loadCollection(id: string) {
-    this.http.get(`${ServerConfig.baseUrl}/games/my/${id}`)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.get(`${ServerConfig.baseUrl}/games/my`, options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.COLLECTION_POPULATE, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   createGame(game: Game) {
-    this.http.post(`${ServerConfig.baseUrl}/games`, JSON.stringify(game), OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.post(`${ServerConfig.baseUrl}/games`, JSON.stringify(game), options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.COLLECTION_CREATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
-  createGameInGameNightAndMyCollection(game: Game, id: string) {
-    this.http.post(`${ServerConfig.baseUrl}/games/${id}`, game, OPTIONS)
+  createGameInGameNightAndMyCollection(game: Game, nightId: string) {
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.post(`${ServerConfig.baseUrl}/games/${nightId}`, game, options)
       .map(res => res.json())
       .subscribe(payload => {
-        this.store.dispatch({ type: StoreActions.COLLECTION_CREATE_GAME, payload })
-        this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_GAME, payload })
+        this.store.dispatch({ type: StoreActions.COLLECTION_CREATE_GAME, payload });
+        this.store.dispatch({ type: StoreActions.GAME_NIGHT_CREATE_GAME, payload });
     })
   }
 
   addGameToGameNight(game: Game, nightId: string) {
-    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/games`, game, OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/games`, game, options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   updateGame(game: Game) {
-    this.http.put(`${ServerConfig.baseUrl}/games`, game, OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.put(`${ServerConfig.baseUrl}/games`, game, options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.UPDATE_GAME, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
   updateGameRating(rating: GameRating) {
-    this.http.put(`${ServerConfig.baseUrl}/games/rating`, rating, OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.put(`${ServerConfig.baseUrl}/games/rating`, rating, options)
       .subscribe(res => res.json());
   }
 
   getGameRecommendation(members: Member[]){
-    // build request using other services
     var request = new GameRecRequest();
     request.GameNightId = this.gameNightService.currentGameNight.value.GameNightId;
-    request.RequestingUserId = this.authService.currentUserProfile.UserId;
     request.UserIds = members.map(m => m.UserId);
 
-    this.http.post(`${ServerConfig.baseUrl}/games/recommend`, request, OPTIONS)
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.post(`${ServerConfig.baseUrl}/games/recommend`, request, options)
     .map(res => {
       return res.json();
     })

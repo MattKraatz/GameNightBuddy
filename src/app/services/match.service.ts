@@ -11,9 +11,8 @@ import {Player} from '../models/player.model';
 import {Game} from '../models/game.model';
 import {GameNight} from '../models/game-night.model';
 import {StoreActions} from '../constants/storeActions';
-
-const HEADERS = new Headers({ 'Content-Type': 'application/json' });
-const OPTIONS = new RequestOptions({ headers: HEADERS });
+import {HttpOptions} from '../models/http-options.model';
+import {AuthService} from '../services/auth.service';
 
 @Injectable()
 export class MatchService {
@@ -22,19 +21,21 @@ export class MatchService {
   
   matchesLoaded: boolean = false;
   
-  constructor(private store: Store<AppStore>, private http: Http) {
+  constructor(private store: Store<AppStore>, private http: Http, private authService: AuthService) {
     this.matches = store.select('matches');
   }
 
-  createMatch(match: Match, id: string) {
-    this.http.post(`${ServerConfig.baseUrl}/game-nights/${id}/matches`, JSON.stringify(match), OPTIONS)
+  createMatch(match: Match, nightId: string) {
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/matches`, JSON.stringify(match), options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.GAME_NIGHT_CREATE_MATCH, payload }))
       .subscribe(action => this.store.dispatch(action));
   }
 
-  updateMatch(match: Match, id: string) {
-    this.http.put(`${ServerConfig.baseUrl}/game-nights/${id}/matches`, JSON.stringify(match), OPTIONS)
+  updateMatch(match: Match, nightId: string) {
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.put(`${ServerConfig.baseUrl}/game-nights/${nightId}/matches`, JSON.stringify(match), options)
       .map(res => res.json())
       .map(payload => ({ type: StoreActions.GAME_NIGHT_UPDATE_MATCH, payload }))
       .subscribe(action => this.store.dispatch(action));

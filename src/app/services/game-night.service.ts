@@ -115,7 +115,7 @@ export class GameNightService {
   }
 
   joinGameNight(user: User, night: GameNight) {
-    var options = new HttpOptions(this.authService.currentUserProfile.UserId);    
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${night.GameNightId}/members`, JSON.stringify(user), options)
       .map(res => res.json())
       .subscribe(payload => {
@@ -124,7 +124,7 @@ export class GameNightService {
   }
 
   addGameNightMember(user: User, nightId: string) {
-    var options = new HttpOptions(this.authService.currentUserProfile.UserId);    
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
     this.http.post(`${ServerConfig.baseUrl}/game-nights/${nightId}/members`, JSON.stringify(user), options)
       .map(res => res.json())      
       .subscribe(payload => {
