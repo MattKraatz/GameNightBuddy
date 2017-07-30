@@ -1,0 +1,15 @@
+<p>
+  activity-list works!
+  <small-loading-indicator *ngIf="!activityLoaded"></small-loading-indicator>
+  <span *ngIf="activities">Activities Loaded</span>
+</p>
+<table>
+  <tr *ngFor="let activity of activities">
+    <td [ngSwitch]="activity.EntityType">
+      <span *ngSwitchCase="'GAME'">
+        <span *ngIf="activity.ActivityType == 'CREATE'">Created a Game: {{activity.EntityId}}</span>
+        <span *ngIf="activity.ActivityType == 'UPDATE'">Updated a Game: {{activity.EntityId}}</span>        
+      </span>
+    </td>
+  </tr>
+</table>

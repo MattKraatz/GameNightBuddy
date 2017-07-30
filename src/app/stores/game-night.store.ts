@@ -1,5 +1,6 @@
 import {GameNight} from '../models/game-night.model';
 import {StoreActions} from '../constants/storeActions';
+import {Activity} from '../models/activity.model';
 
 export const gameNight = (state: GameNight = new GameNight(), {type, payload}) => {
   switch (type) {
@@ -43,6 +44,9 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
       return state.GameNightId === payload.GameNightId ? Object.assign({}, state, payload) : state;
     case 'GAME_NIGHT_DELETE':
       return new GameNight();
+    case StoreActions.GAME_NIGHT_POPULATE_NOTIFICATIONS:
+      state.Notifications = Object.assign(new Array<Activity>(), state.Notifications, payload);
+      return state;
     default:
       return state;
   }

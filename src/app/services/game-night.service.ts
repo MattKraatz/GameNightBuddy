@@ -30,6 +30,7 @@ export class GameNightService {
   nightsLoaded: boolean = false;
   otherNightsLoaded: boolean = false;
   isHost: boolean = false;
+  activityLoaded: boolean = false;
 
   currentGameNight: BehaviorSubject<GameNight>;
 
@@ -138,6 +139,15 @@ export class GameNightService {
       .map(res => res.json())
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_UPDATE_MEMBER, payload });
+      });
+  }
+
+  getNotifications(nightId: string) {
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.get(`${ServerConfig.baseUrl}/game-nights/${nightId}/notifications`, options)
+      .map(res => res.json())
+      .subscribe(payload => {
+        this.store.dispatch({ type: StoreActions.GAME_NIGHT_POPULATE_NOTIFICATIONS, payload: payload })
       });
   }
 }
