@@ -21,9 +21,10 @@ namespace GameNightBuddy_Server.Controllers
       this.nightRepository = nightRepository;
     }
 
-    [HttpGet("my/{userId}")]
-    public IActionResult GetMyGames([FromRoute] Guid userId)
+    [HttpGet("my")]
+    public IActionResult GetMyGames([FromHeader] string uid)
     {
+      var userId = new Guid(uid);
       var games = this.gameRepository.GetMyGames(userId);
       if (games == null)
       {
@@ -46,13 +47,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] GameViewModel vm)
+    public IActionResult Create([FromHeader] string uid, [FromBody] GameViewModel vm)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var userId = new Guid(uid);
       var game = new Game(vm);
 
       this.gameRepository.InsertGame(game);
@@ -66,13 +68,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPut("rating")]
-    public IActionResult UpdateGameRating([FromBody] GameRatingViewModel vm)
+    public IActionResult UpdateGameRating([FromHeader] string uid, [FromBody] GameRatingViewModel vm)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var userId = new Guid(uid);
       var rating = new GameRating(vm);
 
       this.gameRepository.UpdateRating(rating);
@@ -82,13 +85,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost("{nightId}")]
-    public IActionResult CreateAndAddToGameNight([FromBody] GameViewModel vm, [FromRoute] Guid nightId)
+    public IActionResult CreateAndAddToGameNight([FromHeader] string uid, [FromBody] GameViewModel vm, [FromRoute] Guid nightId)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var userId = new Guid(uid);
       var game = new Game(vm);
 
       this.gameRepository.InsertGame(game);
@@ -101,13 +105,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] GameViewModel vm)
+    public IActionResult Update([FromHeader] string uid, [FromBody] GameViewModel vm)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var userId = new Guid(uid);
       var game = new Game(vm);
 
       this.gameRepository.UpdateGame(game);
@@ -121,13 +126,14 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpDelete("rating")]
-    public IActionResult DeleteRating([FromBody] GameRatingViewModel vm)
+    public IActionResult DeleteRating([FromHeader] string uid, [FromBody] GameRatingViewModel vm)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var userId = new Guid(uid);
       throw new NotImplementedException();
 
       //this.gameRepository.DeleteRating(vm);
@@ -137,17 +143,18 @@ namespace GameNightBuddy_Server.Controllers
     }
 
     [HttpPost("recommend")]
-    public IActionResult RecommendGame([FromBody] GameRecRequestViewModel vm)
+    public IActionResult RecommendGame([FromHeader] string uid, [FromBody] GameRecRequestViewModel vm)
     {
       if (vm == null)
       {
         return new BadRequestResult();
       }
 
+      var userId = new Guid(uid);
       var recs = new List<GameViewModel>();
-      bool requesterIsInParty = vm.UserIds.Contains(vm.RequestingUserId);
+      bool requesterIsInParty = vm.UserIds.Contains(userId);
 
-      var games = this.gameRepository.GetGameRecommendations(vm);
+      var games = this.gameRepository.GetGameRecommendations(vm, userId);
 
       if (games.Count() > 0)
       {
@@ -158,11 +165,11 @@ namespace GameNightBuddy_Server.Controllers
           // if requester isn't in party, filter their rating out (for averaging in the constructor) 
           if (!requesterIsInParty)
           {
-            myRating = game.GameRatings.FirstOrDefault(r => r.UserId == vm.RequestingUserId).Rating;
-            game.GameRatings = game.GameRatings.Where(r => r.UserId != vm.RequestingUserId).ToList();
+            myRating = game.GameRatings.FirstOrDefault(r => r.UserId == userId).Rating;
+            game.GameRatings = game.GameRatings.Where(r => r.UserId != userId).ToList();
           }
 
-          var gameVM = new GameViewModel(game, vm.RequestingUserId);
+          var gameVM = new GameViewModel(game, userId);
 
           if (myRating != 0)
           {

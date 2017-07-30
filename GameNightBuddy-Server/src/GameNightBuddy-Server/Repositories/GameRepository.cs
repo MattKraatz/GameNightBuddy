@@ -17,7 +17,7 @@ namespace GameNightBuddy_Server.Repositories
     void UpdateGame(Game game);
     void UpdateRating(GameRating rating);
     void DeleteRating(GameRatingViewModel rating);
-    List<Game> GetGameRecommendations(GameRecRequestViewModel request);
+    List<Game> GetGameRecommendations(GameRecRequestViewModel request, Guid requestingUserId);
     void Save();
   }
 
@@ -95,11 +95,11 @@ namespace GameNightBuddy_Server.Repositories
       throw new NotImplementedException();
     }
 
-    public List<Game> GetGameRecommendations(GameRecRequestViewModel request)
+    public List<Game> GetGameRecommendations(GameRecRequestViewModel request, Guid requestingUserId)
     {
       List<Game> games = null;
       int playerCount = request.UserIds.Count;
-      bool requesterIsInParty = request.UserIds.Contains(request.RequestingUserId);
+      bool requesterIsInParty = request.UserIds.Contains(requestingUserId);
 
       var gameNightGameIds = context.GameNightGames
             .Where(gng => gng.GameNightId == request.GameNightId)
@@ -140,7 +140,7 @@ namespace GameNightBuddy_Server.Repositories
           output.ForEach(g =>
           {
             var requesterGameRating = context.GameRatings
-                        .FirstOrDefault(r => r.UserId == request.RequestingUserId && r.GameId == g.GameId);
+                        .FirstOrDefault(r => r.UserId == requestingUserId && r.GameId == g.GameId);
             if (requesterGameRating != null)
             {
               g.GameRatings.Add(requesterGameRating);
