@@ -11,7 +11,7 @@ namespace GameNightBuddy_Server.Models
     // Foreign Keys
     public Guid UserId { get; set; }
     public User User { get; set; }
-    public Guid GameNightId { get; set; }
+    public Guid? GameNightId { get; set; }
     public GameNight GameNight { get; set; }
 
     public string ActivityType { get; set; }

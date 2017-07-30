@@ -7,8 +7,8 @@ namespace GameNightBuddy_Server.Constants
 {
   public static class Activity
   {
-    public static ActivityTypes ActivityTypes;
-    public static Entities Entities;
+    public static ActivityTypes ActivityTypes = new ActivityTypes();
+    public static Entities Entities = new Entities();
   }
 
   public class ActivityTypes
@@ -22,5 +22,6 @@ namespace GameNightBuddy_Server.Constants
     public string GAME = "GAME";
     public string MEMBER = "MEMBER";
     public string MATCH = "MATCH";
+    public string GAMENIGHT = "GAMENIGHT";
   }
 }

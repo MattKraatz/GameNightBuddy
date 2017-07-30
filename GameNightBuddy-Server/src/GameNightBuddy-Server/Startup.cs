@@ -49,6 +49,7 @@ namespace GameNightBuddy_Server
       services.AddScoped<IGameRepository, GameRepository>();
       services.AddScoped<IMatchRepository, MatchRepository>();
       services.AddScoped<IUserRepository, UserRepository>();
+      services.AddScoped<IActivityRepository, ActivityRepository>();
 
       services.AddCors();
 

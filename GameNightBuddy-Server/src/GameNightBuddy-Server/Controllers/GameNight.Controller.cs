@@ -16,11 +16,13 @@ namespace GameNightBuddy_Server.Controllers
   {
     private readonly IGameNightRepository gameNightRepository;
     private readonly IMatchRepository matchRepo;
+    private readonly IActivityRepository activityRepo;
 
-    public GameNightController(IGameNightRepository gameNightRepository, IMatchRepository matchRepo)
+    public GameNightController(IGameNightRepository gameNightRepository, IMatchRepository matchRepo, IActivityRepository activityRepo)
     {
       this.gameNightRepository = gameNightRepository;
       this.matchRepo = matchRepo;
+      this.activityRepo = activityRepo;
     }
 
     [HttpGet("my")]
@@ -59,6 +61,14 @@ namespace GameNightBuddy_Server.Controllers
       return new ObjectResult(night);
     }
 
+    [HttpGet("{nightId}/notifications")]
+    public IActionResult GetNotifications([FromHeader] string uid, [FromRoute] Guid nightId)
+    {
+      var userId = new Guid(uid);
+      var notifications = this.activityRepo.GetActivitiesByGameNightId(nightId);
+      return new ObjectResult(notifications);
+    }
+
     [HttpPost("{nightId}/members")]
     public IActionResult AddMember([FromHeader] string uid, [FromBody] MemberViewModel vm, [FromRoute] Guid nightId)
     {
@@ -72,6 +82,17 @@ namespace GameNightBuddy_Server.Controllers
 
       member = this.gameNightRepository.InsertMember(member);
       this.gameNightRepository.Save();
+
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.MEMBER,
+        EntityId = member.GameNightMemberId,
+        ActivityType = Constants.Activity.ActivityTypes.CREATE,
+        GameNightId = nightId
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
 
       return new CreatedResult($"game-nights/${nightId}/members", new MemberViewModel(member));
     }
@@ -89,7 +110,16 @@ namespace GameNightBuddy_Server.Controllers
       var member = this.gameNightRepository.GetMember(new Guid(vm.MemberId));
       member.IsHost = vm.IsHost;
 
-      //this.gameNightRepository.UpdateMember(member);
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.MEMBER,
+        EntityId = member.GameNightMemberId,
+        ActivityType = Constants.Activity.ActivityTypes.UPDATE,
+        GameNightId = member.GameNightId
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
 
       this.gameNightRepository.Save();
 
@@ -108,6 +138,17 @@ namespace GameNightBuddy_Server.Controllers
       var game = this.gameNightRepository.InsertGameNightGame(vm.GameId, nightId);
       this.gameNightRepository.Save();
 
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.GAME,
+        EntityId = game.GameId,
+        ActivityType = Constants.Activity.ActivityTypes.CREATE,
+        GameNightId = nightId
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
+
       return new CreatedResult($"game-nights/${nightId}/games", new GameShallowViewModel(game));
     }
 
@@ -122,6 +163,17 @@ namespace GameNightBuddy_Server.Controllers
       var userId = new Guid(uid);
       var match = this.gameNightRepository.InsertMatch(vm, nightId);
       this.gameNightRepository.Save();
+
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.MATCH,
+        EntityId = match.MatchId,
+        ActivityType = Constants.Activity.ActivityTypes.CREATE,
+        GameNightId = nightId
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
 
       vm.MatchId = match.MatchId.ToString();
 
@@ -140,10 +192,19 @@ namespace GameNightBuddy_Server.Controllers
       this.gameNightRepository.UpdateMatch(vm);
       this.gameNightRepository.Save();
 
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.GAME,
+        EntityId = new Guid(vm.MatchId),
+        ActivityType = Constants.Activity.ActivityTypes.UPDATE,
+        GameNightId = nightId
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
+
       var match = this.matchRepo.GetMatch(new Guid(vm.MatchId));
-
       vm = new MatchViewModel(match);
-
       return new CreatedResult($"game-nights/${nightId}/matches", vm);
     }
 
@@ -164,12 +225,23 @@ namespace GameNightBuddy_Server.Controllers
       var member = new GameNightMember(vm.Members.First(), night.GameNightId);
       this.gameNightRepository.InsertMember(member);
       this.gameNightRepository.Save();
-      
+
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.GAMENIGHT,
+        EntityId = night.GameNightId,
+        ActivityType = Constants.Activity.ActivityTypes.CREATE,
+        GameNightId = night.GameNightId
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
+
       return new CreatedResult("game-nights", night);
     }
 
-    [HttpGet]
     // not in use by the client
+    [HttpGet]
     public IActionResult GetAll()
     {
       var nights = this.gameNightRepository.GetGameNights();

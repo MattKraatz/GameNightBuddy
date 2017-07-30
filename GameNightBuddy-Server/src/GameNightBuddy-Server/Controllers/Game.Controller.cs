@@ -14,11 +14,13 @@ namespace GameNightBuddy_Server.Controllers
   {
     private readonly IGameRepository gameRepository;
     private readonly IGameNightRepository nightRepository;
+    private readonly IActivityRepository activityRepo;
 
-    public GameController(IGameRepository gameRepository, IGameNightRepository nightRepository)
+    public GameController(IGameRepository gameRepository, IGameNightRepository nightRepository, IActivityRepository activityRepo)
     {
       this.gameRepository = gameRepository;
       this.nightRepository = nightRepository;
+      this.activityRepo = activityRepo;
     }
 
     [HttpGet("my")]
@@ -98,6 +100,16 @@ namespace GameNightBuddy_Server.Controllers
       this.gameRepository.InsertGame(game);
       this.gameRepository.Save();
 
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.GAME,
+        EntityId = game.GameId,
+        ActivityType = Constants.Activity.ActivityTypes.CREATE
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
+
       var output = this.nightRepository.InsertGameNightGame(game.GameId, nightId);
       this.nightRepository.Save();
 
@@ -117,6 +129,16 @@ namespace GameNightBuddy_Server.Controllers
 
       this.gameRepository.UpdateGame(game);
       this.gameRepository.Save();
+
+      var activity = new Activity()
+      {
+        UserId = userId,
+        EntityType = Constants.Activity.Entities.GAME,
+        EntityId = game.GameId,
+        ActivityType = Constants.Activity.ActivityTypes.UPDATE
+      };
+      this.activityRepo.CreateActivity(activity);
+      this.activityRepo.Save();
 
       var output = new GameShallowViewModel(game)
       {

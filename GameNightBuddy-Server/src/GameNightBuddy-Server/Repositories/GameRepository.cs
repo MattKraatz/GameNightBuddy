@@ -161,6 +161,7 @@ namespace GameNightBuddy_Server.Repositories
       context.SaveChanges();
     }
 
+    // IDisposable Implementation
     private bool disposed = false;
 
     protected virtual void Dispose(bool disposing)
