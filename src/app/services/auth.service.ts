@@ -141,14 +141,6 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  getCurrentUserProfile(): User {
-    var user = this.currentUserProfile;
-    // Remove circular reference
-    user.Games = new Array<Game>();
-    user.GameNights = new Array<GameNight>();
-    return user;
-  }
-
   validateProfile(user: User): boolean {
       var output = false;
       if (user.FirstName && user.FirstName.length > 0 &&
