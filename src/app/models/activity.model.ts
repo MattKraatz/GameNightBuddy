@@ -1,3 +1,4 @@
+import {User} from './user.model';
 
 export class Activity {
   ActivityId: number;
@@ -7,4 +8,6 @@ export class Activity {
   EntityType: string;
   EntityId: string;
   DateCreated: Date;
+  Entity: any;
+  User: User;
 }

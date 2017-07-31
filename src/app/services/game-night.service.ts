@@ -18,6 +18,7 @@ import {Player} from '../models/player.model';
 import {ServerConfig} from '../constants/serverConfig';
 import {StoreActions} from '../constants/storeActions';
 import {HttpOptions} from '../models/http-options.model';
+import {Activity} from '../models/activity.model';
 
 @Injectable()
 export class GameNightService {
@@ -146,8 +147,29 @@ export class GameNightService {
     var options = new HttpOptions(this.authService.currentUserProfile.UserId);
     this.http.get(`${ServerConfig.baseUrl}/game-nights/${nightId}/notifications`, options)
       .map(res => res.json())
+      .map(res => this.populateActivityEntities(res))
       .subscribe(payload => {
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_POPULATE_NOTIFICATIONS, payload: payload })
       });
+  }
+
+  private populateActivityEntities(activities: Activity[]){
+    activities.forEach(activity => {
+      activity.User = this.currentGameNight.value.Members.find(m => m.UserId == activity.UserId);
+      switch(activity.EntityType){
+        case "GAME":
+          activity.Entity = this.currentGameNight.value.Games.find(g => g.GameId == activity.EntityId);
+          break;
+        case "MEMBER":
+          activity.Entity = this.currentGameNight.value.Members.find(m => m.MemberId == activity.EntityId);
+          break;
+        case "MATCH":
+          activity.Entity = this.currentGameNight.value.Matches.find(m => m.MatchId == activity.EntityId);
+          break;
+        default:
+          break;
+      }
+    })
+    return activities;
   }
 }

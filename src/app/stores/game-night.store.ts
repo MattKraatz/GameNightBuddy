@@ -45,8 +45,8 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case 'GAME_NIGHT_DELETE':
       return new GameNight();
     case StoreActions.GAME_NIGHT_POPULATE_NOTIFICATIONS:
-      state.Notifications = Object.assign(new Array<Activity>(), state.Notifications, payload);
-      return state;
+      state.Notifications = payload;
+      return Object.assign({}, state);
     default:
       return state;
   }
