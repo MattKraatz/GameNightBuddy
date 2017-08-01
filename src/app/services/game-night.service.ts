@@ -31,7 +31,7 @@ export class GameNightService {
   nightsLoaded: boolean = false;
   otherNightsLoaded: boolean = false;
   isHost: boolean = false;
-  activityLoaded: boolean = false;
+  activityLoaded: BehaviorSubject<boolean>;
 
   currentGameNight: BehaviorSubject<GameNight>;
 
@@ -39,6 +39,8 @@ export class GameNightService {
     this.gameNight = store.select("gameNight");
     this.myGameNights = store.select("myGameNights");
     this.otherGameNights = store.select("otherGameNights");
+
+    this.activityLoaded = new BehaviorSubject<boolean>(false);
 
     this.gameNight.subscribe(n => {
       if (this.currentGameNight == undefined) {
@@ -52,6 +54,8 @@ export class GameNightService {
   }
 
   loadGameNight(id: string) {
+    if (this.nightLoaded) this.store.dispatch({type: StoreActions.GAME_NIGHT_DELETE, payload: {}});
+    if (this.activityLoaded.value) this.activityLoaded.next(false);
     if (!this.nightLoaded || id != this.currentGameNight.value.GameNightId) {
       var options = new HttpOptions(this.authService.currentUserProfile.UserId);      
       this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`, options)
@@ -149,6 +153,7 @@ export class GameNightService {
       .map(res => res.json())
       .map(res => this.populateActivityEntities(res))
       .subscribe(payload => {
+        this.activityLoaded.next(true);
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_POPULATE_NOTIFICATIONS, payload: payload })
       });
   }

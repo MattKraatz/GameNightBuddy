@@ -1,5 +1,8 @@
 <div class="explore-game-night-list">
-  <table class="table">
+  <div *ngIf="gameNights?.length == 0">
+    <p>Looks like there aren't any more game nights to join, nice job! How about checking in on any of your existing game nights over <a routerLink="/my-game-nights">here</a>.</p>
+  </div>
+  <table *ngIf="gameNights?.length > 0" class="table">
     <thead>
       <tr>
         <th>Name</th>
