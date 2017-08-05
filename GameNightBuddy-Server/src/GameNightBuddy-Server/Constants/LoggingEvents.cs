@@ -11,6 +11,7 @@ namespace GameNightBuddy_Server.Constants
     public const int GetUser = 1000;
     public const int UpdateUser = 1001;
     public const int QueryUsers = 1002;
+    public const int InsertUser = 1003;
 
     // GameNight events
     public const int GetMyGameNights = 2000;
@@ -28,6 +29,16 @@ namespace GameNightBuddy_Server.Constants
     public const int CreateGameNight = 2012;
     public const int DeactiveGameNight = 2013;
     public const int UpdateGameNight = 2014;
+
+    // Game events
+    public const int GetMyGames = 3000;
+    public const int CreateGame = 3001;
+    public const int UpdateGameRating = 3002;
+    public const int CreateGameAndAddToGameNight = 3003;
+    public const int UpdateGame = 3004;
+    public const int DeleteGameRating = 3005;
+    public const int GetGameRecommendation = 3006;
+    public const int DeactivateGame = 3007;
 
     // Save events
     public const int Save = 5000;

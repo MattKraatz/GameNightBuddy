@@ -55,7 +55,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new NoContentResult();
       }
     }
@@ -72,7 +71,6 @@ namespace GameNightBuddy_Server.Controllers
         if (nights == null)
         {
           _logger.LogInformation(LoggingEvents.GetFailed, "No OTHER Game Nights found for user: {ID}", uid);
-
           return new NoContentResult();
         }
         return new ObjectResult(nights);
@@ -80,7 +78,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -93,7 +90,6 @@ namespace GameNightBuddy_Server.Controllers
       if (nightId == Guid.Empty)
       {
         _logger.LogWarning(LoggingEvents.InvalidInput, "No NightId provided");
-
         return new BadRequestResult();
       }
 
@@ -110,7 +106,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -123,7 +118,6 @@ namespace GameNightBuddy_Server.Controllers
       if (nightId == Guid.Empty)
       {
         _logger.LogWarning(LoggingEvents.InvalidInput, "No NightId provided");
-
         return new BadRequestResult();
       }
 
@@ -136,7 +130,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -177,7 +170,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -219,7 +211,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -258,7 +249,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new NoContentResult();
       }
     }
@@ -299,7 +289,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -340,7 +329,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -385,7 +373,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
@@ -410,7 +397,6 @@ namespace GameNightBuddy_Server.Controllers
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-
         return new BadRequestResult();
       }
     }
