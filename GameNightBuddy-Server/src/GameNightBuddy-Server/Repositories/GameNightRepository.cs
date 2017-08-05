@@ -313,7 +313,11 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var game = new GameNightGame { GameId = gameId, GameNightId = nightId };
+        // Make sure this game doesn't already exist in the collection
+        var game = context.GameNightGames.FirstOrDefault(g => g.GameNightId == nightId && g.GameId == gameId);
+        if (game != null) return game;
+
+        game = new GameNightGame { GameId = gameId, GameNightId = nightId };
         context.GameNightGames.Add(game);
 
         game.Game = context.Games

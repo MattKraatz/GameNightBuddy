@@ -40,6 +40,10 @@ namespace GameNightBuddy_Server.Constants
     public const int GetGameRecommendation = 3006;
     public const int DeactivateGame = 3007;
 
+    // Activity events
+    public const int CreateActivity = 6000;
+    public const int GetActivityByGameNight = 6001;
+
     // Save events
     public const int Save = 5000;
 
