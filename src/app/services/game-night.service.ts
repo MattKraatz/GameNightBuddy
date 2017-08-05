@@ -18,6 +18,7 @@ import {Player} from '../models/player.model';
 import {ServerConfig} from '../constants/serverConfig';
 import {StoreActions} from '../constants/storeActions';
 import {HttpOptions} from '../models/http-options.model';
+import {Activity} from '../models/activity.model';
 
 @Injectable()
 export class GameNightService {
@@ -30,7 +31,7 @@ export class GameNightService {
   nightsLoaded: boolean = false;
   otherNightsLoaded: boolean = false;
   isHost: boolean = false;
-  activityLoaded: boolean = false;
+  activityLoaded: BehaviorSubject<boolean>;
 
   currentGameNight: BehaviorSubject<GameNight>;
 
@@ -38,6 +39,8 @@ export class GameNightService {
     this.gameNight = store.select("gameNight");
     this.myGameNights = store.select("myGameNights");
     this.otherGameNights = store.select("otherGameNights");
+
+    this.activityLoaded = new BehaviorSubject<boolean>(false);
 
     this.gameNight.subscribe(n => {
       if (this.currentGameNight == undefined) {
@@ -51,6 +54,8 @@ export class GameNightService {
   }
 
   loadGameNight(id: string) {
+    if (this.nightLoaded) this.store.dispatch({type: StoreActions.GAME_NIGHT_DELETE, payload: {}});
+    if (this.activityLoaded.value) this.activityLoaded.next(false);
     if (!this.nightLoaded || id != this.currentGameNight.value.GameNightId) {
       var options = new HttpOptions(this.authService.currentUserProfile.UserId);      
       this.http.get(`${ServerConfig.baseUrl}/game-nights/${id}`, options)
@@ -146,8 +151,30 @@ export class GameNightService {
     var options = new HttpOptions(this.authService.currentUserProfile.UserId);
     this.http.get(`${ServerConfig.baseUrl}/game-nights/${nightId}/notifications`, options)
       .map(res => res.json())
+      .map(res => this.populateActivityEntities(res))
       .subscribe(payload => {
+        this.activityLoaded.next(true);
         this.store.dispatch({ type: StoreActions.GAME_NIGHT_POPULATE_NOTIFICATIONS, payload: payload })
       });
+  }
+
+  private populateActivityEntities(activities: Activity[]){
+    activities.forEach(activity => {
+      activity.User = this.currentGameNight.value.Members.find(m => m.UserId == activity.UserId);
+      switch(activity.EntityType){
+        case "GAME":
+          activity.Entity = this.currentGameNight.value.Games.find(g => g.GameId == activity.EntityId);
+          break;
+        case "MEMBER":
+          activity.Entity = this.currentGameNight.value.Members.find(m => m.MemberId == activity.EntityId);
+          break;
+        case "MATCH":
+          activity.Entity = this.currentGameNight.value.Matches.find(m => m.MatchId == activity.EntityId);
+          break;
+        default:
+          break;
+      }
+    })
+    return activities;
   }
 }

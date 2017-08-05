@@ -1,4 +1,9 @@
 <h4>My Game Nights</h4>
-<app-game-night-list [gameNights]="gameNights | async"></app-game-night-list>
+<div *ngIf="(gameNights | async)?.length == 0">
+  <p>Doesn't look like you're a part of any Game Nights yet... how about <a routerLink="/explore">joining an existing one</a>? Or create your own Game Night below.</p>
+</div>
+<div *ngIf="(gameNights | async)?.length != 0">
+  <app-game-night-list [gameNights]="gameNights | async"></app-game-night-list>  
+</div>
 <h4>Host a New Group</h4>
 <app-game-night-registration></app-game-night-registration>

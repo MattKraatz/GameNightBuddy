@@ -45,7 +45,10 @@
   <div class="row">
     <div class="col">
       <h4>Recent Activity</h4>
-      <app-activity-list [activities]="activities | async"></app-activity-list>
+      <div *ngIf="activityLoaded && (!activities || activities?.length == 0)">
+        <p>No recent activity</p>
+      </div>
+      <app-activity-list *ngIf="activityLoaded" [activities]="activities"></app-activity-list>
     </div>
   </div>
 </div>

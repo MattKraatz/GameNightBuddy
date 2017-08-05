@@ -11,10 +11,8 @@ import {Activity} from '../../../models/activity.model';
 export class ActivityListComponent implements OnInit {
 
   @Input() activities: Activity[];
-  activityLoaded: boolean;
 
   constructor(private gameNightService: GameNightService) {
-    this.activityLoaded = this.gameNightService.activityLoaded;
   }
 
   ngOnInit() {
