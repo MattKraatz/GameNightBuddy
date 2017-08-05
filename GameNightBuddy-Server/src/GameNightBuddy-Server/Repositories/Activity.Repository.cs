@@ -34,7 +34,7 @@ namespace GameNightBuddy_Server.Repositories
     {
       var games = this.context.GameNightGames.Where(g => g.GameNightId == nightId).ToList();
       return this.context.Activities.Where(a => a.GameNightId == nightId ||
-          (a.EntityType == Constants.Activity.Entities.GAME && games.FindIndex(g => g.GameId == a.EntityId) > -1))
+          (a.EntityType == Activities.Entities.GAME && games.FindIndex(g => g.GameId == a.EntityId) > -1))
           .ToList();
     }
 

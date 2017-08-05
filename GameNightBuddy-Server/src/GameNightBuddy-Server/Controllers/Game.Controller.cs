@@ -1,4 +1,5 @@
-﻿using GameNightBuddy_Server.Models;
+﻿using GameNightBuddy_Server.Constants;
+using GameNightBuddy_Server.Models;
 using GameNightBuddy_Server.Repositories;
 using GameNightBuddy_Server.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -103,9 +104,9 @@ namespace GameNightBuddy_Server.Controllers
       var activity = new Activity()
       {
         UserId = userId,
-        EntityType = Constants.Activity.Entities.GAME,
+        EntityType = Activities.Entities.GAME,
         EntityId = game.GameId,
-        ActivityType = Constants.Activity.ActivityTypes.CREATE
+        ActivityType = Activities.ActivityTypes.CREATE
       };
       this.activityRepo.CreateActivity(activity);
       this.activityRepo.Save();
@@ -133,9 +134,9 @@ namespace GameNightBuddy_Server.Controllers
       var activity = new Activity()
       {
         UserId = userId,
-        EntityType = Constants.Activity.Entities.GAME,
+        EntityType = Activities.Entities.GAME,
         EntityId = game.GameId,
-        ActivityType = Constants.Activity.ActivityTypes.UPDATE
+        ActivityType = Activities.ActivityTypes.UPDATE
       };
       this.activityRepo.CreateActivity(activity);
       this.activityRepo.Save();
