@@ -24,6 +24,11 @@ td {
 
 .welcome-message {
   text-align: center;
+  margin-top: 12px;
+}
+
+#activity {
+  margin-top: 12px;
 }
 
 .host-names {
