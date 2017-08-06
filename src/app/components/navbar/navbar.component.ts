@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
   }
 
   constructor(private authService: AuthService, private navbarService: NavbarService) {
-    authService.isUserLoading.subscribe(b => {
+    navbarService.isContentLoading.subscribe(b => {
       this.isLoading = b
     });
     navbarService.MainNavbarExpanded.subscribe(b => {

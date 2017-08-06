@@ -14,6 +14,7 @@ import {GameNight} from '../models/game-night.model';
 import {LoginViewModel} from '../viewmodels/login.viewmodel';
 import {ServerConfig} from '../constants/serverConfig';
 import {StoreActions} from '../constants/storeActions';
+import {NavbarService} from '../services/navbar.service';
 
 const HEADER = { headers: new Headers({ 'Content-Type': 'application/json' }) };
 
@@ -27,14 +28,13 @@ export class AuthService {
   currentUserProfile: User;
   userLoaded: boolean = false;
 
-  isUserLoading: Subject<boolean> = new Subject<boolean>();
   emailLoginError: Subject<string> = new Subject<string>();
   emailRegisterError: Subject<string> = new Subject<string>();
 
   userSearch: Observable<User[]>;
   
   constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http,
-      private router: Router) {
+      private router: Router, private navbarService: NavbarService) {
     this.user = store.select("auth");
     this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
@@ -53,14 +53,14 @@ export class AuthService {
       }
       else {
         // user not logged in
-        this.isUserLoading.next(false);
+        this.navbarService.isContentLoading.next(false);
         this.store.dispatch({type: "LOGOUT_USER", payload: new User()});
       }
     })
   }
 
   getAuthRecordFromDB(auth: Auth) {
-    this.isUserLoading.next(true);
+    this.navbarService.isContentLoading.next(true);
     this.http.post(`${ServerConfig.baseUrl}/users`, JSON.stringify(auth), HEADER)
         .map(res => res.json())
         .map(res => {
@@ -73,7 +73,7 @@ export class AuthService {
           return {type: StoreActions.LOGIN_USER, payload: user}
         })
         .subscribe(action => {
-          this.isUserLoading.next(false);
+          this.navbarService.isContentLoading.next(false);
           this.store.dispatch(action)
         });
   }

@@ -49,6 +49,9 @@
         <p>No recent activity</p>
       </div>
       <app-activity-list *ngIf="activityLoaded" [activities]="activities"></app-activity-list>
+      <div *ngIf="!activityLoaded">
+        <p><i>Loading...</i></p>
+      </div>
     </div>
   </div>
 </div>

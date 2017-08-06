@@ -36,6 +36,15 @@ button {
   animation: Indicator-spin infinite 1s linear;
 }
 
+#nav-item-loading-indicator {
+  display: inherit;
+  padding-top: 16px;
+}
+
+#brand-loading-indicator {
+  display: none;
+}
+
 @media (max-width: 415px) {
   #game-night-name {
     margin-right: 58px;
@@ -44,9 +53,17 @@ button {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .nav-link {
     text-align: right;
+  }
+
+  #nav-item-loading-indicator {
+    display: none;
+  }
+
+  #brand-loading-indicator {
+    display: inherit;
   }
 }
 

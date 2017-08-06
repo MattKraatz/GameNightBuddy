@@ -4,7 +4,7 @@
   </button>
   <a class="navbar-brand" href="">
     Game Night Buddy
-    <small-loading-indicator *ngIf="isLoading"></small-loading-indicator>
+     <small-loading-indicator *ngIf="isLoading" id="brand-loading-indicator"></small-loading-indicator> 
   </a>
   <div class="collapse navbar-collapse" [ngClass]="navbarClasses" id="navbarToggleControl">
     <ul class="navbar-nav mr-auto">
@@ -13,6 +13,11 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" *ngIf="user && user.UserId" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>
+      </li>
+      <li class="nav-item" *ngIf="isLoading" id="nav-item-loading-indicator">
+        <a class="nav-link">
+          <small-loading-indicator></small-loading-indicator>
+        </a>
       </li>
     </ul>
     <ul class="navbar-nav">

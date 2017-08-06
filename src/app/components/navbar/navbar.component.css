@@ -1,12 +1,28 @@
 a.disabled {
-    color: gray;
-    cursor: not-allowed;
-    text-decoration: underline;
+  color: gray;
+  cursor: not-allowed;
+  text-decoration: underline;
+}
+
+#nav-item-loading-indicator {
+  display: inherit;
+}
+
+#brand-loading-indicator {
+  display: none;
 }
 
 @media (max-width: 768px) {
-    small-loading-indicator {
-        float: right;
-        margin: 0 50px 0 0;
-    }
+  small-loading-indicator {
+    float: right;
+    margin: 0 50px 0 0;
+  }
+  
+  #nav-item-loading-indicator {
+    display: none;
+  }
+
+  #brand-loading-indicator {
+    display: inherit;
+  }
 }

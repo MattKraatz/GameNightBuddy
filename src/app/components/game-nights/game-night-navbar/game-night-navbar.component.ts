@@ -19,6 +19,7 @@ export class GameNightNavbarComponent implements OnInit {
   _gameNight: Observable<GameNight>;
 
   isReloading: boolean = false;
+  isContentLoading: boolean = false;
 
   navbarClasses = {
     show: false
@@ -28,6 +29,9 @@ export class GameNightNavbarComponent implements OnInit {
     navbarService.GameNightNavbarExpanded.subscribe(b => {
       this.navbarClasses.show = b
     });
+    navbarService.isGameNightContentLoading.subscribe(b => {
+      this.isContentLoading = b;
+    })
   }
 
   ngOnInit() {

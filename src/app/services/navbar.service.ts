@@ -7,9 +7,14 @@ export class NavbarService {
   public MainNavbarExpanded: BehaviorSubject<boolean>;
   public GameNightNavbarExpanded: BehaviorSubject<boolean>;
 
+  public isContentLoading: BehaviorSubject<boolean>;
+  public isGameNightContentLoading: BehaviorSubject<boolean>;
+
   constructor() {
     this.MainNavbarExpanded = new BehaviorSubject(false);
     this.GameNightNavbarExpanded = new BehaviorSubject(false);
+    this.isContentLoading = new BehaviorSubject(false);
+    this.isGameNightContentLoading = new BehaviorSubject(false);    
   }
 
   public toggleMainNavbar(){
