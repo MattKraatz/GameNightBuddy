@@ -43,12 +43,15 @@
     </div>
   </div>
   <div class="row">
-    <div class="col">
+    <div class="col" id="activity">
       <h4>Recent Activity</h4>
       <div *ngIf="activityLoaded && (!activities || activities?.length == 0)">
         <p>No recent activity</p>
       </div>
       <app-activity-list *ngIf="activityLoaded" [activities]="activities"></app-activity-list>
+      <div *ngIf="!activityLoaded">
+        <p><i>Loading...</i></p>
+      </div>
     </div>
   </div>
 </div>

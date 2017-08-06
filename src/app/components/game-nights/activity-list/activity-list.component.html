@@ -14,7 +14,11 @@
             <span *ngIf="i < activity.Entity.Players.length - 1">{{player.DisplayName}}, </span>            
             <span *ngIf="i == activity.Entity.Players.length - 1">and {{player.DisplayName}} </span>
           </span>
-          played <a routerLink="matches/{{activity.EntityId}}">{{activity.Entity.Game.Name}}</a></span>
+          played <a routerLink="matches/{{activity.EntityId}}">{{activity.Entity.Game.Name}}</a>
+        </span>
+        <span *ngIf="activity.ActivityType == 'UPDATE'">{{activity.DateCreated | date}} | 
+          A host updated <a routerLink="matches/{{activity.EntityId}}">this match</a> of <a routerLink="collection/{{activity.Entity.Game.GameId}}">{{activity.Entity.Game.Name}}</a>
+        </span>
       </div>
     </td>
   </tr>

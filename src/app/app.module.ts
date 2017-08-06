@@ -66,6 +66,7 @@ import {MatchDetailComponent} from './components/matches/match-detail/match-deta
 import {GameDropdownComponent} from './components/collection/game-dropdown/game-dropdown.component';
 import {ExploreGameNightListComponent} from './components/explore/explore-game-night-list/explore-game-night-list.component';
 import {SmallLoadingIndicatorComponent} from './components/global/small-loading-indicator/small-loading-indicator.component';
+import {SmallLoadingIndicatorDarkComponent} from './components/global/small-loading-indicator-dark/small-loading-indicator-dark.component';
 import {MatchInfoComponent} from './components/matches/match-info/match-info.component';
 import {GameDetailComponent} from './components/collection/game-detail/game-detail.component';
 import {GameInfoComponent} from './components/collection/game-info/game-info.component';
@@ -111,6 +112,7 @@ const authConfig = {
     GameDropdownComponent,
     ExploreGameNightListComponent,
     SmallLoadingIndicatorComponent,
+    SmallLoadingIndicatorDarkComponent,
     MatchInfoComponent,
     GameDetailComponent,
     GameInfoComponent,

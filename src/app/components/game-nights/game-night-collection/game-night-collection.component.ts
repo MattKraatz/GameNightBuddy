@@ -29,7 +29,8 @@ export class GameNightCollectionComponent implements OnInit {
 
       var otherGames = this.authService.currentUserProfile.Games.filter(g => {
         if (night.Games.length) {
-          return night.Games.findIndex(c => c.GameId == g.GameId) < 0;
+          // return games that do not sure the same GameId or the same name
+          return night.Games.findIndex(c => c.GameId == g.GameId || c.Name.toUpperCase() == g.Name.toUpperCase()) < 0;
         } else {
           return true;
         }

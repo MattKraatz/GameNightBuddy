@@ -1,2 +1,9 @@
-<h2>Join Other Game Nights!</h2>
-<app-explore-game-night-list [gameNights]="gameNights | async" (joinNight)="joinNight($event)" (refreshExplore)="refreshExplore()"></app-explore-game-night-list>
+<div id="explore">
+  <h4>Join Other Game Nights!</h4>
+  <div *ngIf="(isLoading | async) == false">
+    <app-explore-game-night-list [gameNights]="gameNights | async" (joinNight)="joinNight($event)" (refreshExplore)="refreshExplore()"></app-explore-game-night-list>
+  </div>
+  <div *ngIf="(isLoading | async) == true">
+    <p><i>Loading...</i></p>
+  </div>
+</div>

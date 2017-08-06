@@ -13,9 +13,11 @@ import {AuthService} from '../../../services/auth.service';
 export class MyGameNightsComponent implements OnInit {
 
   gameNights: Observable<Array<GameNight>>;
+  isLoading: Observable<boolean>;
 
   constructor(private gameNightService: GameNightService, private authService: AuthService) {
     this.gameNights = gameNightService.myGameNights;
+    this.isLoading = gameNightService.isMyGameNightsLoading.asObservable();
     gameNightService.loadMyGameNights();
   }
 

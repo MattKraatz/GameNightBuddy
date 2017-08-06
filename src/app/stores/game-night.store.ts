@@ -7,7 +7,7 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case "GAME_NIGHT_POPULATE_NIGHT":
       return payload;
     case 'GAME_NIGHT_CREATE_GAME':
-      state.Games.push(payload);
+      state.Games.unshift(payload);
       return state;
     case 'GAME_NIGHT_DELETE_GAME':
       state.Games = state.Games.filter(g => {
@@ -20,7 +20,7 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
       })
       return state;
     case StoreActions.GAME_NIGHT_CREATE_MEMBER:
-      state.Members.push(payload);
+      state.Members.unshift(payload);
       return state;
     case 'GAME_NIGHT_DELETE_MEMBER':
       state.Members = state.Members.filter(m => {
@@ -28,7 +28,7 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
       });
       return state;
     case 'GAME_NIGHT_CREATE_MATCH':
-      state.Matches.push(payload);
+      state.Matches.unshift(payload);
       return state;
     case StoreActions.GAME_NIGHT_UPDATE_MATCH:
       state.Matches = state.Matches.map(m => {
