@@ -5,4 +5,9 @@
 Index.html:
  - uncomment CDN tags, comment out local sources
  - uncomment Adsense head tags
- - make sure serverConfig is pointing to Azure
+
+serverConfig.ts:
+ - set proxy to Azure
+
+environmnt.ts:
+ - set environment to production
