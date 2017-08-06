@@ -5,42 +5,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameNightBuddy_Server.Constants;
+using Microsoft.Extensions.Logging;
 
 namespace GameNightBuddy_Server.Repositories
 {
   public interface IActivityRepository : IDisposable
   {
-    Models.Activity CreateActivity(Models.Activity model);
-    List<Models.Activity> GetActivitiesByGameNightId(Guid nightId);
+    Activity CreateActivity(Activity model);
+    List<Activity> GetActivitiesByGameNightId(Guid nightId);
     void Save();
   }
 
   public class ActivityRepository : IActivityRepository
   {
     private Context context;
+    private readonly ILogger _logger;
 
-    public ActivityRepository(Context context)
+    public ActivityRepository(Context context, ILogger<ActivityRepository> logger)
     {
       this.context = context;
+      this._logger = logger;
     }
 
-    public Models.Activity CreateActivity(Models.Activity model)
+    public Activity CreateActivity(Activity model)
     {
-      this.context.Activities.Add(model);
-      return model;
+      if (model == null) return new Activity();
+      _logger.LogInformation(LoggingEvents.CreateActivity, "Starting CreateActivity {timestamp}", DateTime.Now);
+
+      try
+      {
+        this.context.Activities.Add(model);
+
+        _logger.LogInformation(LoggingEvents.CreateActivity, "Ending CreateActivity {timestamp}", DateTime.Now);
+        return model;
+      }
+      catch(Exception ex)
+      {
+        _logger.LogError(LoggingEvents.CreateActivity, ex, "CreateActivity ERROR at {timestamp}", DateTime.Now);
+        return new Activity();
+      }
     }
 
-    public List<Models.Activity> GetActivitiesByGameNightId(Guid nightId)
+    public List<Activity> GetActivitiesByGameNightId(Guid nightId)
     {
       var games = this.context.GameNightGames.Where(g => g.GameNightId == nightId).ToList();
       return this.context.Activities.Where(a => a.GameNightId == nightId ||
-          (a.EntityType == Constants.Activity.Entities.GAME && games.FindIndex(g => g.GameId == a.EntityId) > -1))
+          (a.EntityType == Activities.Entities.GAME && games.FindIndex(g => g.GameId == a.EntityId) > -1))
+          .OrderByDescending(a => a.DateCreated)
           .ToList();
     }
 
     public void Save()
     {
-      context.SaveChanges();
+      try
+      {
+        context.SaveChanges();
+        _logger.LogInformation(LoggingEvents.Save, "Save successful at {timestamp}", DateTime.Now);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.SaveError, ex, "Saving ERROR at {timestamp}", DateTime.Now);
+      }
     }
 
     // IDisposable Implementation

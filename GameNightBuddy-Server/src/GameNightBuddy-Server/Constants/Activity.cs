@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.Constants
 {
-  public static class Activity
+  public static class Activities
   {
     public static ActivityTypes ActivityTypes = new ActivityTypes();
     public static Entities Entities = new Entities();

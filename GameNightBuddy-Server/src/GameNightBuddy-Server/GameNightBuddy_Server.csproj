@@ -10,6 +10,8 @@
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <ApplicationInsightsResourceId>/subscriptions/e30d9a70-1bd5-46ee-befe-371b246ae50b/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/GameNightBuddy-Server</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/e30d9a70-1bd5-46ee-befe-371b246ae50b/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/GameNightBuddy-Server</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Data" Version="1.0.0-beta1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.2" />
     <PackageReference Include="RecurrentTasks" Version="3.0.0-beta1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-preview1-24591" />
@@ -48,6 +50,10 @@
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Service References" />
   </ItemGroup>
 
 </Project>
