@@ -314,7 +314,7 @@ namespace GameNightBuddy_Server.Controllers
         var activity = new Activity()
         {
           UserId = userId,
-          EntityType = Activities.Entities.GAME,
+          EntityType = Activities.Entities.MATCH,
           EntityId = new Guid(vm.MatchId),
           ActivityType = Activities.ActivityTypes.UPDATE,
           GameNightId = nightId
