@@ -118,9 +118,7 @@ export const appRoutes: Routes = [
   {path: 'email-auth', component: EmailAuthComponent},
   // 404/REDIRECT
   {
-    path: '**',
-    canActivate: [AuthGuard, ProfileCompleteGuard],
-    component: HomeComponent
+    path: '**', component: HomeComponent
   },
   // DEFAULT
   {path: '', component: HomeComponent}
