@@ -72,6 +72,9 @@ import {GameDetailComponent} from './components/collection/game-detail/game-deta
 import {GameInfoComponent} from './components/collection/game-info/game-info.component';
 import {GameRecommenderComponent} from './components/collection/game-recommender/game-recommender.component';
 import { ActivityListComponent } from './components/game-nights/activity-list/activity-list.component';
+import { AboutComponent } from './component/about/about.component';
+import { PrivacyComponent } from './component/privacy/privacy.component';
+import { ContactComponent } from './component/contact/contact.component';
 
 
 // Default Authorization Config for AngularFireModule
@@ -117,7 +120,10 @@ const authConfig = {
     GameDetailComponent,
     GameInfoComponent,
     GameRecommenderComponent,
-    ActivityListComponent
+    ActivityListComponent,
+    AboutComponent,
+    PrivacyComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

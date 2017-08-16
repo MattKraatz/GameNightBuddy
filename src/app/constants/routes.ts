@@ -28,6 +28,9 @@ import {MatchDetailComponent} from '../components/matches/match-detail/match-det
 import {ExploreGameNightListComponent} from '../components/explore/explore-game-night-list/explore-game-night-list.component';
 import {GameDetailComponent} from '../components/collection/game-detail/game-detail.component';
 import {GameRecommenderComponent} from '../components/collection/game-recommender/game-recommender.component';
+import {AboutComponent} from '../component/about/about.component';
+import {PrivacyComponent} from '../component/privacy/privacy.component';
+import {ContactComponent} from '../component/contact/contact.component';
 
 export const appRoutes: Routes = [
   // GAME NIGHTS
@@ -116,6 +119,9 @@ export const appRoutes: Routes = [
     component: LoginComponent
   },
   {path: 'email-auth', component: EmailAuthComponent},
+  {path: 'about', component: AboutComponent},
+  {path: 'privacy', component: PrivacyComponent},
+  {path: 'contact', component: ContactComponent},  
   // 404/REDIRECT
   {
     path: '**', component: HomeComponent
