@@ -1,5 +1,5 @@
 <table class="table">
-  <tr *ngFor="let activity of activities">
+  <tr *ngFor="let activity of activities | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
     <td [ngSwitch]="activity.EntityType">
       <div *ngSwitchCase="'GAME'">
         <span *ngIf="activity.ActivityType == 'CREATE'">{{activity.DateCreated | date}} | {{activity.User.DisplayName}} created a game: <a routerLink="collection/{{activity.EntityId}}">{{activity.Entity.Name}}</a></span>
@@ -23,3 +23,6 @@
     </td>
   </tr>
 </table>
+<div id="page-control">
+  <pagination-controls *ngIf="activities.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>
+</div>

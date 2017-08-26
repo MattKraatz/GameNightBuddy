@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
 import {Location} from '@angular/common';
 import {Observable} from 'rxjs';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 import {Match} from '../../../models/match.model';
 import {Member} from '../../../models/member.model';
@@ -28,6 +29,7 @@ export class GameDetailComponent implements OnInit {
   nightId: string;
 
   constructor(private route: ActivatedRoute, private location: Location,
+      private modalService: NgbModal,
       private gameNightService: GameNightService, private collectionService: CollectionService,
       private authService: AuthService) {
     // grab the id from route params
@@ -61,15 +63,6 @@ export class GameDetailComponent implements OnInit {
   ngOnInit() {
   }
 
-  back(){
-    this.location.back();
-  }
-
-  toggleEdit(){
-    var bool = this.isEditing;
-    this.isEditing = bool === true ? false : true;
-  }
-
   updateGame(model: Game){
     var game = new Game(model);
     this.game = game;
@@ -79,9 +72,51 @@ export class GameDetailComponent implements OnInit {
     this.isEditing = false;
   }
 
+  deleteGame(){
+    console.log("deleting ", this.gameId);
+  }
+
+  // Back button
+  back(){
+    this.location.back();
+  }
+
+  // Edit button
+  toggleEdit(){
+    var bool = this.isEditing;
+    this.isEditing = bool === true ? false : true;
+  }
+
+  // Cancel button
   cancelEdit() {
     this.gameModel = JSON.parse(JSON.stringify(this.game));
     this.isEditing = false;
+  }
+
+  // Delete modal
+  closeResult: string;
+
+  confirmDelete(content) {
+    this.modalService.open(content).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+      if (result == "Delete"){
+        this.deleteGame();
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+
+
   }
 
 }

@@ -10,6 +10,10 @@ import {Activity} from '../../../models/activity.model';
 })
 export class ActivityListComponent implements OnInit {
 
+  // PAGINATION
+  page: number = 1;
+  itemsPerPage: number = 10;
+
   @Input() activities: Activity[];
 
   constructor(private gameNightService: GameNightService) {

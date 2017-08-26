@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 import {NgxPaginationModule} from 'ngx-pagination';
 import {StarRatingModule} from 'angular-star-rating';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 // Private Keys
 import {firebaseConfig} from './constants/firebaseConfig';
@@ -71,10 +72,10 @@ import {MatchInfoComponent} from './components/matches/match-info/match-info.com
 import {GameDetailComponent} from './components/collection/game-detail/game-detail.component';
 import {GameInfoComponent} from './components/collection/game-info/game-info.component';
 import {GameRecommenderComponent} from './components/collection/game-recommender/game-recommender.component';
-import { ActivityListComponent } from './components/game-nights/activity-list/activity-list.component';
-import { AboutComponent } from './component/about/about.component';
-import { PrivacyComponent } from './component/privacy/privacy.component';
-import { ContactComponent } from './component/contact/contact.component';
+import {ActivityListComponent} from './components/game-nights/activity-list/activity-list.component';
+import {AboutComponent} from './component/about/about.component';
+import {PrivacyComponent} from './component/privacy/privacy.component';
+import {ContactComponent} from './component/contact/contact.component';
 
 
 // Default Authorization Config for AngularFireModule
@@ -133,7 +134,8 @@ const authConfig = {
     StoreModule.provideStore({user, collection, matches, gameNight, myGameNights, otherGameNights}),
     AngularFireModule.initializeApp(firebaseConfig, authConfig),
     NgxPaginationModule,
-    StarRatingModule
+    StarRatingModule,
+    NgbModule.forRoot()
   ],
   providers: [
     CollectionService,
