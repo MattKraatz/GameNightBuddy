@@ -2,7 +2,10 @@
   <h3>Match Detail</h3>
   <app-match-info [match]="match"></app-match-info>
 
-  <button class="btn btn-primary" (click)="toggleEdit()">Edit</button>
+  <div *ngIf="isHost">
+    <button class="btn btn-primary" (click)="toggleEdit()">Edit</button>
+    <button class="btn btn-danger" (click)="confirmDelete(content)">Delete</button>
+  </div>
   <button class="btn btn-secondary" (click)="back()">Go Back</button>
 
 </div>
@@ -11,3 +14,21 @@
   <app-match-form [members]="members" [games]="collection" [match]="matchModel" (addMatch)="updateMatch($event)"></app-match-form>
   <button class="btn btn-danger btn-block" id="cancel-edit" (click)="cancelEdit()">Cancel</button>
 </div>
+
+<!-- CONFIRM DELETE MODAL -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Delete</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this game?</p>
+    <p><i>This cannot be undone.</i></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="c('Delete')">Delete</button>
+  </div>
+</ng-template>

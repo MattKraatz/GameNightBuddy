@@ -115,8 +115,6 @@ export class GameDetailComponent implements OnInit {
     } else {
       return  `with: ${reason}`;
     }
-
-
   }
 
 }

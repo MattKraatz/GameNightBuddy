@@ -1,24 +1,44 @@
 <table class="table">
-    <thead>
-      <tr>
-        <th>Date Joined</th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let member of members | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-        <td>{{member.DateJoined | date }}</td>
-        <td>
-          {{member.DisplayName}}
-          <button *ngIf="isHost && !member.IsHost" (click)="promoteMember(member)"
-            class="btn btn-info float-right">
+  <thead>
+    <tr>
+      <th>Date Joined</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let member of members | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+      <td>{{member.DateJoined | date }}</td>
+      <td>
+        {{member.DisplayName}}
+        <div class="float-right">
+          <button *ngIf="isHost && !member.IsHost" class="btn btn-danger" (click)="confirmRemove(content, member)">Remove</button>
+          <button *ngIf="isHost && !member.IsHost" (click)="promoteMember(member)" class="btn btn-info ">
             Promote
           </button>
-          <button *ngIf="member.IsHost" class="btn btn-info float-right" disabled>Host</button>          
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div id="page-control">
-    <pagination-controls *ngIf="members.length > itemsPerPage" (pageChange)="page = $event"></pagination-controls>    
-  </div>
+          <button *ngIf="member.IsHost " class="btn btn-info " disabled>Host</button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div id="page-control ">
+  <pagination-controls *ngIf="members.length> itemsPerPage" (pageChange)="page = $event"></pagination-controls>
+</div>
+
+
+<!-- CONFIRM DELETE MODAL -->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Confirm Remove</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to remove this member?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="c('Delete')">Remove</button>
+    </div>
+  </ng-template>

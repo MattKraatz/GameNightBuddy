@@ -1,14 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
-import {Location} from '@angular/common';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { Location } from '@angular/common';
+import { Observable } from 'rxjs';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
-import {Match} from '../../../models/match.model';
-import {Member} from '../../../models/member.model';
-import {Game} from '../../../models/game.model';
-import {GameNight} from '../../../models/game-night.model';
-import {GameNightService} from '../../../services/game-night.service';
-import {MatchService} from '../../../services/match.service';
+import { Match } from '../../../models/match.model';
+import { Member } from '../../../models/member.model';
+import { Game } from '../../../models/game.model';
+import { GameNight } from '../../../models/game-night.model';
+import { GameNightService } from '../../../services/game-night.service';
+import { MatchService } from '../../../services/match.service';
 
 @Component({
   selector: 'app-match-detail',
@@ -28,7 +29,8 @@ export class MatchDetailComponent implements OnInit {
   matchId: string;
 
   constructor(private route: ActivatedRoute, private location: Location,
-      private gameNightService: GameNightService, private matchService: MatchService) {
+    private modalService: NgbModal,
+    private gameNightService: GameNightService, private matchService: MatchService) {
     // grab the id from route params
     this.matchId = route.snapshot.params['matchId'];
 
@@ -49,16 +51,20 @@ export class MatchDetailComponent implements OnInit {
   ngOnInit() {
   }
 
-  back(){
+  deleteMatch(){
+    console.log("deleting ", this.matchId);
+  }
+
+  back() {
     this.location.back();
   }
 
-  toggleEdit(){
+  toggleEdit() {
     var bool = this.isEditing;
     this.isEditing = bool === true ? false : true;
   }
 
-  updateMatch(model: Match){
+  updateMatch(model: Match) {
     var match = new Match(model);
     this.match = match;
     this.matchModel = JSON.parse(JSON.stringify(match));
@@ -70,6 +76,30 @@ export class MatchDetailComponent implements OnInit {
   cancelEdit() {
     this.matchModel = JSON.parse(JSON.stringify(this.match));
     this.isEditing = false;
+  }
+
+  // Delete modal
+  closeResult: string;
+
+  confirmDelete(content) {
+    this.modalService.open(content).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+      if (result == "Delete") {
+        this.deleteMatch();
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
 }
