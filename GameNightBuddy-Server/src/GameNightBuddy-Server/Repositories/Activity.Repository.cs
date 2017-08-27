@@ -48,7 +48,7 @@ namespace GameNightBuddy_Server.Repositories
 
     public List<Activity> GetActivitiesByGameNightId(Guid nightId)
     {
-      var games = this.context.GameNightGames.Where(g => g.GameNightId == nightId).ToList();
+      var games = this.context.GameNightGames.Where(g => g.GameNightId == nightId && g.IsActive).ToList();
       return this.context.Activities.Where(a => a.GameNightId == nightId ||
           (a.EntityType == Activities.Entities.GAME && games.FindIndex(g => g.GameId == a.EntityId) > -1))
           .OrderByDescending(a => a.DateCreated)

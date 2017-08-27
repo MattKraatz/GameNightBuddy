@@ -206,24 +206,7 @@ namespace GameNightBuddy_Server.Controllers
         return new NoContentResult();
       }
     }
-
-    [HttpDelete("rating")]
-    public IActionResult DeleteRating([FromHeader] string uid, [FromBody] GameRatingViewModel vm)
-    {
-      if (vm == null)
-      {
-        return new BadRequestResult();
-      }
-
-      var userId = new Guid(uid);
-      throw new NotImplementedException();
-
-      //this.gameRepository.DeleteRating(vm);
-      //this.gameRepository.Save();
-
-      //return new OkResult();
-    }
-
+    
     [HttpPost("recommend")]
     public IActionResult RecommendGame([FromHeader] string uid, [FromBody] GameRecRequestViewModel vm)
     {
@@ -268,6 +251,50 @@ namespace GameNightBuddy_Server.Controllers
         }
 
         return new ObjectResult(recs);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        return new NoContentResult();
+      }
+    }
+
+    [HttpDelete("{gameId}")]
+    public IActionResult DeleteGame([FromHeader] string uid, [FromRoute] Guid gameId)
+    {
+      _logger.LogInformation(LoggingEvents.UpdateGame, "User {uid} is deleting Game {gameId}", uid, gameId);
+
+      if (gameId == null)
+      {
+        _logger.LogWarning(LoggingEvents.UpdateGame, "gameId is null");
+        return new BadRequestResult();
+      }
+
+      try
+      {
+        var userId = new Guid(uid);
+
+        var game = this.gameRepository.GetMyGames(userId).SingleOrDefault(g => g.GameId == gameId);
+        if (game == null)
+        {
+          _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to delete this game");
+          return new BadRequestResult();
+        }
+
+        this.gameRepository.DeactivateGame(gameId);
+        this.gameRepository.Save();
+
+        var activity = new Activity()
+        {
+          UserId = userId,
+          EntityType = Activities.Entities.GAME,
+          EntityId = gameId,
+          ActivityType = Activities.ActivityTypes.DEACTIVATE
+        };
+        this.activityRepo.CreateActivity(activity);
+        this.activityRepo.Save();
+
+        return new OkResult();
       }
       catch (Exception ex)
       {

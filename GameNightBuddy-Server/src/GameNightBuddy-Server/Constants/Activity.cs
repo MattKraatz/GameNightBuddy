@@ -15,6 +15,7 @@ namespace GameNightBuddy_Server.Constants
   {
     public string CREATE = "CREATE";
     public string UPDATE = "UPDATE";
+    public string DEACTIVATE = "DEACTIVATE";
   }
 
   public class Entities

@@ -42,6 +42,14 @@ namespace GameNightBuddy_Server.Repositories
         var game = context.Games.SingleOrDefault(n => n.GameId == gameId);
         game.IsActive = false;
         context.Entry(game).State = EntityState.Modified;
+
+        var gameNightGames = context.GameNightGames.Where(gng => gng.GameId == gameId).ToList();
+        gameNightGames.ForEach(gng =>
+        {
+          gng.IsActive = false;
+          context.Entry(gng).State = EntityState.Modified;
+        });
+
         _logger.LogInformation(LoggingEvents.DeactivateGame, "Ending DeactivateGame {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
@@ -58,7 +66,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var games = context.Games.Where(g => g.UserId == id)
+        var games = context.Games.Where(g => g.UserId == id && g.IsActive)
             .Include(g => g.User)
             .Include(g => g.GameRatings);
 

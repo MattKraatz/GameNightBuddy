@@ -336,7 +336,7 @@ namespace GameNightBuddy_Server.Controllers
     [HttpPost]
     public IActionResult Create([FromHeader] string uid, [FromBody] GameNightViewModel vm)
     {
-      _logger.LogInformation(LoggingEvents.GetOtherGameNights, "User {ID} is creating a GameNight", uid);
+      _logger.LogInformation(LoggingEvents.GetOtherGameNights, "User {uid} is creating a GameNight", uid);
 
       if (vm == null)
       {
@@ -369,6 +369,60 @@ namespace GameNightBuddy_Server.Controllers
         this.activityRepo.Save();
 
         return new CreatedResult("game-nights", night);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        return new BadRequestResult();
+      }
+    }
+
+    [HttpDelete]
+    public IActionResult Delete([FromHeader] string uid, [FromRoute] Guid nightId)
+    {
+      _logger.LogInformation(LoggingEvents.GetOtherGameNights, "User {uid} is deleting GameNight {nightId}", uid, nightId);
+
+      if (nightId == null)
+      {
+        _logger.LogWarning(LoggingEvents.InvalidInput, "nightId is null");
+
+        return new BadRequestResult();
+      }
+
+      try
+      {
+        var userId = new Guid(uid);
+
+        // get this user's game nights, check for host status
+        var gameNight = this.gameNightRepository.GetMyGameNights(userId).SingleOrDefault(n => n.GameNightId == nightId);
+        // if user does not have access to this gameNight, return badRequest
+        if (gameNight == null) {
+          _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to delete this gameNight");
+          return new BadRequestResult();
+        }
+        var host = gameNight.Members.SingleOrDefault(m => m.UserId == userId && m.IsHost);
+        // if user does not have host priveleges on this gameNight, return badRequest
+        if (host == null)
+        {
+          _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to delete this gameNight");
+          return new BadRequestResult();
+        }
+
+        this.gameNightRepository.DeactivateGameNight(nightId);
+        this.gameNightRepository.Save();
+
+        var activity = new Activity()
+        {
+          UserId = userId,
+          EntityType = Activities.Entities.GAMENIGHT,
+          EntityId = nightId,
+          ActivityType = Activities.ActivityTypes.DEACTIVATE,
+          GameNightId = nightId
+        };
+        this.activityRepo.CreateActivity(activity);
+        this.activityRepo.Save();
+
+        return new OkResult();
       }
       catch (Exception ex)
       {

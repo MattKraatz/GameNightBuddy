@@ -45,7 +45,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var gameNights = context.GameNights.ToList();
+        var gameNights = context.GameNights.Where(n => n.IsActive).ToList();
 
         _logger.LogInformation(LoggingEvents.GetAllGameNights, "Ending GetGameNights {timestamp}", DateTime.Now);
         return gameNights;
@@ -66,7 +66,7 @@ namespace GameNightBuddy_Server.Repositories
       try
       {
         var nights = context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
-        var output = context.GameNights.Where(n => !nights.Contains(n.GameNightId)).ToList();
+        var output = context.GameNights.Where(n => !nights.Contains(n.GameNightId) && n.IsActive).ToList();
 
         _logger.LogInformation(LoggingEvents.GetOtherGameNights, "Ending GetOtherGameNights {timestamp}", DateTime.Now);
         return output;
@@ -87,8 +87,8 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var nights = context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
-        var output = context.GameNights.Where(n => nights.Contains(n.GameNightId))
+        var nights = context.GameNightMembers.Where(m => m.UserId == userId && m.IsActive).Select(m => m.GameNightId);
+        var output = context.GameNights.Where(n => nights.Contains(n.GameNightId) && n.IsActive)
             .Include(n => n.Members)
               .ThenInclude(m => m.User)
             .ToList();
@@ -111,26 +111,27 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var night = context.GameNights
-          // Full Member Tree
-          .Include(n => n.Members)
-            .ThenInclude(m => m.User)
-          // Full Match Tree
-          .Include(n => n.Matches)
-            .ThenInclude(m => m.Players)
-              .ThenInclude(p => p.Member)
-                .ThenInclude(m => m.User)
-          .Include(n => n.Matches)
-            .ThenInclude(m => m.Game)
-              .ThenInclude(g => g.User)
-          .FirstOrDefault(n => n.GameNightId == nightId);
-
+        var night = context.GameNights.FirstOrDefault(n => n.GameNightId == nightId);
+        // Full Member Tree
+        night.Members = context.GameNightMembers
+          .Include(m => m.User)
+          .Where(m => m.GameNightId == night.GameNightId && m.IsActive).ToList();
+        // Full Match Tree
+        night.Matches = context.Matches
+          .Include(m => m.Players)
+            .ThenInclude(p => p.Member)
+              .ThenInclude(m => m.User)
+          .Include(m => m.Game)
+            .ThenInclude(g => g.User)
+          .Where(m => m.GameNightId == night.GameNightId)
+          .Where(m => m.IsActive).ToList();
+        // Full Game Tree
         night.Games = context.GameNightGames
           .Include(gng => gng.Game)
             .ThenInclude(g => g.User)
           .Include(gng => gng.Game)
             .ThenInclude(g => g.GameRatings)
-          .Where(g => g.GameNightId == nightId)
+          .Where(g => g.GameNightId == nightId && g.IsActive && g.Game.IsActive)
           .ToList();
 
         // only provide ratings from group members
@@ -141,7 +142,6 @@ namespace GameNightBuddy_Server.Repositories
         });
 
         var vm = new GameNightViewModel(night, userId);
-
         vm.Games.ForEach(g =>
         {
           var myRating = night.Games

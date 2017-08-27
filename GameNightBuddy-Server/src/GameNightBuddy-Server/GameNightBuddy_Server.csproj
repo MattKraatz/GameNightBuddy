@@ -11,7 +11,7 @@
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
     <ApplicationInsightsResourceId>/subscriptions/e30d9a70-1bd5-46ee-befe-371b246ae50b/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/GameNightBuddy-Server</ApplicationInsightsResourceId>
-    <ApplicationInsightsAnnotationResourceId>/subscriptions/e30d9a70-1bd5-46ee-befe-371b246ae50b/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/GameNightBuddy-Server</ApplicationInsightsAnnotationResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/e30d9a70-1bd5-46ee-befe-371b246ae50b/resourceGroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/GameNightBuddy-Server</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
   <ItemGroup>
