@@ -29,6 +29,7 @@ namespace GameNightBuddy_Server.Constants
     public const int CreateGameNight = 2012;
     public const int DeactiveGameNight = 2013;
     public const int UpdateGameNight = 2014;
+    public const int DeactivateMember = 2015;
 
     // Game events
     public const int GetMyGames = 3000;

@@ -15,7 +15,7 @@ namespace GameNightBuddy_Server.Repositories
     IEnumerable<GameNight> GetGameNights();
     IEnumerable<GameNight> GetMyGameNights(Guid userId);
     IEnumerable<GameNight> GetOtherGameNights(Guid userId);
-    GameNightViewModel LoadGameNightByID(Guid nightId, Guid userId);
+    GameNightViewModel LoadGameNightById(Guid nightId, Guid userId);
     Guid InsertGameNight(GameNight night);
     GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
     GameNightMember InsertMember(GameNightMember member);
@@ -31,12 +31,12 @@ namespace GameNightBuddy_Server.Repositories
 
   public class GameNightRepository : IGameNightRepository, IDisposable
   {
-    private Context context;
+    private readonly Context _context;
     private readonly ILogger _logger;
 
     public GameNightRepository(Context context, ILogger<GameNightRepository> logger)
     {
-      this.context = context;
+      this._context = context;
       this._logger = logger;
     }
 
@@ -46,7 +46,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var gameNights = context.GameNights.Where(n => n.IsActive).ToList();
+        var gameNights = _context.GameNights.Where(n => n.IsActive).ToList();
 
         _logger.LogInformation(LoggingEvents.GetAllGameNights, "Ending GetGameNights {timestamp}", DateTime.Now);
         return gameNights;
@@ -66,8 +66,8 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var nights = context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
-        var output = context.GameNights.Where(n => !nights.Contains(n.GameNightId) && n.IsActive).ToList();
+        var nights = _context.GameNightMembers.Where(m => m.UserId == userId).Select(m => m.GameNightId);
+        var output = _context.GameNights.Where(n => !nights.Contains(n.GameNightId) && n.IsActive).ToList();
 
         _logger.LogInformation(LoggingEvents.GetOtherGameNights, "Ending GetOtherGameNights {timestamp}", DateTime.Now);
         return output;
@@ -88,11 +88,17 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var nights = context.GameNightMembers.Where(m => m.UserId == userId && m.IsActive).Select(m => m.GameNightId);
-        var output = context.GameNights.Where(n => nights.Contains(n.GameNightId) && n.IsActive)
+        var nights = _context.GameNightMembers.Where(m => m.UserId == userId && m.IsActive).Select(m => m.GameNightId);
+        var output = _context.GameNights.Where(n => nights.Contains(n.GameNightId) && n.IsActive)
             .Include(n => n.Members)
               .ThenInclude(m => m.User)
             .ToList();
+
+        // filter out inactive members
+        output.ForEach(n =>
+        {
+          n.Members = n.Members.Where(m => m.IsActive).ToList();
+        });
 
         _logger.LogInformation(LoggingEvents.GetMyGameNights, "Ending GetMyGameNights {timestamp}", DateTime.Now);
         return output;
@@ -104,7 +110,7 @@ namespace GameNightBuddy_Server.Repositories
       }
     }
 
-    public GameNightViewModel LoadGameNightByID(Guid nightId, Guid userId)
+    public GameNightViewModel LoadGameNightById(Guid nightId, Guid userId)
     {
       // handle null values
       if (nightId == Guid.Empty || userId == Guid.Empty) return new GameNightViewModel();
@@ -112,13 +118,13 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var night = context.GameNights.FirstOrDefault(n => n.GameNightId == nightId);
+        var night = _context.GameNights.FirstOrDefault(n => n.GameNightId == nightId);
         // Full Member Tree
-        night.Members = context.GameNightMembers
+        night.Members = _context.GameNightMembers
           .Include(m => m.User)
           .Where(m => m.GameNightId == night.GameNightId && m.IsActive).ToList();
         // Full Match Tree
-        night.Matches = context.Matches
+        night.Matches = _context.Matches
           .Include(m => m.Players)
             .ThenInclude(p => p.Member)
               .ThenInclude(m => m.User)
@@ -127,7 +133,7 @@ namespace GameNightBuddy_Server.Repositories
           .Where(m => m.GameNightId == night.GameNightId)
           .Where(m => m.IsActive).ToList();
         // Full Game Tree
-        night.Games = context.GameNightGames
+        night.Games = _context.GameNightGames
           .Include(gng => gng.Game)
             .ThenInclude(g => g.User)
           .Include(gng => gng.Game)
@@ -149,7 +155,7 @@ namespace GameNightBuddy_Server.Repositories
             .First(gm => gm.GameId.ToString() == g.GameId)
             .Game.GameRatings.FirstOrDefault(r => r.UserId == userId);
 
-          g.MyRating = myRating != null ? myRating.Rating : 0;
+          g.MyRating = myRating?.Rating ?? 0;
         });
 
         _logger.LogInformation(LoggingEvents.GetGameNightById, "Ending LoadGameNightByID {timestamp}", DateTime.Now);
@@ -174,14 +180,14 @@ namespace GameNightBuddy_Server.Repositories
         {
           GameNightId = nightId
         };
-        context.Matches.Add(match);
+        _context.Matches.Add(match);
         foreach (PlayerViewModel pvm in vm.Players)
         {
           var player = new MatchPlayer(pvm)
           {
             MatchId = match.MatchId
           };
-          context.MatchPlayers.Add(player);
+          _context.MatchPlayers.Add(player);
 
         }
 
@@ -206,21 +212,22 @@ namespace GameNightBuddy_Server.Repositories
         var update = new Match(vm);
 
         // update match properties
-        var match = context.Matches.FirstOrDefault(m => m.MatchId == new Guid(vm.MatchId));
+        var match = _context.Matches.FirstOrDefault(m => m.MatchId == new Guid(vm.MatchId));
         match.GameId = update.GameId;
         match.Date = update.Date;
 
-        var players = context.MatchPlayers.Where(mp => mp.MatchId == match.MatchId).ToList();
+        var players = _context.MatchPlayers.Where(mp => mp.MatchId == match.MatchId).ToList();
 
         // remove any players as needed
-        var deletedPlayers = players.Where(p => vm.Players.FindIndex(u => u.MemberId == p.GameNightMemberId.ToString()) < 0);
-        context.MatchPlayers.RemoveRange(deletedPlayers);
+        var deletedPlayers = players.Where(p => vm.Players.FindIndex(u => u.MemberId == p.GameNightMemberId.ToString()) < 0).ToList();
+        _context.MatchPlayers.RemoveRange(deletedPlayers);
         players = players.Where(p => !deletedPlayers.Contains(p)).ToList();
 
         // edit any existing players
         players.ForEach(p =>
         {
           var player = vm.Players.FirstOrDefault(up => up.MemberId == p.GameNightMemberId.ToString());
+          if (player == null) return;
           p.FirstTimer = player.FirstTime;
           p.Score = player.Score;
           p.Team = player.Team;
@@ -235,7 +242,7 @@ namespace GameNightBuddy_Server.Repositories
           {
             MatchId = match.MatchId
           };
-          context.MatchPlayers.Add(player);
+          _context.MatchPlayers.Add(player);
         });
 
         _logger.LogInformation(LoggingEvents.UpdateMatch, "Ending UpdateMatch {timestamp}", DateTime.Now);
@@ -257,7 +264,7 @@ namespace GameNightBuddy_Server.Repositories
       try
       {
         // check for existing game night member and re-activate instead
-        var dbMember = context.GameNightMembers.Include(m => m.User).FirstOrDefault(m => m.UserId == member.UserId && m.GameNightId == member.GameNightId);
+        var dbMember = _context.GameNightMembers.Include(m => m.User).FirstOrDefault(m => m.UserId == member.UserId && m.GameNightId == member.GameNightId);
         if (dbMember != null)
         {
           dbMember.IsActive = true;
@@ -265,8 +272,8 @@ namespace GameNightBuddy_Server.Repositories
           return dbMember;
         }
 
-        context.GameNightMembers.Add(member);
-        member.User = context.Users.FirstOrDefault(u => u.UserId == member.UserId);
+        _context.GameNightMembers.Add(member);
+        member.User = _context.Users.FirstOrDefault(u => u.UserId == member.UserId);
 
         _logger.LogInformation(LoggingEvents.AddMember, "Ending InsertMember {timestamp}", DateTime.Now);
         return member;
@@ -286,7 +293,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        context.Entry(member).State = EntityState.Modified;
+        _context.Entry(member).State = EntityState.Modified;
         _logger.LogInformation(LoggingEvents.UpdateMember, "Ending UpdateMember {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
@@ -298,14 +305,14 @@ namespace GameNightBuddy_Server.Repositories
     public void DeactivateMember(Guid memberId)
     {
       // handle null values
-      if (memberId == null) return;
+      if (memberId == Guid.Empty) return;
       _logger.LogInformation(LoggingEvents.UpdateMember, "Starting DeactivateMember {timestamp}", DateTime.Now);
 
       try
       {
-        var member = context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == memberId);
+        var member = _context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == memberId);
         member.IsActive = false;
-        context.Entry(member).State = EntityState.Modified;
+        _context.Entry(member).State = EntityState.Modified;
         _logger.LogInformation(LoggingEvents.UpdateMember, "Ending DeactivateMember {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
@@ -322,7 +329,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var member = context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == id);
+        var member = _context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == id);
 
         _logger.LogInformation(LoggingEvents.GetMember, "Ending GetMember {timestamp}", DateTime.Now);
         return member;
@@ -343,13 +350,13 @@ namespace GameNightBuddy_Server.Repositories
       try
       {
         // Make sure this game doesn't already exist in the collection
-        var game = context.GameNightGames.FirstOrDefault(g => g.GameNightId == nightId && g.GameId == gameId);
+        var game = _context.GameNightGames.FirstOrDefault(g => g.GameNightId == nightId && g.GameId == gameId);
         if (game != null) return game;
 
         game = new GameNightGame { GameId = gameId, GameNightId = nightId };
-        context.GameNightGames.Add(game);
+        _context.GameNightGames.Add(game);
 
-        game.Game = context.Games
+        game.Game = _context.Games
           .Include(g => g.User)
           .FirstOrDefault(g => g.GameId == game.GameId);
 
@@ -371,7 +378,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        context.GameNights.Add(night);
+        _context.GameNights.Add(night);
 
         _logger.LogInformation(LoggingEvents.CreateGameNight, "Ending InsertGameNight {timestamp}", DateTime.Now);
         return night.GameNightId;
@@ -391,9 +398,9 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var night = context.GameNights.SingleOrDefault(n => n.GameNightId == nightId);
+        var night = _context.GameNights.SingleOrDefault(n => n.GameNightId == nightId);
         night.IsActive = false;
-        context.Entry(night).State = EntityState.Modified;
+        _context.Entry(night).State = EntityState.Modified;
         _logger.LogInformation(LoggingEvents.DeactiveGameNight, "Ending DeactiveGameNight {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
@@ -410,7 +417,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        context.Entry(night).State = EntityState.Modified;
+        _context.Entry(night).State = EntityState.Modified;
         _logger.LogInformation(LoggingEvents.UpdateGameNight, "Ending UpdateGameNight {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
@@ -423,7 +430,7 @@ namespace GameNightBuddy_Server.Repositories
     {
       try
       {
-        context.SaveChanges();
+        _context.SaveChanges();
         _logger.LogInformation(LoggingEvents.Save, "Save successful at {timestamp}", DateTime.Now);
       }
       catch(Exception ex)
@@ -432,18 +439,18 @@ namespace GameNightBuddy_Server.Repositories
       }
     }
 
-    private bool disposed = false;
+    private bool _disposed = false;
 
     protected virtual void Dispose(bool disposing)
     {
-      if (!this.disposed)
+      if (!this._disposed)
       {
         if (disposing)
         {
-          context.Dispose();
+          _context.Dispose();
         }
       }
-      this.disposed = true;
+      this._disposed = true;
     }
 
     public void Dispose()

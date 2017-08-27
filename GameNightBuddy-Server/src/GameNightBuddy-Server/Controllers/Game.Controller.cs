@@ -14,17 +14,17 @@ namespace GameNightBuddy_Server.Controllers
   [Route("api/v1/games")]
   public class GameController
   {
-    private readonly IGameRepository gameRepository;
-    private readonly IGameNightRepository nightRepository;
-    private readonly IActivityRepository activityRepo;
+    private readonly IGameRepository _gameRepository;
+    private readonly IGameNightRepository _nightRepository;
+    private readonly IActivityRepository _activityRepo;
     private readonly ILogger _logger;
 
     public GameController(IGameRepository gameRepository, IGameNightRepository nightRepository, IActivityRepository activityRepo,
                           ILogger<GameController> logger)
     {
-      this.gameRepository = gameRepository;
-      this.nightRepository = nightRepository;
-      this.activityRepo = activityRepo;
+      this._gameRepository = gameRepository;
+      this._nightRepository = nightRepository;
+      this._activityRepo = activityRepo;
       this._logger = logger;
     }
 
@@ -36,7 +36,7 @@ namespace GameNightBuddy_Server.Controllers
       try
       {
         var userId = new Guid(uid);
-        var games = this.gameRepository.GetMyGames(userId);
+        var games = this._gameRepository.GetMyGames(userId);
         if (games == null)
         {
           _logger.LogInformation(LoggingEvents.GetFailed, "No  Games found for user: {ID}", uid);
@@ -80,8 +80,8 @@ namespace GameNightBuddy_Server.Controllers
         var userId = new Guid(uid);
         var game = new Game(vm);
 
-        this.gameRepository.InsertGame(game);
-        this.gameRepository.Save();
+        this._gameRepository.InsertGame(game);
+        this._gameRepository.Save();
 
         var output = new GameShallowViewModel(game)
         {
@@ -112,8 +112,8 @@ namespace GameNightBuddy_Server.Controllers
         var userId = new Guid(uid);
         var rating = new GameRating(vm);
 
-        this.gameRepository.UpdateRating(rating);
-        this.gameRepository.Save();
+        this._gameRepository.UpdateRating(rating);
+        this._gameRepository.Save();
 
         return new CreatedResult("ratings", vm);
       }
@@ -140,8 +140,8 @@ namespace GameNightBuddy_Server.Controllers
         var userId = new Guid(uid);
         var game = new Game(vm);
 
-        this.gameRepository.InsertGame(game);
-        this.gameRepository.Save();
+        this._gameRepository.InsertGame(game);
+        this._gameRepository.Save();
 
         var activity = new Activity()
         {
@@ -150,11 +150,11 @@ namespace GameNightBuddy_Server.Controllers
           EntityId = game.GameId,
           ActivityType = Activities.ActivityTypes.CREATE
         };
-        this.activityRepo.CreateActivity(activity);
-        this.activityRepo.Save();
+        this._activityRepo.CreateActivity(activity);
+        this._activityRepo.Save();
 
-        var output = this.nightRepository.InsertGameNightGame(game.GameId, nightId);
-        this.nightRepository.Save();
+        var output = this._nightRepository.InsertGameNightGame(game.GameId, nightId);
+        this._nightRepository.Save();
 
         return new CreatedResult("games", new GameShallowViewModel(output));
       }
@@ -181,8 +181,8 @@ namespace GameNightBuddy_Server.Controllers
         var userId = new Guid(uid);
         var game = new Game(vm);
 
-        this.gameRepository.UpdateGame(game);
-        this.gameRepository.Save();
+        this._gameRepository.UpdateGame(game);
+        this._gameRepository.Save();
 
         var activity = new Activity()
         {
@@ -191,8 +191,8 @@ namespace GameNightBuddy_Server.Controllers
           EntityId = game.GameId,
           ActivityType = Activities.ActivityTypes.UPDATE
         };
-        this.activityRepo.CreateActivity(activity);
-        this.activityRepo.Save();
+        this._activityRepo.CreateActivity(activity);
+        this._activityRepo.Save();
 
         var output = new GameShallowViewModel(game)
         {
@@ -224,9 +224,9 @@ namespace GameNightBuddy_Server.Controllers
         var recs = new List<GameViewModel>();
         bool requesterIsInParty = vm.UserIds.Contains(userId);
 
-        var games = this.gameRepository.GetGameRecommendations(vm, userId);
+        var games = this._gameRepository.GetGameRecommendations(vm, userId);
 
-        if (games.Count() > 0)
+        if (games.Any())
         {
           foreach (Game game in games)
           {
@@ -235,17 +235,14 @@ namespace GameNightBuddy_Server.Controllers
             // if requester isn't in party, filter their rating out (for averaging in the constructor) 
             if (!requesterIsInParty)
             {
-              myRating = game.GameRatings.FirstOrDefault(r => r.UserId == userId).Rating;
+              var rating = game.GameRatings.FirstOrDefault(r => r.UserId == userId);
+              // store requester's rating for display on UI
+              if (rating != null) myRating = rating.Rating;
               game.GameRatings = game.GameRatings.Where(r => r.UserId != userId).ToList();
             }
 
             var gameVM = new GameViewModel(game, userId);
-
-            if (myRating != 0)
-            {
-              gameVM.MyRating = myRating;
-            }
-
+            if (myRating != 0) gameVM.MyRating = myRating;
             recs.Add(gameVM);
           }
         }
@@ -264,7 +261,7 @@ namespace GameNightBuddy_Server.Controllers
     {
       _logger.LogInformation(LoggingEvents.UpdateGame, "User {uid} is deleting Game {gameId}", uid, gameId);
 
-      if (gameId == null)
+      if (gameId == Guid.Empty)
       {
         _logger.LogWarning(LoggingEvents.UpdateGame, "gameId is null");
         return new BadRequestResult();
@@ -274,15 +271,15 @@ namespace GameNightBuddy_Server.Controllers
       {
         var userId = new Guid(uid);
 
-        var game = this.gameRepository.GetMyGames(userId).SingleOrDefault(g => g.GameId == gameId);
+        var game = this._gameRepository.GetMyGames(userId).SingleOrDefault(g => g.GameId == gameId);
         if (game == null)
         {
           _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to delete this game");
           return new BadRequestResult();
         }
 
-        this.gameRepository.DeactivateGame(gameId);
-        this.gameRepository.Save();
+        this._gameRepository.DeactivateGame(gameId);
+        this._gameRepository.Save();
 
         var activity = new Activity()
         {
@@ -291,8 +288,8 @@ namespace GameNightBuddy_Server.Controllers
           EntityId = gameId,
           ActivityType = Activities.ActivityTypes.DEACTIVATE
         };
-        this.activityRepo.CreateActivity(activity);
-        this.activityRepo.Save();
+        this._activityRepo.CreateActivity(activity);
+        this._activityRepo.Save();
 
         return new OkResult();
       }

@@ -34,7 +34,7 @@ namespace GameNightBuddy_Server.Controllers
     {
       _logger.LogInformation(LoggingEvents.UpdateMember, "Removing Match: {ID}", matchId);
 
-      if (matchId == null)
+      if (matchId == Guid.Empty)
       {
         _logger.LogWarning(LoggingEvents.InvalidInput, "matchId is null");
 
@@ -59,8 +59,8 @@ namespace GameNightBuddy_Server.Controllers
           return new BadRequestResult();
         }
         // check for Host priveleges
-        var isHost = gameNight.Members.FirstOrDefault(m => m.UserId == userId && m.IsActive).IsHost;
-        if (!isHost)
+        var member = gameNight.Members.FirstOrDefault(m => m.UserId == userId && m.IsActive);
+        if (member == null || !member.IsHost)
         {
           _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
           return new BadRequestResult();

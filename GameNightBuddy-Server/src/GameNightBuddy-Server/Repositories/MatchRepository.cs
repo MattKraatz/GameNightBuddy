@@ -21,23 +21,23 @@ namespace GameNightBuddy_Server.Repositories
 
   public class MatchRepository : IMatchRepository
   {
-    private Context context;
+    private readonly Context _context;
 
     public MatchRepository(Context context)
     {
-      this.context = context;
+      this._context = context;
     }
 
     public IEnumerable<Match> GetMatches()
     {
-      return context.Matches.ToList();
+      return _context.Matches.ToList();
     }
 
     public IEnumerable<Match> GetMyMatches(Guid id)
     {
-      var members = context.GameNightMembers.Where(m => m.UserId == id).Select(m => m.GameNightMemberId);
-      var players = context.MatchPlayers.Where(p => members.Contains(p.GameNightMemberId)).Select(p => p.MatchId);
-      return context.Matches
+      var members = _context.GameNightMembers.Where(m => m.UserId == id).Select(m => m.GameNightMemberId);
+      var players = _context.MatchPlayers.Where(p => members.Contains(p.GameNightMemberId)).Select(p => p.MatchId);
+      return _context.Matches
         // Full Player Tree
         .Include(m => m.Players)
           .ThenInclude(p => p.Member)
@@ -50,7 +50,7 @@ namespace GameNightBuddy_Server.Repositories
 
     public Match GetMatch(Guid id)
     {
-      var match = context.Matches
+      var match = _context.Matches
         .Include(m => m.Players)
           .ThenInclude(p => p.Member)
             .ThenInclude(m => m.User)
@@ -63,40 +63,40 @@ namespace GameNightBuddy_Server.Repositories
 
     public Match InsertMatch(Match match)
     {
-      context.Matches.Add(match);
+      _context.Matches.Add(match);
 
       return match;
     }
 
     public void DeleteMatch(Match match)
     {
-      var players = context.MatchPlayers.Where(p => p.MatchId == match.MatchId);
-      context.MatchPlayers.RemoveRange(players);
-      context.Matches.Remove(match);
+      var players = _context.MatchPlayers.Where(p => p.MatchId == match.MatchId);
+      _context.MatchPlayers.RemoveRange(players);
+      _context.Matches.Remove(match);
     }
 
     public void UpdateMatch(Match match)
     {
-      context.Entry(match).State = EntityState.Modified;
+      _context.Entry(match).State = EntityState.Modified;
     }
 
     public void Save()
     {
-      context.SaveChanges();
+      _context.SaveChanges();
     }
 
-    private bool disposed = false;
+    private bool _disposed = false;
 
     protected virtual void Dispose(bool disposing)
     {
-      if (!this.disposed)
+      if (!this._disposed)
       {
         if (disposing)
         {
-          context.Dispose();
+          _context.Dispose();
         }
       }
-      this.disposed = true;
+      this._disposed = true;
     }
 
     public void Dispose()
