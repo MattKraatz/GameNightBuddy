@@ -60,7 +60,7 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var memberIds = this.context.GameNightMembers.Where(m => m.GameNightId == nightId).Select(m => m.UserId).ToList();
+        var memberIds = this.context.GameNightMembers.Where(m => m.GameNightId == nightId && m.IsActive).Select(m => m.UserId).ToList();
         query = query.ToLower();
         var users = this.context.Users.Where(u =>
           !memberIds.Contains(u.UserId) &&

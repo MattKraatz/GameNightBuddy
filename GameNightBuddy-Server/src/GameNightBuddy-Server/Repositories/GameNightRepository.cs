@@ -19,6 +19,7 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGameNight(GameNight night);
     GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
     GameNightMember InsertMember(GameNightMember member);
+    void DeactivateMember(Guid memberId);
     GameNightMember GetMember(Guid id);
     void UpdateMember(GameNightMember member);
     Match InsertMatch(MatchViewModel vm, Guid nightId);
@@ -255,6 +256,15 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
+        // check for existing game night member and re-activate instead
+        var dbMember = context.GameNightMembers.Include(m => m.User).FirstOrDefault(m => m.UserId == member.UserId && m.GameNightId == member.GameNightId);
+        if (dbMember != null)
+        {
+          dbMember.IsActive = true;
+          _logger.LogInformation(LoggingEvents.AddMember, "Ending InsertMember, Reactivated Existing Member {memberId} {timestamp}", dbMember.GameNightMemberId, DateTime.Now);
+          return dbMember;
+        }
+
         context.GameNightMembers.Add(member);
         member.User = context.Users.FirstOrDefault(u => u.UserId == member.UserId);
 
@@ -282,6 +292,25 @@ namespace GameNightBuddy_Server.Repositories
       catch (Exception ex)
       {
         _logger.LogError(LoggingEvents.UpdateMember, ex, "UpdateMember ERROR at {timestamp}", DateTime.Now);
+      }
+    }
+
+    public void DeactivateMember(Guid memberId)
+    {
+      // handle null values
+      if (memberId == null) return;
+      _logger.LogInformation(LoggingEvents.UpdateMember, "Starting DeactivateMember {timestamp}", DateTime.Now);
+
+      try
+      {
+        var member = context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == memberId);
+        member.IsActive = false;
+        context.Entry(member).State = EntityState.Modified;
+        _logger.LogInformation(LoggingEvents.UpdateMember, "Ending DeactivateMember {timestamp}", DateTime.Now);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.UpdateMember, ex, "DeactivateMember ERROR at {timestamp}", DateTime.Now);
       }
     }
 

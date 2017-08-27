@@ -56,7 +56,7 @@ namespace GameNightBuddy_Server.Repositories
             .ThenInclude(m => m.User)
         .Include(m => m.Game)
           .ThenInclude(g => g.User)
-        .FirstOrDefault(m => m.MatchId == id);
+        .FirstOrDefault(m => m.MatchId == id && m.IsActive);
 
       return match;
     }
