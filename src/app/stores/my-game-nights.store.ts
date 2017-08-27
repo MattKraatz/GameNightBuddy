@@ -9,6 +9,8 @@ export const myGameNights = (state: GameNight[] = new Array<GameNight>(), {type,
       return [...state, payload];
     case StoreActions.OTHER_GAME_NIGHTS_JOIN:
       return [...state, payload];
+    case StoreActions.MY_GAME_NIGHTS_DELETE:
+      return state.filter(n => n.GameNightId != payload);
     default:
       return state;
   }

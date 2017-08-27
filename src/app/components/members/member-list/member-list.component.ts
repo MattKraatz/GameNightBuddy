@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Member } from '../../../models/member.model';
-
-import { GameNightService } from '../../../services/game-night.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
+
+import { Member } from '../../../models/member.model';
+import { GameNightService } from '../../../services/game-night.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-member-list',
@@ -14,16 +16,19 @@ export class MemberListComponent implements OnInit {
   @Input() members: Member[];
 
   isHost: boolean = false;
+  userId: string;
   nightId: string;
-  memberToRemove: string;
+  memberToRemove: Member;
 
   // Pagination
   page: number = 1;
   itemsPerPage: number = 10;
 
-  constructor(private gameNightService: GameNightService,
+  constructor(private gameNightService: GameNightService, private authService: AuthService,
+    private router: Router,
     private modalService: NgbModal) {
     this.isHost = this.gameNightService.isHost;
+    this.userId = this.authService.currentUserProfile.UserId;
     this.nightId = this.gameNightService.currentGameNight.value.GameNightId;
   }
 
@@ -36,15 +41,18 @@ export class MemberListComponent implements OnInit {
   }
 
   removeMember() {
-    console.log("removing member ", this.memberToRemove);
-    this.gameNightService.removeGameNightMember(this.memberToRemove, this.nightId);
+    console.log("removing member ", this.memberToRemove.UserId);
+    this.gameNightService.removeGameNightMember(this.memberToRemove.MemberId, this.nightId);
+    if (this.memberToRemove.UserId == this.userId) {
+      this.router.navigate(['home']);
+    }
   }
 
   // Delete modal
   closeResult: string;
 
   confirmRemove(content, member: Member) {
-    this.memberToRemove = member.MemberId;
+    this.memberToRemove = member;
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
       if (result == "Delete") {

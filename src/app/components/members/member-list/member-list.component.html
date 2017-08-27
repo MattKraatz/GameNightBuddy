@@ -11,7 +11,8 @@
       <td>
         {{member.DisplayName}}
         <div class="float-right">
-          <button *ngIf="isHost && !member.IsHost" class="btn btn-danger" (click)="confirmRemove(content, member)">Remove</button>
+          <button *ngIf="isHost && !member.IsHost && member.UserId != userId" class="btn btn-danger" (click)="confirmRemove(hostContent, member)">Remove</button>
+          <button *ngIf="member.UserId == userId" class="btn btn-danger" (click)="confirmRemove(memberContent, member)">Leave</button>          
           <button *ngIf="isHost && !member.IsHost" (click)="promoteMember(member)" class="btn btn-info ">
             Promote
           </button>
@@ -26,19 +27,37 @@
 </div>
 
 
-<!-- CONFIRM DELETE MODAL -->
-<ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title">Confirm Remove</h4>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+<!-- CONFIRM DELETE MODAL -- HOST VERSION -->
+<ng-template #hostContent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Remove</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
           <span aria-hidden="true">&times;</span>
         </button>
-    </div>
-    <div class="modal-body">
-      <p>Are you sure you want to remove this member?</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="c('Delete')">Remove</button>
-    </div>
-  </ng-template>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to remove this member?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="c('Delete')">Remove</button>
+  </div>
+</ng-template>
+
+<!-- CONFIRM DELETE MODAL -- MEMBER VERSION -->
+<ng-template #memberContent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Leave</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to leave this group?</p>
+    <p>This cannot be undone, and you may need an invitation to re-enter this group.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="c('Delete')">Remove</button>
+  </div>
+</ng-template>

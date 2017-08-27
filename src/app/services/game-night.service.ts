@@ -190,6 +190,7 @@ export class GameNightService {
       .subscribe(res => {
         this.navbarService.isGameNightContentLoading.next(false);
         this.store.dispatch({type: StoreActions.GAME_NIGHT_DELETE_MEMBER, payload: memberId});
+        this.store.dispatch({type: StoreActions.MY_GAME_NIGHTS_DELETE, payload: nightId});
       })
   }
 
