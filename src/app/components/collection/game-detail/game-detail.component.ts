@@ -74,6 +74,8 @@ export class GameDetailComponent implements OnInit {
 
   deleteGame(){
     console.log("deleting ", this.gameId);
+    this.collectionService.deleteGame(this.gameId);
+    this.back();
   }
 
   // Back button

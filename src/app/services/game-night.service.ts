@@ -183,6 +183,16 @@ export class GameNightService {
       });
   }
 
+  removeGameNightMember(memberId: string, nightId: string) {
+    this.navbarService.isGameNightContentLoading.next(true);
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.delete(`${ServerConfig.baseUrl}/game-nights/members/${memberId}`, options)
+      .subscribe(res => {
+        this.navbarService.isGameNightContentLoading.next(false);
+        this.store.dispatch({type: StoreActions.GAME_NIGHT_DELETE_MEMBER, payload: memberId});
+      })
+  }
+
   getNotifications(nightId: string) {
     this.navbarService.isGameNightContentLoading.next(true);
     var options = new HttpOptions(this.authService.currentUserProfile.UserId);

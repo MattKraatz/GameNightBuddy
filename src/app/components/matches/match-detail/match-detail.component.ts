@@ -53,6 +53,8 @@ export class MatchDetailComponent implements OnInit {
 
   deleteMatch(){
     console.log("deleting ", this.matchId);
+    this.matchService.deleteMatch(this.matchId);
+    this.back();
   }
 
   back() {

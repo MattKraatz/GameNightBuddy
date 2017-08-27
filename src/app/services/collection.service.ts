@@ -120,4 +120,15 @@ export class CollectionService {
       this.gameRecommendations.next(games)
     });
   }
+
+  deleteGame(gameId: string){
+    this.navbarService.isGameNightContentLoading.next(true);
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.delete(`${ServerConfig.baseUrl}/games/${gameId}`, options)
+      .subscribe(res => {
+        this.navbarService.isGameNightContentLoading.next(false);        
+        this.store.dispatch({type: StoreActions.COLLECTION_DELETE_GAME, payload: gameId});
+        this.store.dispatch({type: StoreActions.GAME_NIGHT_DELETE_GAME, payload: gameId});
+      })
+  }
 }

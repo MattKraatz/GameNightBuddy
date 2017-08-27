@@ -13,7 +13,8 @@ export const collection = (state: Game[] = new Array<Game>(), {type, payload}) =
       });
     case 'COLLECTION_DELETE_GAME':
       return state.filter(game => {
-        return game.GameId !== payload.GameId;
+        // payload is GameId only
+        return game.GameId !== payload;
       });
     default:
       return state;

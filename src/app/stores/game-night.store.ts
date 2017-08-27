@@ -9,11 +9,12 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case 'GAME_NIGHT_CREATE_GAME':
       state.Games.unshift(payload);
       return state;
-    case 'GAME_NIGHT_DELETE_GAME':
+    case StoreActions.GAME_NIGHT_DELETE_GAME:
       state.Games = state.Games.filter(g => {
-        return g.GameId != payload.GameId;
+        // payload is GameId only
+        return g.GameId != payload;
       });
-      return state;
+      return Object.assign({}, state);
     case StoreActions.UPDATE_GAME:
       state.Games = state.Games.map(game => {
         return game.GameId === payload.GameId ? Object.assign({}, game, payload) : game;
@@ -22,11 +23,12 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case StoreActions.GAME_NIGHT_CREATE_MEMBER:
       state.Members.unshift(payload);
       return state;
-    case 'GAME_NIGHT_DELETE_MEMBER':
+    case StoreActions.GAME_NIGHT_DELETE_MEMBER:
       state.Members = state.Members.filter(m => {
-        return m.UserId != payload.UserId;
+        // payload is MemberId only  
+        return m.MemberId != payload;
       });
-      return state;
+      return Object.assign({}, state);
     case 'GAME_NIGHT_CREATE_MATCH':
       state.Matches.unshift(payload);
       return state;
@@ -35,11 +37,11 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
         return m.MatchId == payload.MatchId ? payload : m;
       });
       return state;
-    case 'GAME_NIGHT_DELETE_MATCH':
+    case StoreActions.GAME_NIGHT_DELETE_MATCH:
       state.Matches = state.Matches.filter(m => {
-        return m.MatchId != payload.MatchId;
+        return m.MatchId != payload;
       });
-      return state;
+      return Object.assign({}, state);
     case 'GAME_NIGHT_UPDATE':
       return state.GameNightId === payload.GameNightId ? Object.assign({}, state, payload) : state;
     case 'GAME_NIGHT_DELETE':

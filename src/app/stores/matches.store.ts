@@ -12,7 +12,8 @@ export const matches = (state: Match[] = new Array<Match>(), {type, payload}) =>
       });
     case 'MATCHES_DELETE':
       return state.filter(match => {
-        return match.MatchId !== payload.MatchId;
+        // Payload is MatchId only
+        return match.MatchId !== payload;
       });
     default:
       return state;

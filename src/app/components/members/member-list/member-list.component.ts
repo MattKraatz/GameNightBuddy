@@ -37,6 +37,7 @@ export class MemberListComponent implements OnInit {
 
   removeMember() {
     console.log("removing member ", this.memberToRemove);
+    this.gameNightService.removeGameNightMember(this.memberToRemove, this.nightId);
   }
 
   // Delete modal

@@ -49,4 +49,14 @@ export class MatchService {
         this.store.dispatch(action)
       });
   }
+
+  deleteMatch(matchId: string){
+    this.navbarService.isGameNightContentLoading.next(true);
+    var options = new HttpOptions(this.authService.currentUserProfile.UserId);
+    this.http.delete(`${ServerConfig.baseUrl}/matches/${matchId}`, options)
+      .subscribe(res => {
+        this.navbarService.isGameNightContentLoading.next(false);    
+        this.store.dispatch({type: StoreActions.GAME_NIGHT_DELETE_MATCH, payload: matchId});
+      })
+  }
 }
