@@ -23,6 +23,11 @@ export const gameNight = (state: GameNight = new GameNight(), {type, payload}) =
     case StoreActions.GAME_NIGHT_CREATE_MEMBER:
       state.Members.unshift(payload);
       return state;
+    case StoreActions.GAME_NIGHT_UPDATE_MEMBER:
+      state.Members = state.Members.map(m => {
+        return m.MemberId == payload.MemberId ? payload : m;
+      });
+      return Object.assign({}, state);
     case StoreActions.GAME_NIGHT_DELETE_MEMBER:
       state.Members = state.Members.filter(m => {
         // payload is MemberId only  

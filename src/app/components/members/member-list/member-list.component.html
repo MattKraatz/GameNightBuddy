@@ -7,16 +7,19 @@
   </thead>
   <tbody>
     <tr *ngFor="let member of members | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-      <td>{{member.DateJoined | date }}</td>
       <td>
-        {{member.DisplayName}}
+        <span *ngIf="member.UserId == userId"><b>{{member.DateJoined | date }}</b></span>
+        <span *ngIf="member.UserId != userId">{{member.DateJoined | date }}</span>        
+      </td>
+      <td>
+        <span *ngIf="member.UserId == userId"><b>{{member.DisplayName}}</b></span>
+        <span *ngIf="member.UserId != userId">{{member.DisplayName}}</span>        
         <div class="float-right">
           <button *ngIf="isHost && !member.IsHost && member.UserId != userId" class="btn btn-danger" (click)="confirmRemove(hostContent, member)">Remove</button>
           <button *ngIf="member.UserId == userId" class="btn btn-danger" (click)="confirmRemove(memberContent, member)">Leave</button>          
-          <button *ngIf="isHost && !member.IsHost" (click)="promoteMember(member)" class="btn btn-info ">
-            Promote
-          </button>
-          <button *ngIf="member.IsHost " class="btn btn-info " disabled>Host</button>
+          <button *ngIf="isHost && !member.IsHost" (click)="promoteMember(member)" class="btn btn-info ">Promote</button>
+          <button *ngIf="member.IsHost && member.UserId != userId" class="btn btn-info" disabled>Host</button>
+          <button *ngIf="member.IsHost && member.UserId == userId" class="btn btn-warning" (click)="confirmDemote(demoteContent, member)">Demote</button>
         </div>
       </td>
     </tr>
@@ -61,3 +64,21 @@
     <button type="button" class="btn btn-danger" (click)="c('Delete')">Remove</button>
   </div>
 </ng-template>
+
+<!-- CONFIRM DEMOTION MODAL -->
+<ng-template #demoteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Confirm Demotion</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to relieve yourself of host priveleges?</p>
+      <p>This cannot be undone, you would need an existing host to promote you.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="c('Delete')">Demote Me</button>
+    </div>
+  </ng-template>

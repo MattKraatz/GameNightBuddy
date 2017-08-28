@@ -19,6 +19,7 @@ export class MemberListComponent implements OnInit {
   userId: string;
   nightId: string;
   memberToRemove: Member;
+  memberToDemote: Member;
 
   // Pagination
   page: number = 1;
@@ -41,11 +42,17 @@ export class MemberListComponent implements OnInit {
   }
 
   removeMember() {
-    console.log("removing member ", this.memberToRemove.UserId);
     this.gameNightService.removeGameNightMember(this.memberToRemove.MemberId, this.nightId);
     if (this.memberToRemove.UserId == this.userId) {
       this.router.navigate(['home']);
     }
+  }
+
+  demoteMember() {
+    console.log("demoting member ", this.memberToDemote.UserId);
+    this.memberToDemote.IsHost = false;
+    this.isHost = false;
+    this.gameNightService.updateGameNightMember(this.memberToDemote, this.nightId);
   }
 
   // Delete modal
@@ -57,6 +64,18 @@ export class MemberListComponent implements OnInit {
       this.closeResult = `Closed with: ${result}`;
       if (result == "Delete") {
         this.removeMember();
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  confirmDemote(content, member: Member) {
+    this.memberToDemote = member;
+    this.modalService.open(content).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+      if (result == "Delete") {
+        this.demoteMember();
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;

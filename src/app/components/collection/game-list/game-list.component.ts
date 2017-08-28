@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IStarRatingOnClickEvent, IStarRatingOnRatingChangeEven, IStarRatingIOnHoverRatingChangeEvent } from "angular-star-rating/src/star-rating-struct";
+import {ActivatedRoute} from '@angular/router';
 
 import { Game } from '../../../models/game.model';
 import { GameRating } from '../../../models/game-rating.model';
@@ -14,12 +15,15 @@ import {AuthService} from '../../../services/auth.service';
 export class GameListComponent implements OnInit {
 
   @Input() games: Game[];
+  nightId: string;
 
   // PAGINATION
   page: number = 1;
   itemsPerPage: number = 10;
 
-  constructor(private collectionService: CollectionService, private authService: AuthService) { }
+  constructor(private collectionService: CollectionService, private authService: AuthService,
+    private route: ActivatedRoute) {
+    }
 
   ngOnInit() {
   }
