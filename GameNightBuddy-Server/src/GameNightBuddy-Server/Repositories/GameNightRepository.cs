@@ -19,7 +19,7 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertGameNight(GameNight night);
     GameNightGame InsertGameNightGame(Guid gameId, Guid nightId);
     GameNightMember InsertMember(GameNightMember member);
-    void DeactivateMember(Guid memberId);
+    void DeactivateMember(GameNightMember member);
     GameNightMember GetMember(Guid id);
     void UpdateMember(GameNightMember member);
     Match InsertMatch(MatchViewModel vm, Guid nightId);
@@ -302,15 +302,19 @@ namespace GameNightBuddy_Server.Repositories
       }
     }
 
-    public void DeactivateMember(Guid memberId)
+    public void DeactivateMember(GameNightMember member)
     {
-      // handle null values
-      if (memberId == Guid.Empty) return;
       _logger.LogInformation(LoggingEvents.UpdateMember, "Starting DeactivateMember {timestamp}", DateTime.Now);
+     
+      // handle null values
+      if (member == null)
+      {
+        _logger.LogWarning(LoggingEvents.DeactivateMember, "member is null {timestamp}", DateTime.Now);
+        return;
+      }
 
       try
       {
-        var member = _context.GameNightMembers.FirstOrDefault(m => m.GameNightMemberId == memberId);
         member.IsActive = false;
         _context.Entry(member).State = EntityState.Modified;
         _logger.LogInformation(LoggingEvents.UpdateMember, "Ending DeactivateMember {timestamp}", DateTime.Now);

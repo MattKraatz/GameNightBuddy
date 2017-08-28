@@ -193,17 +193,6 @@ namespace GameNightBuddy_Server.Controllers
         var member = this.gameNightRepository.GetMember(new Guid(vm.MemberId));
         member.IsHost = vm.IsHost;
 
-        var activity = new Activity()
-        {
-          UserId = userId,
-          EntityType = Activities.Entities.MEMBER,
-          EntityId = member.GameNightMemberId,
-          ActivityType = Activities.ActivityTypes.UPDATE,
-          GameNightId = member.GameNightId
-        };
-        this.activityRepo.CreateActivity(activity);
-        this.activityRepo.Save();
-
         this.gameNightRepository.Save();
 
         return new ObjectResult(vm);
@@ -377,12 +366,73 @@ namespace GameNightBuddy_Server.Controllers
       }
     }
 
+    [HttpDelete("members/{memberId}")]
+    public IActionResult DeleteMember([FromHeader] string uid, [FromRoute] Guid memberId)
+    {
+      _logger.LogInformation(LoggingEvents.UpdateMember, "Removing Member: {ID}", memberId);
+
+      if (memberId == Guid.Empty)
+      {
+        _logger.LogWarning(LoggingEvents.InvalidInput, "memberId is null");
+
+        return new BadRequestResult();
+      }
+
+      try
+      {
+        var userId = new Guid(uid);
+        // get Member from database
+        var member = this.gameNightRepository.GetMember(memberId);
+        // get GameNight from database
+        GameNight night = this.gameNightRepository.GetMyGameNights(userId)?.FirstOrDefault(n => n.GameNightId == member?.GameNightId && n.IsActive);
+
+        // if this member is trying to remove themself, don't check for authorization
+        if (member.UserId != userId)
+        {
+          if (!member.IsActive)
+          {
+            _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
+            return new BadRequestResult();
+          }
+
+          if (night == null || !night.IsActive)
+          {
+            _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
+            return new BadRequestResult();
+          }
+          // check for Host priveleges
+          var host = night.Members.FirstOrDefault(m => m.UserId == userId && m.IsActive);
+          if (host == null || !host.IsHost)
+          {
+            _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
+            return new BadRequestResult();
+          }
+        }
+
+        this.gameNightRepository.DeactivateMember(member);
+        if (night != null && night.Members.Count <= 1)
+        {
+          _logger.LogInformation(LoggingEvents.DeactivateMember, "Game Night {gid} has no members left, now de-activating", night.GameNightId);
+          this.gameNightRepository.DeactivateGameNight(night.GameNightId);
+        }
+
+        this.gameNightRepository.Save();
+
+        return new OkResult();
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        return new BadRequestResult();
+      }
+    }
+
     [HttpDelete("{nightId}")]
     public IActionResult Delete([FromHeader] string uid, [FromRoute] Guid nightId)
     {
       _logger.LogInformation(LoggingEvents.GetOtherGameNights, "User {uid} is deleting GameNight {nightId}", uid, nightId);
 
-      if (nightId == null)
+      if (nightId == Guid.Empty)
       {
         _logger.LogWarning(LoggingEvents.InvalidInput, "nightId is null");
 
@@ -430,79 +480,7 @@ namespace GameNightBuddy_Server.Controllers
         return new BadRequestResult();
       }
     }
-
-    [HttpDelete("members/{memberId}")]
-    public IActionResult DeleteMember([FromHeader] string uid, [FromRoute] Guid memberId)
-    {
-      _logger.LogInformation(LoggingEvents.UpdateMember, "Removing Member: {ID}", memberId);
-
-      if (memberId == Guid.Empty)
-      {
-        _logger.LogWarning(LoggingEvents.InvalidInput, "memberId is null");
-
-        return new BadRequestResult();
-      }
-
-      try
-      {
-        var userId = new Guid(uid);
-        // get Member from database
-        var member = this.gameNightRepository.GetMember(memberId);
-        GameNight night = null;
-
-        // if this member is trying to remove themself, don't check for authorization
-        if (member.UserId != userId)
-        {
-          if (!member.IsActive)
-          {
-            _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
-            return new BadRequestResult();
-          }
-          // get GameNight from database
-          night = this.gameNightRepository.GetMyGameNights(userId).FirstOrDefault(n => n.GameNightId == member.GameNightId && n.IsActive);
-          if (night == null || !night.IsActive)
-          {
-            _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
-            return new BadRequestResult();
-          }
-          // check for Host priveleges
-          var host = night.Members.FirstOrDefault(m => m.UserId == userId && m.IsActive);
-          if (host == null || !host.IsHost)
-          {
-            _logger.LogWarning(LoggingEvents.InvalidInput, "user not authorized to deactivate this Member");
-            return new BadRequestResult();
-          }
-        }
-
-        this.gameNightRepository.DeactivateMember(memberId);
-        if (night != null && night.Members.Count <= 1)
-        {
-          _logger.LogInformation(LoggingEvents.DeactivateMember, "Game Night {gid} has no members left, now de-activating", night.GameNightId);
-          this.gameNightRepository.DeactivateGameNight(night.GameNightId);
-        }
-
-        this.gameNightRepository.Save();
-
-        var activity = new Activity()
-        {
-          UserId = userId,
-          EntityType = Activities.Entities.MEMBER,
-          EntityId = member.GameNightMemberId,
-          ActivityType = Activities.ActivityTypes.UPDATE,
-          GameNightId = member.GameNightId
-        };
-        this.activityRepo.CreateActivity(activity);
-        this.activityRepo.Save();
-
-        return new OkResult();
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
-        return new BadRequestResult();
-      }
-    }
-
+    
     // not in use by the client
     [HttpGet]
     public IActionResult GetAll()
