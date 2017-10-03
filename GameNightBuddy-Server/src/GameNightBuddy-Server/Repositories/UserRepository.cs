@@ -31,10 +31,16 @@ namespace GameNightBuddy_Server.Repositories
       this._logger = logger;
     }
 
+    // OVERLOAD FOR TESTING
+    public UserRepository(Context context)
+    {
+      this.context = context;
+    }
+
     public User GetUserByFbKey(string id)
     {
       if (id?.Length < 1) return new User();
-      _logger.LogInformation(LoggingEvents.GetUser, "Starting GetUserByFbKey {timestamp}", DateTime.Now);
+      if (_logger != null)  _logger.LogInformation(LoggingEvents.GetUser, "Starting GetUserByFbKey {timestamp}", DateTime.Now);
 
       try
       {
@@ -43,12 +49,12 @@ namespace GameNightBuddy_Server.Repositories
             .ThenInclude(g => g.User)
           .FirstOrDefault(u => u.FirebaseId == id);
 
-        _logger.LogInformation(LoggingEvents.GetUser, "Ending GetUserByFbKey {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogInformation(LoggingEvents.GetUser, "Ending GetUserByFbKey {timestamp}", DateTime.Now);
         return user;
       }
       catch (Exception ex)
       {
-        _logger.LogError(LoggingEvents.GetFailed, ex, "GetUserByFbKey ERROR at {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogError(LoggingEvents.GetFailed, ex, "GetUserByFbKey ERROR at {timestamp}", DateTime.Now);
         return new User();
       }
     }
@@ -56,7 +62,7 @@ namespace GameNightBuddy_Server.Repositories
     public List<User> QueryUsers(string query, Guid nightId)
     {
       if (query?.Length < 1 || nightId == Guid.Empty) return new List<User>();
-      _logger.LogInformation(LoggingEvents.QueryUsers, "Starting QueryUsers {timestamp}", DateTime.Now);
+      if (_logger != null)  _logger.LogInformation(LoggingEvents.QueryUsers, "Starting QueryUsers {timestamp}", DateTime.Now);
 
       try
       {
@@ -69,19 +75,43 @@ namespace GameNightBuddy_Server.Repositories
               string.Concat(u.FirstName + u.LastName).ToLower().Contains(query))
              ).ToList();
 
-        _logger.LogInformation(LoggingEvents.QueryUsers, "Ending QueryUsers {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogInformation(LoggingEvents.QueryUsers, "Ending QueryUsers {timestamp}", DateTime.Now);
         return users;
       }
       catch (Exception ex)
       {
-        _logger.LogError(LoggingEvents.QueryUsers, ex, "QueryUsers ERROR at {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogError(LoggingEvents.QueryUsers, ex, "QueryUsers ERROR at {timestamp}", DateTime.Now);
         return new List<User>();
       }
     }
 
     public void DeactivateUser(Guid userId)
     {
-      throw new NotImplementedException();
+      if (userId == null) return;
+      if (_logger != null) _logger.LogInformation(LoggingEvents.DeactiveUser, "Starting DeactivateUser {timestamp}", DateTime.Now);
+
+      var user = this.context.Users.SingleOrDefault(u => u.UserId == userId);
+      if (user != null && user.UserId != Guid.Empty)
+      {
+        // Deactivate GameRatings
+        var ratings = this.context.GameRatings.Where(r => r.UserId == user.UserId).ToList();
+        ratings.ForEach(r => r.IsActive = false);
+        // Deactivate GameNightGames
+        var gameNightGames = this.context.GameNightGames.Where(g => g.Game.UserId == user.UserId).ToList();
+        gameNightGames.ForEach(g => g.IsActive = false);
+        // Deactivate Games
+        var games = this.context.Games.Where(g => g.UserId == user.UserId).ToList();
+        games.ForEach(g => g.IsActive = false);
+        // Deactivate Memberships
+        var members = this.context.GameNightMembers.Where(m => m.UserId == user.UserId).ToList();
+        members.ForEach(m => m.IsActive = false);
+        // Deactivate User
+        user.IsActive = false;
+      }
+      else
+      {
+        if (_logger != null) _logger.LogWarning(LoggingEvents.DeactiveUser, "User not found in database at {timestamp}", DateTime.Now);
+      }
     }
 
     public User GetUser(Guid id)
@@ -92,18 +122,18 @@ namespace GameNightBuddy_Server.Repositories
     public Guid InsertUser(User user)
     {
       if (user == null) return Guid.Empty;
-      _logger.LogInformation(LoggingEvents.InsertUser, "Starting InsertUser {timestamp}", DateTime.Now);
+      if (_logger != null)  _logger.LogInformation(LoggingEvents.InsertUser, "Starting InsertUser {timestamp}", DateTime.Now);
 
       try
       {
         this.context.Users.Add(user);
 
-        _logger.LogInformation(LoggingEvents.InsertUser, "Ending InsertUser {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogInformation(LoggingEvents.InsertUser, "Ending InsertUser {timestamp}", DateTime.Now);
         return user.UserId;
       }
       catch (Exception ex)
       {
-        _logger.LogError(LoggingEvents.InsertUser, ex, "InsertUser ERROR at {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogError(LoggingEvents.InsertUser, ex, "InsertUser ERROR at {timestamp}", DateTime.Now);
         return Guid.Empty;
       }
     }
@@ -111,7 +141,7 @@ namespace GameNightBuddy_Server.Repositories
     public void UpdateUser(User user)
     {
       if (user == null) return;
-      _logger.LogInformation(LoggingEvents.UpdateUser, "Starting UpdateUser {timestamp}", DateTime.Now);
+      if (_logger != null)  _logger.LogInformation(LoggingEvents.UpdateUser, "Starting UpdateUser {timestamp}", DateTime.Now);
 
       try
       {
@@ -121,11 +151,11 @@ namespace GameNightBuddy_Server.Repositories
         dbUser.Email = user.Email;
         dbUser.DisplayName = user.DisplayName;
         dbUser.PhotoURL = user.PhotoURL;
-        _logger.LogInformation(LoggingEvents.UpdateUser, "Ending UpdateUser {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogInformation(LoggingEvents.UpdateUser, "Ending UpdateUser {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
       {
-        _logger.LogError(LoggingEvents.UpdateUser, ex, "UpdateUser ERROR at {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogError(LoggingEvents.UpdateUser, ex, "UpdateUser ERROR at {timestamp}", DateTime.Now);
         return;
       }
     }
@@ -135,11 +165,11 @@ namespace GameNightBuddy_Server.Repositories
       try
       {
         context.SaveChanges();
-        _logger.LogInformation(LoggingEvents.Save, "Save successful at {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogInformation(LoggingEvents.Save, "Save successful at {timestamp}", DateTime.Now);
       }
       catch (Exception ex)
       {
-        _logger.LogError(LoggingEvents.SaveError, ex, "Saving ERROR at {timestamp}", DateTime.Now);
+        if (_logger != null)  _logger.LogError(LoggingEvents.SaveError, ex, "Saving ERROR at {timestamp}", DateTime.Now);
       }
     }
 

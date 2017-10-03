@@ -12,6 +12,7 @@ namespace GameNightBuddy_Server.Constants
     public const int UpdateUser = 1001;
     public const int QueryUsers = 1002;
     public const int InsertUser = 1003;
+    public const int DeactiveUser = 1004;
 
     // GameNight events
     public const int GetMyGameNights = 2000;

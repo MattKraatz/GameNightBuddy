@@ -136,6 +136,15 @@ namespace GameNightBuddy_Server.Repositories
       try
       {
         context.Entry(game).State = EntityState.Modified;
+        if (!game.IsActive)
+        {
+          var gameNightGames = this.context.GameNightGames.Where(g => g.GameId == game.GameId).ToList();
+          gameNightGames.ForEach(g => g.IsActive = false);
+
+          var ratings = this.context.GameRatings.Where(r => r.GameId == game.GameId).ToList();
+          ratings.ForEach(r => r.IsActive = false);
+        }
+
         _logger.LogInformation(LoggingEvents.UpdateGame, "Ending UpdateGame {timestamp}", DateTime.Now);
       }
       catch (Exception ex)

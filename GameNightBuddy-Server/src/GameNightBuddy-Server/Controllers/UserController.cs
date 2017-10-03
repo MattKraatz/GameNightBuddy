@@ -21,19 +21,26 @@ namespace GameNightBuddy_Server.Controllers
       this._logger = logger;
     }
 
+    // OVERLOAD FOR TESTING
+    public UserController(IUserRepository userRepository)
+    {
+      this.userRepository = userRepository;
+    }
+
     [HttpPost]
     public IActionResult GetUserByFbKey([FromBody] AuthViewModel input)
     {
-      _logger.LogInformation(LoggingEvents.GetUser, "Getting user by Firebase key {uid}", input?.uid);
+      if (_logger != null) _logger.LogInformation(LoggingEvents.GetUser, "Getting user by Firebase key {uid}", input?.uid);
       if (input == null)
       {
-        _logger.LogWarning(LoggingEvents.InvalidInput, "No AuthViewModel provided");
+        if (_logger != null) _logger.LogWarning(LoggingEvents.InvalidInput, "No AuthViewModel provided");
         return new BadRequestResult();
       }
 
       try
       {
         var user = this.userRepository.GetUserByFbKey(input.uid);
+        // create a new user if input FbKey is not found
         if (user == null)
         {
           user = new User(input);
@@ -44,7 +51,7 @@ namespace GameNightBuddy_Server.Controllers
       }
       catch(Exception ex)
       {
-        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        if (_logger != null) _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
         return new BadRequestResult();
       }
     }
@@ -52,10 +59,10 @@ namespace GameNightBuddy_Server.Controllers
     [HttpGet("search/{nightId}/{query}")]
     public IActionResult QueryUsers([FromRoute] string query, [FromRoute] Guid nightId)
     {
-      _logger.LogInformation(LoggingEvents.QueryUsers, "Query for members of Game Night {nid} :: {query} ", nightId, query);
+      if (_logger != null)  _logger.LogInformation(LoggingEvents.QueryUsers, "Query for members of Game Night {nid} :: {query} ", nightId, query);
       if (query?.Length < 1 || nightId == Guid.Empty)
       {
-        _logger.LogWarning(LoggingEvents.InvalidInput, "Invalid Input; Query: {qry} ;; NightId: {nid}", query, nightId);
+        if (_logger != null)  _logger.LogWarning(LoggingEvents.InvalidInput, "Invalid Input; Query: {qry} ;; NightId: {nid}", query, nightId);
         return new BadRequestResult();
       }
 
@@ -66,7 +73,7 @@ namespace GameNightBuddy_Server.Controllers
       }
       catch (Exception ex)
       {
-        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        if (_logger != null)  _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
         return new BadRequestResult();
       }
     }
@@ -74,10 +81,10 @@ namespace GameNightBuddy_Server.Controllers
     [HttpPut]
     public IActionResult OverwriteUser([FromBody] User user)
     {
-      _logger.LogInformation(LoggingEvents.UpdateUser, "Updating User {uid}", user?.UserId);
+      if (_logger != null)  _logger.LogInformation(LoggingEvents.UpdateUser, "Updating User {uid}", user?.UserId);
       if (user == null)
       {
-        _logger.LogWarning(LoggingEvents.InvalidInput, "No User provided");
+        if (_logger != null)  _logger.LogWarning(LoggingEvents.InvalidInput, "No User provided");
         return new BadRequestResult();
       }
 
@@ -89,7 +96,7 @@ namespace GameNightBuddy_Server.Controllers
       }
       catch(Exception ex)
       {
-        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        if (_logger != null)  _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
         return new BadRequestResult();
       }
     }
