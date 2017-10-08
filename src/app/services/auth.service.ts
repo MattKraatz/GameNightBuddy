@@ -2,9 +2,10 @@ import {Injectable} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import 'rxjs/Rx';
 import {Store} from '@ngrx/store';
-import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
+import {AngularFireAuth} from 'angularfire2/auth';
 import {Http, Headers} from '@angular/http';
 import {Router} from '@angular/router';
+import * as firebase from 'firebase';
 
 import {AppStore, IStoreAction} from '../models/appstore.model';
 import {Auth} from '../models/auth.model';
@@ -33,28 +34,28 @@ export class AuthService {
 
   userSearch: Observable<User[]>;
   
-  constructor(public af: AngularFire, private store: Store<AppStore>, private http: Http,
+  constructor(public af: AngularFireAuth, private store: Store<AppStore>, private http: Http,
       private router: Router, private navbarService: NavbarService) {
     this.user = store.select("auth");
     this.userProfile = store.select("user");
     this.user.subscribe(auth => this.currentUser = auth);
 
-    // Resolve initial Auth status during construction
-    this.af.auth.subscribe(auth => {
-      if(auth) {
+    // Resolve initial Auth status
+    this.af.auth.onAuthStateChanged(auth => {
+      if(auth && auth.providerData && auth.providerData[0]) {
         // user logged in
-        if (auth.facebook) {
-          var user = new Auth(auth.facebook);
+        if (auth.providerData[0].providerId === 'facebook.com') {
+          var user = new Auth(auth.providerData[0]);
           user.uid = auth.uid;
-        } else if (auth.auth) {
-          var user = new Auth(auth.auth);
+          this.getAuthRecordFromDB(user);
+        } else if (auth.providerData[0].providerId === 'password') {
+          var user = new Auth(auth.providerData[0]);
+          this.getAuthRecordFromDB(user);
         }
-        this.getAuthRecordFromDB(user);
       }
       else {
         // user not logged in
         this.navbarService.isContentLoading.next(false);
-        this.store.dispatch({type: "LOGOUT_USER", payload: new User()});
       }
     })
   }
@@ -63,18 +64,15 @@ export class AuthService {
     this.navbarService.isContentLoading.next(true);
     this.http.post(`${ServerConfig.baseUrl}/users`, JSON.stringify(auth), HEADER)
         .map(res => res.json())
-        .map(res => {
-          var user = new User(res);
-          this.currentUserProfile = user;
+        .map(json => {
+          var user = new User(json);
           this.userLoaded = true;
-          return user;
+          return this.currentUserProfile = user;
         })
-        .map(user => {
-          return {type: StoreActions.LOGIN_USER, payload: user}
-        })
-        .subscribe(action => {
+        .subscribe(user => {
+          var action = {type: StoreActions.LOGIN_USER, payload: user};
           this.navbarService.isContentLoading.next(false);
-          this.store.dispatch(action)
+          this.store.dispatch(action);
         });
   }
 
@@ -90,19 +88,18 @@ export class AuthService {
   }
 
   loginWithFacebook() {
-    // Redirect Method (default) reloads the page, triggering the constructor
-    this.af.auth.login();
+    this.af.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider())
+      .then(response => {
+        // try to navigate to 'my game nights' after the userProfile is updated
+        // profile complete guard service will catch an incomplete profile
+        this.userProfile.subscribe(u => {
+          if (u.UserId !== '') this.router.navigate(['my-game-nights']);
+        });
+      });
   }
 
   loginWithEmailAndPassword(user: LoginViewModel) {
-    this.af.auth.login({
-      email: user.Email,
-      password: user.Password
-    },
-    {
-      provider: AuthProviders.Password,
-      method: AuthMethods.Password,
-    })
+    this.af.auth.signInWithEmailAndPassword(user.Email, user.Password)
     .then(response => {
       // try to navigate to 'my game nights' after the userProfile is updated
       // profile complete guard service will catch an incomplete profile
@@ -117,10 +114,7 @@ export class AuthService {
   }
 
   registerEmailAndPassword(user: LoginViewModel) {
-    this.af.auth.createUser({
-      email: user.Email,
-      password: user.Password
-    })
+    this.af.auth.createUserWithEmailAndPassword(user.Email, user.Password)
     .then(response => {
       this.userProfile.first().subscribe(u => {
         this.router.navigate(['my-game-nights']);
@@ -133,12 +127,11 @@ export class AuthService {
   }
 
   logout() {
-    this.af.auth.logout()
-    .then(response => {
-      console.log("logout", response);
-    });
-    this.store.dispatch({type: "LOGOUT_USER", payload: {}});
-    this.router.navigate(['/']);
+    this.af.auth.signOut()
+      .then(response => {
+        this.store.dispatch({type: "LOGOUT_USER", payload: null});
+        this.router.navigate(['/']);
+      });
   }
 
   validateProfile(user: User): boolean {

@@ -11,7 +11,7 @@ export class LoginGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
   // If logged in, navigate to home page
-  return this.authService.af.auth.map(authState => {
+  return this.authService.af.authState.map(authState => {
       if (authState) this.router.navigate(['/home']);
       return !authState;
     }).take(1);

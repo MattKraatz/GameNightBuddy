@@ -8,11 +8,11 @@
   </a>
   <div class="collapse navbar-collapse" [ngClass]="navbarClasses" id="navbarToggleControl">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" *ngIf="user && user.UserId" routerLink="/explore" routerLinkActive="active">Explore</a>
+      <li class="nav-item"  *ngIf="user?.UserId">
+        <a class="nav-link" routerLink="/explore" routerLinkActive="active">Explore</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" *ngIf="user && user.UserId" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>
+      <li class="nav-item" *ngIf="user?.UserId">
+        <a class="nav-link" routerLink="/my-game-nights" routerLinkActive="active">My Game Nights</a>
       </li>
       <li class="nav-item" *ngIf="isLoading" id="nav-item-loading-indicator">
         <a class="nav-link">
@@ -32,7 +32,7 @@
           <a class="dropdown-item" (click)="logout()">Logout</a>
         </div>
       </li>
-      <li class="nav-item" *ngIf="!user || !user.UserId">
+      <li class="nav-item" *ngIf="!user?.UserId">
         <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
       </li>
     </ul>

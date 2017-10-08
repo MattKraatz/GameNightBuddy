@@ -11,8 +11,10 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     // If not logged in, navigate to login page
-    // Method below from this thread: https://github.com/angular/angularfire2/issues/282
-    return this.authService.af.auth
+    return this.authService.af.authState
+      .map(state => {
+        return state;
+      })
       .take(1)
       .map(state => !!state)
       .do(authenticated => {

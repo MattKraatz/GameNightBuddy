@@ -1,8 +1,9 @@
 import {User} from '../models/user.model';
+import {StoreActions} from '../constants/storeActions';
 
 export const user = (state: User = new User(), {type, payload}) => {
   switch (type) {
-    case "LOGIN_USER":
+    case StoreActions.LOGIN_USER:
       return payload;
     case 'LOGOUT_USER':
       return new User();

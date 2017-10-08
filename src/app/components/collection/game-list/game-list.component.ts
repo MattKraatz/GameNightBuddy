@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IStarRatingOnClickEvent, IStarRatingOnRatingChangeEven, IStarRatingIOnHoverRatingChangeEvent } from "angular-star-rating/src/star-rating-struct";
+import { OnClickEvent, OnRatingChangeEvent, OnHoverRatingChangeEvent } from "../../../models/star-rating.interface";
 import {ActivatedRoute} from '@angular/router';
 
 import { Game } from '../../../models/game.model';
@@ -29,11 +29,11 @@ export class GameListComponent implements OnInit {
   }
 
   // STAR RATING
-  onClickResult: IStarRatingOnClickEvent;
-  onHoverRatingChangeResult: IStarRatingIOnHoverRatingChangeEvent;
-  onRatingChangeResult: IStarRatingOnRatingChangeEven;
+  onClickResult: OnClickEvent;
+  onHoverRatingChangeResult: OnHoverRatingChangeEvent;
+  onRatingChangeResult: OnRatingChangeEvent;
 
-  onClick = ($event: IStarRatingOnClickEvent, gameId: string) => {
+  onClick = ($event: OnClickEvent, gameId: string) => {
     var rating = new GameRating();
     rating.GameId = gameId;
     rating.Rating = $event.rating;
@@ -53,11 +53,11 @@ export class GameListComponent implements OnInit {
     })
   };
 
-  onRatingChange = ($event: IStarRatingOnRatingChangeEven) => {
+  onRatingChange = ($event: OnRatingChangeEvent) => {
     this.onRatingChangeResult = $event;
   };
 
-  onHoverRatingChange = ($event: IStarRatingIOnHoverRatingChangeEvent) => {
+  onHoverRatingChange = ($event: OnHoverRatingChangeEvent) => {
     this.onHoverRatingChangeResult = $event;
   };
 

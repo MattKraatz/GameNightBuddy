@@ -5,9 +5,9 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import {StoreModule} from '@ngrx/store';
-import * as firebase from 'firebase';
 import * as $ from 'jquery';
-import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
+import {AngularFireModule} from "angularfire2";
+import {AngularFireAuth} from 'angularfire2/auth';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {StarRatingModule} from 'angular-star-rating';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -77,13 +77,6 @@ import {AboutComponent} from './component/about/about.component';
 import {PrivacyComponent} from './component/privacy/privacy.component';
 import {ContactComponent} from './component/contact/contact.component';
 
-
-// Default Authorization Config for AngularFireModule
-const authConfig = {
-  provider: AuthProviders.Facebook,
-  method: AuthMethods.Redirect
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -132,7 +125,7 @@ const authConfig = {
     HttpModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.provideStore({user, collection, matches, gameNight, myGameNights, otherGameNights}),
-    AngularFireModule.initializeApp(firebaseConfig, authConfig),
+    AngularFireModule.initializeApp(firebaseConfig),
     NgxPaginationModule,
     StarRatingModule,
     NgbModule.forRoot()
@@ -146,7 +139,8 @@ const authConfig = {
     GameNightService,
     GameNightResolver,
     ProfileCompleteGuard,
-    NavbarService
+    NavbarService,
+    AngularFireAuth
   ],
   bootstrap: [
     AppComponent
