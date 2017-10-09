@@ -76,6 +76,7 @@ import {ActivityListComponent} from './components/game-nights/activity-list/acti
 import {AboutComponent} from './component/about/about.component';
 import {PrivacyComponent} from './component/privacy/privacy.component';
 import {ContactComponent} from './component/contact/contact.component';
+import {GameNightStatsComponent} from './components/game-nights/game-night-stats/game-night-stats.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,8 @@ import {ContactComponent} from './component/contact/contact.component';
     ActivityListComponent,
     AboutComponent,
     PrivacyComponent,
-    ContactComponent
+    ContactComponent,
+    GameNightStatsComponent
   ],
   imports: [
     BrowserModule,
@@ -127,7 +129,7 @@ import {ContactComponent} from './component/contact/contact.component';
     StoreModule.provideStore({user, collection, matches, gameNight, myGameNights, otherGameNights}),
     AngularFireModule.initializeApp(firebaseConfig),
     NgxPaginationModule,
-    StarRatingModule,
+    StarRatingModule.forRoot(),
     NgbModule.forRoot()
   ],
   providers: [

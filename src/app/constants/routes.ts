@@ -31,6 +31,8 @@ import {GameRecommenderComponent} from '../components/collection/game-recommende
 import {AboutComponent} from '../component/about/about.component';
 import {PrivacyComponent} from '../component/privacy/privacy.component';
 import {ContactComponent} from '../component/contact/contact.component';
+import {GameNightStatsComponent} from '../components/game-nights/game-night-stats/game-night-stats.component';
+
 
 export const appRoutes: Routes = [
   // GAME NIGHTS
@@ -69,6 +71,10 @@ export const appRoutes: Routes = [
       {
         path: 'matches/:matchId',
         component: MatchDetailComponent
+      },
+      {
+        path: 'stats',
+        component: GameNightStatsComponent
       },
       {
         path: '',

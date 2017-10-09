@@ -1,6 +1,6 @@
 import {Match} from '../models/match.model';
 
-export const matches = (state: Match[] = new Array<Match>(), {type, payload}) => {
+export function matches(state: Match[] = new Array<Match>(), {type, payload}) {
   switch (type) {
     case "MATCHES_POPULATE":
       return payload;

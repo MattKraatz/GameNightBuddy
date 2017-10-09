@@ -2,7 +2,7 @@ import {GameNight} from '../models/game-night.model';
 import {StoreActions} from '../constants/storeActions';
 import {Activity} from '../models/activity.model';
 
-export const gameNight = (state: GameNight = new GameNight(), {type, payload}) => {
+export function gameNight(state: GameNight = new GameNight(), {type, payload}) {
   switch (type) {
     case "GAME_NIGHT_POPULATE_NIGHT":
       return payload;

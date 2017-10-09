@@ -1,7 +1,7 @@
 import {GameNight} from '../models/game-night.model';
 import {StoreActions} from '../constants/storeActions';
 
-export const myGameNights = (state: GameNight[] = new Array<GameNight>(), {type, payload}) => {
+export function myGameNights(state: GameNight[] = new Array<GameNight>(), {type, payload}) {
   switch (type) {
     case "MY_GAME_NIGHTS_POPULATE":
       return payload;
