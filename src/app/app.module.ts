@@ -11,6 +11,7 @@ import {AngularFireAuth} from 'angularfire2/auth';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {StarRatingModule} from 'angular-star-rating';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {ChartsModule} from 'ng2-charts';
 
 // Private Keys
 import {firebaseConfig} from './constants/firebaseConfig';
@@ -32,6 +33,7 @@ import {GameNightService} from './services/game-night.service';
 import {GameNightResolver} from './services/resolvers/game-night-resolver.service';
 import {ProfileCompleteGuard} from './services/guards/profile-complete-guard.service';
 import {NavbarService} from './services/navbar.service';
+import {StatisticsService} from './services/statistics.service';
 
 // Routes
 import {appRoutes} from './constants/routes';
@@ -130,7 +132,8 @@ import {GameNightStatsComponent} from './components/game-nights/game-night-stats
     AngularFireModule.initializeApp(firebaseConfig),
     NgxPaginationModule,
     StarRatingModule.forRoot(),
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    ChartsModule
   ],
   providers: [
     CollectionService,
@@ -142,7 +145,8 @@ import {GameNightStatsComponent} from './components/game-nights/game-night-stats
     GameNightResolver,
     ProfileCompleteGuard,
     NavbarService,
-    AngularFireAuth
+    AngularFireAuth,
+    StatisticsService
   ],
   bootstrap: [
     AppComponent

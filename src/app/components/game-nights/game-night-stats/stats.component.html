@@ -1,3 +1,13 @@
-<p>
-  stats works!
-</p>
+<h3>{{night.Name}} Statistics</h3>
+
+<h4>Most Played Games</h4>
+<div>
+  <canvas baseChart
+          [datasets]="gameByMatchesData"
+          [labels]="gameByMatchesLabels"
+          [options]="gameByMatchesOptions"
+          [colors]="gameByMatchesColors"
+          [chartType]="'bar'"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"></canvas>
+</div>
