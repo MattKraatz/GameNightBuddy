@@ -26,25 +26,20 @@ export class GameNightStatsComponent implements OnInit {
   }
 
   calculateStats(night: GameNight) {
-    const gameByMatchesDataLabel = '# of Matches';
+    // Game By Matches
     const gameByMatchesDataLength = 5;
     let matchCount = this.statsService.sortGamesByMatchesPlayed(night.Matches, gameByMatchesDataLength);
-
-    // calculate line chart data, then push to public props
-    let gameByMatchesDataPoints: Array<number> = new Array<number>();
     matchCount.forEach(group => {
-      gameByMatchesDataPoints.push(group.count);
+      this.gameByMatchesData[0].data.push(group.count);
       this.gameByMatchesLabels.push(group.game.Name);
     });
-    let gameByMatchesDataObject = {
-      data: gameByMatchesDataPoints,
-      label: gameByMatchesDataLabel
-    };
-    this.gameByMatchesData.push(gameByMatchesDataObject);
   }
 
-  // GameByMatches Bar Chart
-  public gameByMatchesData: Array<any> = new Array<any>();
+  // Game By Matches Bar Chart
+  public gameByMatchesData: Array<any> = new Array<any>({
+    data: [],
+    label: '# of Matches'
+  });
   public gameByMatchesLabels: Array<string> = new Array<string>();
   public gameByMatchesOptions: any = {
     responsive: true,
