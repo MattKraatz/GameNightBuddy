@@ -12,15 +12,21 @@ namespace GameNightBuddy_Server.Models
     // Foreign Key
     public Guid UserId { get; set; }
     public User User { get; set; }
+    // Foreign Keys Elsewhere
     public List<GameNightGame> GameNightGames { get; set; }
     public List<Match> Matches { get; set; }
     public List<GameRating> GameRatings { get; set; }
-    
+
+    // Unique Columns
     public string Name { get; set; }
     public int MinPlayers { get; set; }
     public int MaxPlayers { get; set; }
 
+    // Default
     public DateTime DateCreated { get; set; }
+    public string UserCreated { get; set; }
+    public DateTime DateUpdated { get; set; }
+    public string UserUpdated { get; set; }
     public Boolean IsActive { get; set; }
 
     public Game() { }

@@ -6,7 +6,7 @@
   <PropertyGroup>
     <ActiveDebugProfile>GameNightBuddy_Server</ActiveDebugProfile>
     <WebStackScaffolding_DependencyDialogWidth>600</WebStackScaffolding_DependencyDialogWidth>
-    <NameOfLastUsedPublishProfile>GameNightBuddy</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>GameNightBuddy - Web Deploy</NameOfLastUsedPublishProfile>
     <AutoRefresh>true</AutoRefresh>
   </PropertyGroup>
 </Project>

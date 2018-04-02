@@ -11,7 +11,7 @@ namespace GameNightBuddy_Server.Repositories
 {
   public interface IUserRepository : IDisposable
   {
-    User GetUserByFbKey(string id);
+    User GetUserByAuthKey(string id);
     List<User> QueryUsers(string query, Guid nightId);
     User GetUser(Guid id);
     Guid InsertUser(User user);
@@ -31,7 +31,12 @@ namespace GameNightBuddy_Server.Repositories
       this._logger = logger;
     }
 
-    public User GetUserByFbKey(string id)
+    /// <summary>
+    /// Gets a full User record by authentication key.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public User GetUserByAuthKey(string id)
     {
       if (id?.Length < 1) return new User();
       _logger.LogInformation(LoggingEvents.GetUser, "Starting GetUserByFbKey {timestamp}", DateTime.Now);
@@ -53,6 +58,13 @@ namespace GameNightBuddy_Server.Repositories
       }
     }
 
+    /// <summary>
+    /// Returns public Users via string query that are eligible for joining a specific Game Night.
+    /// Supported queries: display name, first name + last name
+    /// </summary>
+    /// <param name="query">String search query</param>
+    /// <param name="nightId">Game Night context</param>
+    /// <returns></returns>
     public List<User> QueryUsers(string query, Guid nightId)
     {
       if (query?.Length < 1 || nightId == Guid.Empty) return new List<User>();
@@ -62,8 +74,7 @@ namespace GameNightBuddy_Server.Repositories
       {
         var memberIds = this.context.GameNightMembers.Where(m => m.GameNightId == nightId).Select(m => m.UserId).ToList();
         query = query.ToLower();
-        var users = this.context.Users.Where(u =>
-          !memberIds.Contains(u.UserId) &&
+        var users = this.context.Users.Where(u => !memberIds.Contains(u.UserId) &&
             (
               (u.DisplayName != null && u.DisplayName.ToLower().Contains(query)) ||
               string.Concat(u.FirstName + u.LastName).ToLower().Contains(query))
@@ -89,6 +100,11 @@ namespace GameNightBuddy_Server.Repositories
       throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Inserts a new User.
+    /// </summary>
+    /// <param name="user">The user.</param>
+    /// <returns></returns>
     public Guid InsertUser(User user)
     {
       if (user == null) return Guid.Empty;
@@ -108,6 +124,10 @@ namespace GameNightBuddy_Server.Repositories
       }
     }
 
+    /// <summary>
+    /// Updates an existing User.
+    /// </summary>
+    /// <param name="user">The user.</param>
     public void UpdateUser(User user)
     {
       if (user == null) return;
@@ -115,12 +135,16 @@ namespace GameNightBuddy_Server.Repositories
 
       try
       {
-        var dbUser = this.context.Users.First(u => u.UserId == user.UserId);
-        dbUser.FirstName = user.FirstName;
-        dbUser.LastName = user.LastName;
-        dbUser.Email = user.Email;
-        dbUser.DisplayName = user.DisplayName;
-        dbUser.PhotoURL = user.PhotoURL;
+        var dbUser = this.context.Users.FirstOrDefault(u => u.UserId == user.UserId);
+        if (dbUser != null)
+        {
+          dbUser.FirstName = user.FirstName;
+          dbUser.LastName = user.LastName;
+          dbUser.Email = user.Email;
+          dbUser.DisplayName = user.DisplayName;
+          dbUser.PhotoURL = user.PhotoURL;
+        }
+
         _logger.LogInformation(LoggingEvents.UpdateUser, "Ending UpdateUser {timestamp}", DateTime.Now);
       }
       catch (Exception ex)

@@ -21,8 +21,13 @@ namespace GameNightBuddy_Server.Controllers
       this._logger = logger;
     }
 
+    /// <summary>
+    /// POST: Gets the user by auth key (provided client-side).
+    /// </summary>
+    /// <param name="input">The input.</param>
+    /// <returns></returns>
     [HttpPost]
-    public IActionResult GetUserByFbKey([FromBody] AuthViewModel input)
+    public IActionResult GetUserByAuthKey([FromBody] AuthViewModel input)
     {
       _logger.LogInformation(LoggingEvents.GetUser, "Getting user by Firebase key {uid}", input?.uid);
       if (input == null)
@@ -33,7 +38,7 @@ namespace GameNightBuddy_Server.Controllers
 
       try
       {
-        var user = this.userRepository.GetUserByFbKey(input.uid);
+        var user = this.userRepository.GetUserByAuthKey(input.uid);
         if (user == null)
         {
           user = new User(input);
@@ -49,6 +54,12 @@ namespace GameNightBuddy_Server.Controllers
       }
     }
 
+    /// <summary>
+    /// GET: Queries the users that are eligible for joining a specific Game Night.
+    /// </summary>
+    /// <param name="query">The query.</param>
+    /// <param name="nightId">The night identifier.</param>
+    /// <returns></returns>
     [HttpGet("search/{nightId}/{query}")]
     public IActionResult QueryUsers([FromRoute] string query, [FromRoute] Guid nightId)
     {
@@ -71,6 +82,11 @@ namespace GameNightBuddy_Server.Controllers
       }
     }
 
+    /// <summary>
+    /// PUT: Overwrites a User.
+    /// </summary>
+    /// <param name="user">The user.</param>
+    /// <returns></returns>
     [HttpPut]
     public IActionResult OverwriteUser([FromBody] User user)
     {

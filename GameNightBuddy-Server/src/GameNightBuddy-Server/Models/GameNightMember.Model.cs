@@ -18,11 +18,18 @@ namespace GameNightBuddy_Server.Models
     [Required]
     public Guid UserId { get; set; }
     public User User { get; set; }
+    // Foreign Keys Elsewhere
     public List<MatchPlayer> MatchPlayers { get; set; }
+    public GameNightMemberStat GameNightMemberStat { get; set; }
 
+    // Unique Columns
     public Boolean IsHost { get; set; }
 
+    // Default
     public DateTime DateCreated { get; set; }
+    public string UserCreated { get; set; }
+    public DateTime DateUpdated { get; set; }
+    public string UserUpdated { get; set; }
     public Boolean IsActive { get; set; }
 
     public GameNightMember() { }

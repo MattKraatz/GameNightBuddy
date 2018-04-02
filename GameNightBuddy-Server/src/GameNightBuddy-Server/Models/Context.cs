@@ -49,11 +49,19 @@ namespace GameNightBuddy_Server.Models
           .Property(n => n.DateCreated)
           .HasDefaultValueSql("GETDATE()");
 
+      modelBuilder.Entity<MatchPlayer>()
+          .Property(n => n.DateCreated)
+          .HasDefaultValueSql("GETDATE()");
+
       modelBuilder.Entity<GameRating>()
           .Property(n => n.DateCreated)
           .HasDefaultValueSql("GETDATE()");
 
       modelBuilder.Entity<Activity>()
+          .Property(n => n.DateCreated)
+          .HasDefaultValueSql("GETDATE()");
+
+      modelBuilder.Entity<UserStat>()
           .Property(n => n.DateCreated)
           .HasDefaultValueSql("GETDATE()");
 
@@ -82,7 +90,15 @@ namespace GameNightBuddy_Server.Models
           .Property(n => n.IsActive)
           .HasDefaultValue(true);
 
+      modelBuilder.Entity<MatchPlayer>()
+          .Property(n => n.IsActive)
+          .HasDefaultValue(true);
+
       modelBuilder.Entity<GameRating>()
+          .Property(n => n.IsActive)
+          .HasDefaultValue(true);
+
+      modelBuilder.Entity<UserStat>()
           .Property(n => n.IsActive)
           .HasDefaultValue(true);
 

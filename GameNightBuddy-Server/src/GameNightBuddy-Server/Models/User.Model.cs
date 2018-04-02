@@ -12,11 +12,14 @@ namespace GameNightBuddy_Server.Models
     // Primary Key
     public Guid UserId { get; set; }
     // Foreign Keys
+    // Foreign Keys Elsewhere
     public List<GameNightMember> GameNightsMembers { get; set; }
     public List<Game> Games { get; set; }
     public List<GameRating> GameRatings { get; set; }
     public List<Activity> Activities { get; set; }
+    public UserStat UserStat { get; set; }
 
+    // Unique Columns
     [Required]
     public string FirebaseId { get; set; }
     public string FirstName { get; set; }
@@ -25,7 +28,11 @@ namespace GameNightBuddy_Server.Models
     public string PhotoURL { get; set; }
     public string Email { get; set; }
 
+    // Default
     public DateTime DateCreated { get; set; }
+    public string UserCreated { get; set; }
+    public DateTime DateUpdated { get; set; }
+    public string UserUpdated { get; set; }
     public Boolean IsActive { get; set; }
 
     public User() { }
