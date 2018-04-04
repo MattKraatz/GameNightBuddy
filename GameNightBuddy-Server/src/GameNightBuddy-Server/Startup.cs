@@ -25,8 +25,7 @@ namespace GameNightBuddy_Server
 
       if (env.IsEnvironment("Development"))
       {
-        // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-        builder.AddApplicationInsightsSettings(developerMode: true);
+
       }
 
       builder.AddEnvironmentVariables();
@@ -67,10 +66,6 @@ namespace GameNightBuddy_Server
     {
       loggerFactory.AddConsole(Configuration.GetSection("Logging"));
       loggerFactory.AddDebug();
-
-      app.UseApplicationInsightsRequestTelemetry();
-
-      app.UseApplicationInsightsExceptionTelemetry();
 
       app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 

@@ -65,6 +65,10 @@ namespace GameNightBuddy_Server.Models
           .Property(n => n.DateCreated)
           .HasDefaultValueSql("GETDATE()");
 
+      modelBuilder.Entity<UserStatEntity>()
+          .Property(n => n.DateCreated)
+          .HasDefaultValueSql("GETDATE()");
+
       // IsActive default values
       modelBuilder.Entity<User>()
           .Property(n => n.IsActive)
@@ -99,6 +103,10 @@ namespace GameNightBuddy_Server.Models
           .HasDefaultValue(true);
 
       modelBuilder.Entity<UserStat>()
+          .Property(n => n.IsActive)
+          .HasDefaultValue(true);
+
+      modelBuilder.Entity<UserStatEntity>()
           .Property(n => n.IsActive)
           .HasDefaultValue(true);
 
@@ -147,6 +155,21 @@ namespace GameNightBuddy_Server.Models
       modelBuilder.Entity<Activity>()
           .HasOne(m => m.GameNight)
           .WithMany(n => n.Activities)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<User>()
+          .HasOne(m => m.UserStat)
+          .WithOne(n => n.User)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<UserStatEntity>()
+          .HasOne(m => m.UserStat)
+          .WithMany(n => n.UserStatEntities)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<UserStatEntity>()
+          .HasOne(m => m.GameEntity)
+          .WithMany(n => n.UserStatEntities)
           .OnDelete(DeleteBehavior.Restrict);
 
       #endregion DELETE BEHAVIOR

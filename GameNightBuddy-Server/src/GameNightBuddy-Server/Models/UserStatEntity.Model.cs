@@ -6,24 +6,26 @@ using System.Threading.Tasks;
 
 namespace GameNightBuddy_Server.Models
 {
-  public class UserStat
+  public class UserStatEntity
   {
     // Primary Key
-    public Guid UserStatId { get; set; }
+    public Guid UserStatEntityId { get; set; }
     // Foreign Keys
     [Required]
-    public Guid UserId { get; set; }
-    public User User { get; set; }
+    public Guid UserStatId { get; set; }
+    public UserStat UserStat { get; set; }
+    public Guid GameEntityId { get; set; }
+    public Game GameEntity { get; set; }
     // Foreign Keys Elsewhere
-    // User Stat Entities manage many-to-many stat relationships
-    // stat title is controlled via bool columns
-    public List<UserStatEntity> UserStatEntities { get; set; }
 
     // Unique Columns
-    public int GamesInCollectionCount { get; set; }
-    public int MatchesPlayedCount { get; set; }
-    public int MatchesWonCount { get; set; }
-
+    public int Rank { get; set; }
+    public int PlayCount { get; set; }
+    public int WinCount { get; set; }
+    public bool IsFavoriteGame { get; set; }
+    public bool IsMostWonGame { get; set; }
+    public bool IsFirstTimerWinGame { get; set; }
+    
     // Default
     public DateTime DateCreated { get; set; }
     public string UserCreated { get; set; }

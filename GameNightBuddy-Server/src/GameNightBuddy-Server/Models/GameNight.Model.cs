@@ -12,9 +12,6 @@ namespace GameNightBuddy_Server.Models
     // Primary Key
     public Guid GameNightId { get; set; }
     // Foreign Keys
-    [Required]
-    public Guid UserId { get; set; }
-    public User UserCreator { get; set; }
     // Foreign Keys Elsewhere
     public List<GameNightMember> Members { get; set; }
     public List<GameNightGame> Games { get; set; }

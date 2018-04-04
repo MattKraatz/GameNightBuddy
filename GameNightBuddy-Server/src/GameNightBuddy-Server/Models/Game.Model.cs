@@ -16,6 +16,7 @@ namespace GameNightBuddy_Server.Models
     public List<GameNightGame> GameNightGames { get; set; }
     public List<Match> Matches { get; set; }
     public List<GameRating> GameRatings { get; set; }
+    public List<UserStatEntity> UserStatEntities { get; set; }
 
     // Unique Columns
     public string Name { get; set; }

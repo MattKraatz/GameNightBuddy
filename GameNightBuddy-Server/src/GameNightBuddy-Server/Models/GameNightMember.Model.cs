@@ -20,10 +20,10 @@ namespace GameNightBuddy_Server.Models
     public User User { get; set; }
     // Foreign Keys Elsewhere
     public List<MatchPlayer> MatchPlayers { get; set; }
-    public GameNightMemberStat GameNightMemberStat { get; set; }
 
     // Unique Columns
     public Boolean IsHost { get; set; }
+    public Boolean IsFounder { get; set; }
 
     // Default
     public DateTime DateCreated { get; set; }
