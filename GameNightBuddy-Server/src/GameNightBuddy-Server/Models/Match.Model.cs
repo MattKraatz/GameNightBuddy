@@ -19,7 +19,7 @@ namespace GameNightBuddy_Server.Models
     public Guid GameNightId { get; set; }
     public GameNight GameNight { get; set; }
     // Foreign Keys Elsewhere
-    public List<MatchPlayer> Players { get; set; } = new List<MatchPlayer>();
+    public List<MatchPlayer> Players { get; set; }
 
     // Unique Columns
     [Required]

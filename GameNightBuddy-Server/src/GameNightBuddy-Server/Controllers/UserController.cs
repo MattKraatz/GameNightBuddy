@@ -109,5 +109,33 @@ namespace GameNightBuddy_Server.Controllers
         return new BadRequestResult();
       }
     }
+
+    /// <summary>
+    /// GET: Queries the users that are eligible for joining a specific Game Night.
+    /// </summary>
+    /// <param name="query">The query.</param>
+    /// <param name="nightId">The night identifier.</param>
+    /// <returns></returns>
+    [HttpGet("{userId}/stats")]
+    public IActionResult GetUserStats([FromRoute] Guid userId)
+    {
+      _logger.LogInformation(LoggingEvents.GetUserStats, "Getting User Stats for UserId {uid}", userId);
+      if (userId == Guid.Empty)
+      {
+        _logger.LogWarning(LoggingEvents.InvalidInput, "Invalid Input; UserId: {uid}", userId);
+        return new BadRequestResult();
+      }
+
+      try
+      {
+        var userStats = this.userRepository.GetUserStats(userId);
+        return new ObjectResult(new UserStatViewModel(userStats));
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.Unexpectederror, ex, "Unhandled Exception");
+        return new BadRequestResult();
+      }
+    }
   }
 }

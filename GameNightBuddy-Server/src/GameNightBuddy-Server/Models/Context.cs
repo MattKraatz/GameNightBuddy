@@ -14,6 +14,8 @@ namespace GameNightBuddy_Server.Models
     public DbSet<GameNightGame> GameNightGames { get; set; }
     public DbSet<GameRating> GameRatings { get; set; }
     public DbSet<Activity> Activities { get; set; }
+    public DbSet<UserStat> UserStats { get; set; }
+    public DbSet<UserStatEntity> UserStatEntities { get; set; }
     
     public Context(DbContextOptions<Context> options) : base(options)
     {

@@ -17,6 +17,7 @@ namespace GameNightBuddy_Server.Repositories
     Guid InsertUser(User user);
     void DeactivateUser(Guid userId);
     void UpdateUser(User user);
+    UserStat GetUserStats(Guid id);
     void Save();
   }
 
@@ -151,6 +152,136 @@ namespace GameNightBuddy_Server.Repositories
       {
         _logger.LogError(LoggingEvents.UpdateUser, ex, "UpdateUser ERROR at {timestamp}", DateTime.Now);
         return;
+      }
+    }
+
+    /// <summary>
+    /// Gets a full User record by UserId.
+    /// </summary>
+    /// <param name="id">The UserId.</param>
+    /// <returns></returns>
+    public UserStat GetUserStats(Guid id)
+    {
+      if (id == Guid.Empty) return new UserStat();
+      _logger.LogInformation(LoggingEvents.GetUser, "Starting GetUserStats {timestamp}", DateTime.Now);
+
+      try
+      {
+        CalculateUserStats(id);
+
+        var userStat = this.context.UserStats
+          .Include(u => u.UserStatEntities)
+            .ThenInclude(e => e.GameEntity)
+          .FirstOrDefault(u => u.UserId == id);
+
+        _logger.LogInformation(LoggingEvents.GetUser, "Ending GetUserStats {timestamp}", DateTime.Now);
+        return userStat;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.GetFailed, ex, "GetUserStats ERROR at {timestamp}", DateTime.Now);
+        return new UserStat();
+      }
+    }
+
+    /// <summary>
+    /// Calculates User stats.
+    /// </summary>
+    /// <param name="id">The UserId.</param>
+    /// <returns></returns>
+    public void CalculateUserStats(Guid id)
+    {
+      if (id == Guid.Empty) return;
+      _logger.LogInformation(LoggingEvents.GetUser, "Starting CalculateUserStats {timestamp}", DateTime.Now);
+
+      try
+      {
+        var userStat = new UserStat
+        {
+          UserId = id,
+          DateCreated = DateTime.Now,
+          IsActive = true
+        };
+
+        var user = this.context.Users
+          .Include(u => u.Games)
+          .FirstOrDefault(u => u.UserId == userStat.UserId);
+
+        if (user == null)
+        {
+          _logger.LogError(LoggingEvents.GetUser, "CalculateUserStats ERROR at {timestamp} : User does not exist", DateTime.Now);
+          return;
+        }
+
+        var userMatchPlayers = this.context.MatchPlayers
+          .Include(p => p.Member)
+          .Include(p => p.Match)
+            .ThenInclude(m => m.Game)
+          .Where(p => p.Member.UserId == userStat.UserId);
+
+        // # of Games in personal collection
+        userStat.GamesInCollectionCount = user.Games.Count();
+
+        // # of Matches played and won across all Game Nights (can calculate ratio)
+        userStat.MatchesPlayedCount = userMatchPlayers.Count();
+        userStat.MatchesWonCount = userMatchPlayers.Where(p => p.Winner).Count();
+
+        var oldUserStatEntities = this.context.UserStatEntities
+          .Include(e => e.UserStat)
+          .Where(e => e.UserStat.UserId == userStat.UserId);
+        if (oldUserStatEntities.Count() > 0)
+        {
+          this.context.UserStatEntities.RemoveRange(oldUserStatEntities);
+        }
+
+        // Favorite Games by # of times played
+        var faveGamesByFreq = userMatchPlayers.GroupBy(p => p.Match.Game).OrderByDescending(g => g.Count()).Take(3);
+        int rankIndex = 1;
+        foreach (var group in faveGamesByFreq)
+        {
+          this.context.UserStatEntities.Add(new UserStatEntity
+          {
+            UserStatId = userStat.UserStatId,
+            GameEntityId = group.Key.GameId,
+            Rank = rankIndex,
+            IsFavoriteGame = true
+          });
+          rankIndex++;
+        }
+
+        // Most Won Game
+        var mostWonGames = userMatchPlayers.Where(p => p.Winner).GroupBy(p => p.Match.Game).OrderByDescending(g => g.Count()).Take(3);
+        rankIndex = 1;
+        foreach (var group in mostWonGames)
+        {
+          this.context.UserStatEntities.Add(new UserStatEntity
+          {
+            UserStatId = userStat.UserStatId,
+            GameEntityId = group.Key.GameId,
+            Rank = rankIndex,
+            IsMostWonGame = true
+          });
+          rankIndex++;
+        }
+
+        // Any First Timer Wins
+        var firstTimerWins = userMatchPlayers.Where(p => p.FirstTimer && p.Winner).GroupBy(p => p.Match.Game).OrderByDescending(g => g.Count()).Take(3);
+        foreach (var group in firstTimerWins)
+        {
+          this.context.UserStatEntities.Add(new UserStatEntity
+          {
+            UserStatId = userStat.UserStatId,
+            GameEntityId = group.Key.GameId,
+            Rank = rankIndex,
+            IsFirstTimerWinGame = true
+          });
+        }
+
+        _logger.LogInformation(LoggingEvents.GetUser, "Ending CalculateUserStats {timestamp}", DateTime.Now);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(LoggingEvents.GetFailed, ex, "CalculateUserStats ERROR at {timestamp}", DateTime.Now);
       }
     }
 
